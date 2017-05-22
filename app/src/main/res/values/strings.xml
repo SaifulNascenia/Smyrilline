@@ -1,0 +1,110 @@
+<resources>
+    <string name="app_name">Smyrilline</string>
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="action_settings">Settings</string>
+    <string name="home">Home</string>
+    <string name="view_booking">View Booking</string>
+    <string name="ship_tracker">Ship tracker</string>
+    <string name="inbox">Inbox</string>
+    <string name="duty_free">Duty free</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="destinations">Destinations</string>
+    <string name="coupons">Coupons</string>
+    <string name="settings">Settings</string>
+    <string name="info">Info</string>
+    <string name="message_filters">Message filters</string>
+    <string name="please_choose_message_category">Please choose your desired message category(s).</string>
+    <string name="age_group">Age group</string>
+    <string name="adult">Adult\n(from 15 yr)</string>
+    <string name="child11">Child\n3 - 11 yr</string>
+    <string name="child15">Child\n12 - 15 yr</string>
+    <string name="all">All</string>
+    <string name="gender">Gender</string>
+    <string name="both">Both</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="done">Done</string>
+    <string name="settings_saved">Settings saved!</string>
+    <string name="please_select_age">Please select an age group.</string>
+    <string name="please_select_gender">Please select a gender group.</string>
+    <string name="bulletins_since_last_time">bulletins since last time</string>
+    <string name="please_select_age_gender">Please select age and gender.</string>
+    <string name="search">Search</string>
+    <string name="language">Language</string>
+    <string name="please_choose_language">Please choose your desired language</string>
+    <string name="english">English</string>
+    <string name="danish">Danish</string>
+    <string name="deutsch">Deutsch</string>
+    <string name="faroese">Faroese</string>
+    <string name="ends">Ends</string>
+    <string name="show_coupon">Show this to the staff</string>
+    <string name="use_coupon">Use coupon</string>
+    <string name="no_coupons">No coupons</string>
+    <string name="no_results">No results</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="use_coupon_warning">The coupon will be used and removed.</string>
+    <string name="used">USED</string>
+    <string name="alert_no_wifi">Data is not available.. please turn on Wi-Fi.</string>
+    <string name="alert_server_down">Cannot load data.. server is down.</string>
+    <string name="alert_server_timeout">Server request timed out.. please try again later.</string>
+    <string name="alert_downloading">Downloading file.. please wait.</string>
+    <string name="alert_download_cancelled">Download cancelled!</string>
+    <string name="alert_error">Error retrieving data.\nPlease try later..</string>
+    <string name="alert_download_failed">Failed to download file!</string>
+    <string name="alert_no_pdf_reader">PDF Reader application is not installed in your device.</string>
+    <string name="alert_file_saved_to">File saved to:</string>
+    <string name="alert_turn_on_bluetooth">Please turn on bluetooth</string>
+    <string name="bluetooth_stack_crashed">Probably your bluetooth stack has crashed. Please restart your bluetooth.</string>
+    <string name="beacons_invalid_rssi">Beacons with invalid RSSI detected. Please restart your bluetooth.</string>
+    <string name="label_new">new</string>
+    <string name="use">USE</string>
+    <string name="use_meal_warning">The meal will be used.</string>
+    <string name="no_meals">No meals found</string>
+    <string name="log_out">Change booking</string>
+    <string name="sex">SEX</string>
+    <string name="dob">DOB</string>
+    <string name="nationality">NATIONALITY</string>
+    <string name="car">CAR</string>
+    <string name="name">NAME</string>
+    <string name="meals">Meals</string>
+    <string name="nav_help">Help</string>
+    <string name="expired">Expired</string>
+    <string name="adults">Adults</string>
+    <string name="cabin">CABIN</string>
+    <string name="bookingNo">BOOKING NO.</string>
+    <string name="from">FROM</string>
+    <string name="to">TO</string>
+    <string name="departure">DEPARTURE</string>
+    <string name="arrival">ARRIVAL</string>
+    <string name="travellers">TRAVELLERS</string>
+    <string name="child">Children</string>
+    <string name="infant">Infants</string>
+    <string name="log_in">View Booking</string>
+    <string name="invalid_input">Please enter valid input.</string>
+    <string name="routes">Routes</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="elipsis" translatable="false">...</string>
+    <string name="children12">Children (5-12 yr)</string>
+    <string name="children15">Children (12-15 yr)</string>
+    <string name="my_smyrilline">My Smiril Line</string>
+    <string name="booking">Booking</string>
+    <string name="hint_lastname">Lastname</string>
+    <string name="hint_booking">Booking</string>
+    <string name="connecting">Connecting...</string>
+    <string name="alert_server_error">The server responded with an error.</string>
+</resources>

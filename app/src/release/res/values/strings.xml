@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- production urls -->
+    <string name="url_wordpress" translatable="false">http://smy-wp.mcp.com</string>
+    <string name="url_onyxcms" translatable="false">https://smy-beacon.mcp.com</string>
+    <string name="url_websocket" translatable="false">ws://smy-wp.mcp.com:8080/v1</string>
+    <string name="url_wordpress_parent" translatable="false">http://smy-wp.mcp.com/wordpress/wp-json/wp/v2/pages?filter[post_parent]</string>
+    <string name="url_signalr_root" translatable="false">http://smy-wp.mcp.com:82</string>
+    <string name="url_signalr_service" translatable="false">http://smy-wp.mcp.com:82/signalr</string>
+    <string name="url_signalr_bulletin_queue" translatable="false">http://smy-wp.mcp.com:82/api/Schedule/FindQueuedBulletin</string>
+    <string name="url_signalr_bulletin_queue_ack" translatable="false">http://smy-wp.mcp.com:82/api/Schedule/AckQueuedBulletin</string>
+    <string name="url_custom_css" translatable="false">http://smy-wp.mcp.com/wordpress/?display_custom_css=css</string>
+    <string name="onyx_client_id" translatable="false">2a5118396e16d6a1c3ec491d5a52d15461275cbf</string>
+    <string name="onyx_secret" translatable="false">3817d3211ac880e62906f41ee62bc8bd32aa61a5</string>
+</resources>

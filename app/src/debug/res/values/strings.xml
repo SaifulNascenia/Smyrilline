@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- staging urls -->
+    <string name="url_wordpress" translatable="false">http://stage-smy-wp.mcp.com</string>
+    <string name="url_onyxcms" translatable="false">https://staging-beacon.mcp.com</string>
+    <string name="url_websocket" translatable="false">ws://stage-smy-wp.mcp.com:8080/v1</string>
+    <string name="url_wordpress_parent" translatable="false">http://stage-smy-wp.mcp.com/wordpress/wp-json/wp/v2/pages?filter[post_parent]</string>
+    <string name="url_signalr_root" translatable="false">http://stage-smy-wp.mcp.com:82</string>
+    <string name="url_signalr_service" translatable="false">http://stage-smy-wp.mcp.com:82/signalr</string>
+    <string name="url_signalr_bulletin_queue" translatable="false">http://stage-smy-wp.mcp.com:82/api/Schedule/FindQueuedBulletin</string>
+    <string name="url_signalr_bulletin_queue_ack" translatable="false">http://stage-smy-wp.mcp.com:82/api/Schedule/AckQueuedBulletin</string>
+    <string name="url_custom_css" translatable="false">http://stage-smy-wp.mcp.com/wordpress/?display_custom_css=css</string>
+    <string name="onyx_client_id" translatable="false">50bd1b12405ae56e81f4ad365d339d35733a9567</string>
+    <string name="onyx_secret" translatable="false">af0d920f2b9c78ed95b585383b4481020cb8ac1c</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>

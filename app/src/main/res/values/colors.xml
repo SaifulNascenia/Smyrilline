@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00a8ff</color>
+    <color name="colorPrimaryDark">#0086CC</color>
+    <color name="colorAccent">#00a8ff</color>
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#727272</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="white_65_opaque">#A6FFFFFF</color>
+    <color name="bkg_coupon_image">#D6F0FA</color>
+    <color name="bkg_duty_free_image">#F1E9DB</color>
+    <color name="bkg_restaurant_image">#F1E9DB</color>
+    <color name="bkg_light_grey">#ebebeb</color>
+    <color name="ship_trajectory">#2c7af8</color>
+    <color name="bkg_deep_grey">#999999</color>
+    <color name="bkg_fragment_bulletin">#d9d9d9</color>
+    <color name="bkg_login_input_boundary">#D0D0D0</color>
+    <color name="guide_screen_text">#005580</color>
+    <color name="bkg_cancel_button">#ff0000</color>
+    <color name="bkg_ok_button">#009900</color>
+    <color name="bkg_settings_msg_filters">#00a8ff</color>
+    <color name="bkg_60_percent_opaque_black">#99000000</color>
+    <color name="bkg_40_percent_opaque_black">#4D000000</color>
+</resources>

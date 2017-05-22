@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bkg_fragment_bulletin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bkg_with_bottom_border"
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:visibility="visible"
+        android:weightSum="10">
+
+        <ImageView
+            android:id="@+id/imgBulletinNewIndicator"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:src="@drawable/bkg_blue_circle" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="8"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin">
+
+            <TextView
+                android:id="@+id/tvBulletinTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Bulletin title"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvBulletinContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Bulletin content"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvBulletinDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:gravity="right"
+            android:text="Apr 01" />
+    </LinearLayout>
+
+    <!-- Layout for Delete & Undo-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="2">
+
+        <ImageView
+            android:id="@+id/imgDeleted"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hapticFeedbackEnabled="true"
+            android:scaleType="center"
+            android:src="@drawable/ic_delete" />
+
+        <ImageView
+            android:id="@+id/imgUndo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:scaleType="center"
+            android:src="@drawable/ic_undo_flat" />
+    </LinearLayout>
+</FrameLayout>
