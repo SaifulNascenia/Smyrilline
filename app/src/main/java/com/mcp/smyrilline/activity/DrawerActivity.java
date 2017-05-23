@@ -155,9 +155,16 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
 
         switch (fragmentName) {
             case ("LoginFragment"):
-                fragment = new LoginFragment();
+                /*fragment = new LoginFragment();
                 if (!loggedIn)  // if logged, then go to next case
                     break;      // otherwise break out
+                */
+                if (loggedIn)
+                    fragment = new TicketFragment();
+                else
+                    fragment = new LoginFragment();
+                break;
+
             /*case ("TicketFragment"):
                 fragment = new TicketFragment();
                 break;*/
