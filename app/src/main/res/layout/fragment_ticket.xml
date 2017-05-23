@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
+
     <LinearLayout
         android:id="@+id/ll_booking_barcode"
         android:layout_width="match_parent"
@@ -13,6 +14,15 @@
         android:background="@color/bkg_light_grey"
         android:orientation="vertical"
         android:weightSum="10">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
+            android:background="@color/colorPrimaryDark"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/cvTabLayout"
