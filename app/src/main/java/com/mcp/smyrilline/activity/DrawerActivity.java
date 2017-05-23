@@ -2,7 +2,6 @@ package com.mcp.smyrilline.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -20,21 +20,25 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mcp.smyrilline.adapter.LanguageSpinnerAdapter;
 import com.mcp.smyrilline.fragment.InfoFragment;
 import com.mcp.smyrilline.fragment.SettingsFragment;
 import com.mcp.smyrilline.model.DrawerItem;
@@ -63,8 +67,10 @@ import com.onyxbeacon.rest.auth.util.AuthenticationMode;
 import com.onyxbeacon.service.logging.LoggingStrategy;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class DrawerActivity extends AppCompatActivity implements BleStateListener, BulletinListener, DrawerCouponsCountListener {
+    public static final String ENTERED_FROM_MENU = "enteredFromMenu";
     public static final String FRAGMENT_PARENT_TAG = "parent_fragment";
     public static final String FRAGMENT_CHILD_TAG = "child_fragment";
     private static final int REQUEST_ENABLE_BT = 1;
@@ -76,6 +82,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
+    private Spinner mLanguageSpinner;
 
     private CharSequence mTitle;
     private String[] mPlanetTitles;
@@ -564,6 +571,94 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             AppCompatActivity appCompatActivity = this;
             appCompatActivity.setSupportActionBar(toolbar);
 
+            final ActionBar actionBar = getSupportActionBar();
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+            //actionBar.setDisplayShowHomeEnabled(true);
+            //actionBar.setDisplayHomeAsUpEnabled(true);
+
+            // Populate flag icon id list
+            final Integer[] flagIcons = {
+                    R.drawable.img_flag_english
+                    , R.drawable.img_flag_german
+                    , R.drawable.img_flag_faroese
+                    , R.drawable.img_flag_danish};
+            mLanguageSpinner = new Spinner(actionBar.getThemedContext());
+            // Adapter for spinner
+            LanguageSpinnerAdapter langSpinnerAdapter = new LanguageSpinnerAdapter(mContext,
+                    R.layout.list_item_language_spinner, flagIcons);
+            mLanguageSpinner.setAdapter(langSpinnerAdapter);
+
+            // Set the initial spinner item
+            // according to the current app language
+            String currentLanguage = getResources().getConfiguration().locale.getLanguage();
+
+
+            switch (currentLanguage) {
+                case "en":
+                    mLanguageSpinner.setSelection(0);
+                    break;
+                case "de":
+                    mLanguageSpinner.setSelection(1);
+                    break;
+                case "fo":
+                    mLanguageSpinner.setSelection(2);
+                    break;
+                case "da":
+                    mLanguageSpinner.setSelection(3);
+                    break;
+                default:
+                    mLanguageSpinner.setSelection(0);
+            }
+
+            mLanguageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                /**
+                 * A known issue when itemSelected is called first time erronously
+                 * without user selection
+                 * <p/>
+                 * Using a counter to check first instance
+                 * http://stackoverflow.com/a/10102356
+                 */
+                int isLoaded = 0;
+
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view,
+                                           int position, long arg3) {
+
+                    if (isLoaded >= 1) {
+                        // Check the selected position in the icon array
+                        switch (flagIcons[position]) {
+                            case R.drawable.img_flag_english:
+                                updateAppLocale("en");
+                                break;
+                            case R.drawable.img_flag_german:
+                                updateAppLocale("de");
+                                break;
+                            case R.drawable.img_flag_faroese:
+                                updateAppLocale("fo");
+                                break;
+                            case R.drawable.img_flag_danish:
+                                updateAppLocale("da");
+                                break;
+                        }
+                    }
+                    isLoaded++;
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> arg0) {
+                    // TODO Auto-generated method stub
+                }
+            });
+
+
+            // Add the spinner to the right of Toolbar
+            Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.gravity = Gravity.RIGHT;
+            toolbar.addView(mLanguageSpinner, layoutParams);
+
             mDrawerLayout = (DrawerLayout) appCompatActivity.findViewById(R.id.drawer_layout);
             mDrawerToggle = new ActionBarDrawerToggle(
                     this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -572,6 +667,71 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         } else {
             mDrawerLayout.setDrawerListener(null);
         }
+    }
+
+    private Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentById(R.id.content_frame);
+    }
+
+    /**
+     * We add the spinner for WelcomeFragment only
+     * To call this, use 'invalidateOptionsMenu()' inside fragments
+     * which are accessed from drawer
+     *
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        String currentFragmentName = getCurrentFragment().getClass().getSimpleName();
+
+        switch (currentFragmentName) {
+            case ("LoginFragment"):
+                mLanguageSpinner.setVisibility(View.VISIBLE);
+                break;
+            case ("TicketFragment"):
+                mLanguageSpinner.setVisibility(View.VISIBLE);
+                break;
+            default:
+                mLanguageSpinner.setVisibility(View.GONE);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.isDrawerIndicatorEnabled() &&
+                mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        } else if (item.getItemId() == android.R.id.home &&
+                getSupportFragmentManager().popBackStackImmediate()) {
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void updateAppLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources res = getBaseContext().getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+
+        // Save to load when app starts
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(Utils.PREF_LOCALE, lang);
+        Log.i("MainActivity", "onCreate() - Saving locale -> " + lang);
+        editor.apply();
+
+        // Send broadcast to service
+        Log.i(Utils.TAG, "MainActivity: sending locale changed broadcast");
+        sendBroadcast(new Intent(SignalRService.ACTION_APP_SETTINGS_CHANGED));
+
+        // Restart activity for effects to take place
+        this.recreate();
     }
 
     @Override
