@@ -35,13 +35,14 @@ public class TicketFragment extends Fragment {
 
         mContext = getActivity();
 
-        getActivity().invalidateOptionsMenu();
-        mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
 
+        getActivity().invalidateOptionsMenu();
         // Inflate tab_layout and setup Views.
         View rootView = inflater.inflate(R.layout.fragment_ticket, null);
         ((DrawerActivity) getActivity()).setToolbarAndToggle((Toolbar) rootView.findViewById(R.id.toolbar));
         getActivity().setTitle(mContext.getResources().getString(R.string.my_smyrilline));
+
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
         mTabLayout = (TabLayout) rootView.findViewById(R.id.ticketTabs);
         mViewPager = (ViewPager) rootView.findViewById(R.id.ticketPager);
 
