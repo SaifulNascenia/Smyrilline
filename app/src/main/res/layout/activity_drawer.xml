@@ -18,7 +18,7 @@
     <!-- the navigation drawer -->
     <ListView
         android:id="@+id/drawer_listview"
-        android:layout_width="111dp"
+        android:layout_width="@dimen/drawer_listview_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
