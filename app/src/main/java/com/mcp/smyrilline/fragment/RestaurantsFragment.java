@@ -49,8 +49,8 @@ public class RestaurantsFragment extends Fragment {
 
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolbar.setTitle("RestaurantFragment");
-        actionBar = (AppCompatActivity) getActivity();
-        actionBar.setSupportActionBar(toolbar);
+       /* actionBar = (AppCompatActivity) getActivity();
+        actionBar.setSupportActionBar(toolbar);*/
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
