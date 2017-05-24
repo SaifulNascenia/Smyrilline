@@ -130,14 +130,25 @@ public class Utils {
     private static final int MAX_RETRIES = 5;
     // Wordpress language param
     public static String WP_PARAM_LANGUAGE;
-
+    // Translatable texts
+    public static String ALERT_NO_WIFI;
+    public static String ALERT_SERVER_DOWN;
+    public static String ALERT_SERVER_TIMEOUT;
+    public static String ALERT_DOWNLOADING;
+    public static String ALERT_DOWNLOAD_CANCELLED;
+    public static String ALERT_ERROR;
+    public static String ALERT_DOWNLOAD_FAILED;
+    public static String ALERT_FILE_SAVED_TO;
+    public static String ALERT_NO_PDF_READER;
+    public static String ALERT_TURN_ON_BLUETOOTH;
+    public static String LABEL_NEW;
     private Locale locale = null;
     public static String[] fragmentList = {"LoginFragment", "ShipTrackerFragment", "InboxFragment", "DutyFreeFragment",
             "RestaurantsFragment", "DestinationsFragment", "CouponsFragment", "SettingsFragment", "InfoFragment"
     };
 
     private static SharedPreferences mSharedPref;
-    private static Context mContext;
+    public static Context mContext;
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
@@ -256,6 +267,26 @@ public class Utils {
             webView.loadUrl("");
             webView.loadUrl("");
         }
+    }
+
+
+    /**
+     * Update translations of strings used in code
+     * Called when app started, language changed in-app, and in-phone
+     */
+    public static void updateTextTranslations() {
+        WP_PARAM_LANGUAGE = mContext.getResources().getString(R.string.wp_language_param);
+        ALERT_TURN_ON_BLUETOOTH = mContext.getResources().getString(R.string.alert_turn_on_bluetooth);
+        ALERT_NO_WIFI = mContext.getResources().getString(R.string.alert_no_wifi);
+        ALERT_SERVER_DOWN = mContext.getResources().getString(R.string.alert_server_down);
+        ALERT_SERVER_TIMEOUT = mContext.getResources().getString(R.string.alert_server_timeout);
+        ALERT_DOWNLOADING = mContext.getResources().getString(R.string.alert_downloading);
+        ALERT_DOWNLOAD_CANCELLED = mContext.getResources().getString(R.string.alert_download_cancelled);
+        ALERT_FILE_SAVED_TO = mContext.getResources().getString(R.string.alert_file_saved_to);
+        ALERT_NO_PDF_READER = mContext.getResources().getString(R.string.alert_no_pdf_reader);
+        ALERT_DOWNLOAD_FAILED = mContext.getResources().getString(R.string.alert_download_failed);
+        ALERT_ERROR = mContext.getResources().getString(R.string.alert_error);
+        LABEL_NEW = mContext.getResources().getString(R.string.new_label);
     }
 
     public static String convertDateFormat(String givenString, String givenFormat, String requiredFormat) {
