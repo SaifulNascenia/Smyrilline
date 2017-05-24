@@ -114,10 +114,10 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         super.onCreate(savedInstanceState);
 
         mContext = this;
+
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         initUI(savedInstanceState);
-
         // SignalRService initialize before load list (for Bulletins)
         initSignalRService();
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.model.Restaurent;
+import com.mcp.smyrilline.model.DemoRestaurent;
 
 import java.util.List;
 
@@ -16,15 +16,15 @@ import java.util.List;
  * Created by saiful on 5/18/17.
  */
 
-public class RestaurentAdapter extends RecyclerView.Adapter<RestaurentAdapter.RestaurentViewHolder> {
+public class DemoRestaurentAdapter extends RecyclerView.Adapter<DemoRestaurentAdapter.RestaurentViewHolder> {
 
 
     private Context mContext;
-    private List<Restaurent> restaurentList;
+    private List<DemoRestaurent> demoRestaurentList;
 
-    public RestaurentAdapter(Context mContext, List<Restaurent> restaurentList) {
+    public DemoRestaurentAdapter(Context mContext, List<DemoRestaurent> demoRestaurentList) {
         this.mContext = mContext;
-        this.restaurentList = restaurentList;
+        this.demoRestaurentList = demoRestaurentList;
     }
 
 
@@ -40,13 +40,13 @@ public class RestaurentAdapter extends RecyclerView.Adapter<RestaurentAdapter.Re
     @Override
     public void onBindViewHolder(RestaurentViewHolder holder, int position) {
 
-        holder.recipeNameTextView.setText(restaurentList.get(position).getRecipeName());
-        holder.recipeDetailsTextView.setText(restaurentList.get(position).getRecipeDetails());
+        holder.recipeNameTextView.setText(demoRestaurentList.get(position).getRecipeName());
+        holder.recipeDetailsTextView.setText(demoRestaurentList.get(position).getRecipeDetails());
     }
 
     @Override
     public int getItemCount() {
-        return restaurentList.size();
+        return demoRestaurentList.size();
     }
 
     public class RestaurentViewHolder extends RecyclerView.ViewHolder {

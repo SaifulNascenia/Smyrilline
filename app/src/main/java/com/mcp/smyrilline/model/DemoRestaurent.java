@@ -4,13 +4,13 @@ package com.mcp.smyrilline.model;
  * Created by saiful on 5/18/17.
  */
 
-public class Restaurent {
+public class DemoRestaurent {
 
 
     private String RecipeName;
     private String RecipeDetails;
 
-    public Restaurent(String recipeName, String recipeDetails) {
+    public DemoRestaurent(String recipeName, String recipeDetails) {
         RecipeName = recipeName;
         RecipeDetails = recipeDetails;
     }
