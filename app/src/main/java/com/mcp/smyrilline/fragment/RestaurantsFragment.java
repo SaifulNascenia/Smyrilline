@@ -6,11 +6,9 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,23 +20,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cjj.MaterialRefreshLayout;
-import com.cjj.MaterialRefreshListener;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.adapter.DemoRestaurentAdapter;
 import com.mcp.smyrilline.adapter.RestaurantAdapter;
 import com.mcp.smyrilline.interfaces.ApiInterfaces;
-import com.mcp.smyrilline.model.DemoRestaurent;
 import com.mcp.smyrilline.model.InternalStorage;
 import com.mcp.smyrilline.model.Restaurant;
 import com.mcp.smyrilline.model.parentmodel.ParentModel;
-import com.mcp.smyrilline.model.parentmodel.ParentModelList;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.Utils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +37,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by raqib on 5/11/17.
@@ -71,6 +62,8 @@ public class RestaurantsFragment extends Fragment {
     private SharedPreferences mSharedPref;
     private View mLoadingView;
     private TextView tvNothingText;
+
+    private List<ParentModel> parentModelList;
 
     @Nullable
     @Override
@@ -205,24 +198,38 @@ public class RestaurantsFragment extends Fragment {
 
     private void initRestaurantList() {
 
-        //http://stage-smy-wp.mcp.com/wordpress/wp-json/wp/v2/pages?filter[post_parent]=7&filter[orderby]=menu_order&filter[order]=asc&per_page=100
+        Retrofit retrofit = ApiClient.getClient();
+        ApiInterfaces apiInterfaces = retrofit.create(ApiInterfaces.class);
+        Call<List<ParentModel>> call = apiInterfaces.fetchAllRestaurentsAndBarsInfo();
 
-        ApiInterfaces apiService =
-                ApiClient.getClient().create(ApiInterfaces.class);
-
-        Call<ParentModelList> call = apiService.getTotalData();
-        call.enqueue(new Callback<ParentModelList>() {
+        call.enqueue(new Callback<List<ParentModel>>() {
             @Override
-            public void onResponse(Call<ParentModelList> call, Response<ParentModelList> response) {
-                Log.i("progresslog", "data:  "+String.valueOf(response.body()));
+            public void onResponse(Call<List<ParentModel>> call, Response<List<ParentModel>> response) {
+                try {
 
+                    //Log.d("onResponse", response.body() + "");
+                    parentModelList = response.body();
+                    //Log.d("onResponse", parentModelList.size() + "");
+
+
+                    for (int i = 0; i < parentModelList.size(); i++) {
+                        ParentModel parentModel = parentModelList.get(i);
+                        Log.d("onResponse", parentModel.getId() + " " + parentModel.getTitle().getRendered());
+                    }
+
+
+                } catch (Exception e) {
+                    Log.d("onResponse", "error");
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onFailure(Call<ParentModelList> call, Throwable t) {
-
+            public void onFailure(Call<List<ParentModel>> call, Throwable t) {
+                Log.d("onResponse", "onFailure " + t.toString());
             }
         });
+
 
     }
 
