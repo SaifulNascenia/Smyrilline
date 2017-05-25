@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.fragment.CouponsFragment;
 import com.mcp.smyrilline.listener.DrawerCouponsCountListener;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 import com.onyxbeacon.OnyxBeaconApplication;
 import com.onyxbeacon.listeners.OnyxBeaconsListener;
 import com.onyxbeacon.listeners.OnyxCouponsListener;
@@ -106,14 +106,14 @@ public class ContentReceiver extends BroadcastReceiver {
                 ArrayList<Coupon> coupons = intent.getParcelableArrayListExtra(OnyxBeaconApplication.EXTRA_COUPONS);
                 IBeacon beacon = intent.getParcelableExtra(OnyxBeaconApplication.EXTRA_BEACON);
 
-                Log.i(Utils.TAG, "BUZZ beacon " + gson.toJson(beacon));
+                Log.i(AppUtils.TAG, "BUZZ beacon " + gson.toJson(beacon));
 
                 if (!(coupons == null || coupons.size() == 0)) {
 
                     // Get coupon list from memory if exists
                     ArrayList<Coupon> couponsFromStorage;
-                    String couponsListAsString = mSharedPref.getString(Utils.PREF_COUPON_LIST, Utils.PREF_NO_ENTRY);
-                    if (!couponsListAsString.equals(Utils.PREF_NO_ENTRY)) {
+                    String couponsListAsString = mSharedPref.getString(AppUtils.PREF_COUPON_LIST, AppUtils.PREF_NO_ENTRY);
+                    if (!couponsListAsString.equals(AppUtils.PREF_NO_ENTRY)) {
                         couponsFromStorage = gson.fromJson(couponsListAsString, new TypeToken<ArrayList<Coupon>>() {
                         }.getType());
                     } else {
@@ -122,8 +122,8 @@ public class ContentReceiver extends BroadcastReceiver {
 
                     // Get unseen coupon list from memory
                     ArrayList<Long> unseenCoupons;
-                    String unseenCouponsAsString = mSharedPref.getString(Utils.PREF_UNSEEN_COUPONS, Utils.PREF_NO_ENTRY);
-                    if (!unseenCouponsAsString.equals(Utils.PREF_NO_ENTRY)) {
+                    String unseenCouponsAsString = mSharedPref.getString(AppUtils.PREF_UNSEEN_COUPONS, AppUtils.PREF_NO_ENTRY);
+                    if (!unseenCouponsAsString.equals(AppUtils.PREF_NO_ENTRY)) {
                         unseenCoupons = gson.fromJson(unseenCouponsAsString, new TypeToken<ArrayList<Long>>() {
                         }.getType());
                     } else {
@@ -132,8 +132,8 @@ public class ContentReceiver extends BroadcastReceiver {
 
                     // Get list of used coupons from memory
                     ArrayList<Long> usedListFromStorage;
-                    String usedListAsString = mSharedPref.getString(Utils.PREF_USED_COUPONS, Utils.PREF_NO_ENTRY);
-                    if (!usedListAsString.equals(Utils.PREF_NO_ENTRY))
+                    String usedListAsString = mSharedPref.getString(AppUtils.PREF_USED_COUPONS, AppUtils.PREF_NO_ENTRY);
+                    if (!usedListAsString.equals(AppUtils.PREF_NO_ENTRY))
                         usedListFromStorage = gson.fromJson(usedListAsString, new TypeToken<ArrayList<Long>>() {
                         }.getType());
                     else
@@ -152,9 +152,9 @@ public class ContentReceiver extends BroadcastReceiver {
                         }
 
                         if (usedListFromStorage.contains(cp.couponId))
-                            Log.i(Utils.TAG, "Used list already contains \"" + cp.name + "\" with ID - " + cp.couponId);
+                            Log.i(AppUtils.TAG, "Used list already contains \"" + cp.name + "\" with ID - " + cp.couponId);
                         else
-                            Log.i(Utils.TAG, "Used list doesn't contain \"" + cp.name + "\" with ID - " + cp.couponId);
+                            Log.i(AppUtils.TAG, "Used list doesn't contain \"" + cp.name + "\" with ID - " + cp.couponId);
                     }
 
                     // add the latest coupon list to the begining of existing list
@@ -162,7 +162,7 @@ public class ContentReceiver extends BroadcastReceiver {
 
                     for (Iterator<Coupon> ci = newCouponsList.iterator(); ci.hasNext(); ) {
                         Coupon c = ci.next();
-                        Utils.generateNotification(context, c.name, c.message, R.mipmap.ic_launcher,
+                        AppUtils.generateNotification(context, c.name, c.message, R.mipmap.ic_launcher,
                                 CouponsFragment.class.getSimpleName());
                     }
 
@@ -170,8 +170,8 @@ public class ContentReceiver extends BroadcastReceiver {
                         mOnyxCouponsListener.onDeliveredCouponsReceived(newCouponsList);
 
                     // Save updated lists in shared preference
-                    Utils.saveListInSharedPref(couponsFromStorage, Utils.PREF_COUPON_LIST);
-                    Utils.saveListInSharedPref(unseenCoupons, Utils.PREF_UNSEEN_COUPONS);
+                    AppUtils.saveListInSharedPref(couponsFromStorage, AppUtils.PREF_COUPON_LIST);
+                    AppUtils.saveListInSharedPref(unseenCoupons, AppUtils.PREF_UNSEEN_COUPONS);
                 }
                 break;
             case OnyxBeaconApplication.PUSH_TYPE:

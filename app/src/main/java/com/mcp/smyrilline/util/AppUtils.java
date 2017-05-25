@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.multidex.MultiDexApplication;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,7 +57,7 @@ import java.util.TimeZone;
  * Created by raqib on 5/11/17.
  */
 
-public class Utils {
+public class AppUtils extends MultiDexApplication {
 
     public static final String START_DRAWER_FRAGMENT = "start_drawer_fragment";
     public static final String TAG = "smyrilline";
@@ -243,7 +244,9 @@ public class Utils {
         alertDialog.show();
     }
 
- */   /**
+ */
+
+    /**
      * Method to show toast in UI thread
      *
      * @param message The message to show
@@ -306,11 +309,12 @@ public class Utils {
 
     /**
      * Generates a notification in the notification tray
-     *  @param context        the context
-     * @param title          the title of notification
-     * @param text           the text of notification
-     * @param iconID         the drawable ID of the notification icon
-     * @param startFragment  the fragment to start when pressed on the notification
+     *
+     * @param context       the context
+     * @param title         the title of notification
+     * @param text          the text of notification
+     * @param iconID        the drawable ID of the notification icon
+     * @param startFragment the fragment to start when pressed on the notification
      */
     public static void generateNotification(Context context, String title, String text, int iconID, String startFragment) {
 
@@ -438,9 +442,10 @@ public class Utils {
 
     /**
      * Return the saved message filter from shared preference
-     * @return saved filter value
+     *
      * @param sharedPrefKey
      * @param defaultVal
+     * @return saved filter value
      */
     public static String getSavedMessageFilter(String sharedPrefKey, String defaultVal) {
         String filterGroup = mSharedPref.getString(sharedPrefKey, defaultVal);
@@ -625,4 +630,53 @@ public class Utils {
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.i("AppUtils", "onCreate()");
+        mContext = getApplicationContext();
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        clearSharedPrefIfNecessary();
+        Configuration config = getBaseContext().getResources().getConfiguration();
+
+        // Get saved Locale from previous selection
+        String lang = mSharedPref.getString(PREF_LOCALE, "");
+        Log.i("AppUtils", "onCreate() - Getting saved locale -> " + lang);
+
+        if (!"".equals(lang)) {
+            locale = new Locale(lang);
+            Locale.setDefault(locale);
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        }
+
+        // Update code strings
+        updateTextTranslations();
+    }
+
+    /**
+     * Called when phone config is changed
+     * in our case, were handling Locale change
+     *
+     * @param newConfig The new configuration
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Save the new locale
+        Locale saveLocale = new Locale(newConfig.locale.getLanguage());
+
+        // Save it in memory
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mSharedPref.edit().putString(PREF_LOCALE, saveLocale.getLanguage()).apply();
+        Log.i("AppUtils", "onConfigChange() - Saving locale -> " + saveLocale.getLanguage());
+
+        // Update texts used in code
+        updateTextTranslations();
+    }
+
+
 }

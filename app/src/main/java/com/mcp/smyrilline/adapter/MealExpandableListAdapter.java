@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.model.Meal;
 import com.mcp.smyrilline.model.MealDate;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 
 import java.util.ArrayList;
 
@@ -172,7 +172,7 @@ public class MealExpandableListAdapter extends BaseExpandableListAdapter {
 //                                    btnMealUse.setEnabled(false);
                                     // use meal and save
                                     meal.setUsed(true);
-                                    Utils.saveListInSharedPref(mGroups, Utils.PREF_MEAL_LIST);
+                                    AppUtils.saveListInSharedPref(mGroups, AppUtils.PREF_MEAL_LIST);
                                     notifyDataSetChanged();
 //                                    useCouponAndExit(position, btnMealUse);
                                 }

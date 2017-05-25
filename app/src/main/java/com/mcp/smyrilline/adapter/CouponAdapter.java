@@ -17,7 +17,7 @@ import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.activity.MainGridActivity;
 import com.mcp.smyrilline.fragment.CouponDetailFragment;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 import com.onyxbeacon.OnyxBeaconApplication;
 import com.onyxbeacon.rest.model.content.Coupon;
 import com.squareup.picasso.Picasso;
@@ -89,7 +89,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.ViewHolder
 
         // Set the expire time in format: "MMM dd, HH:mm' e.g. "Nov 01, 18:00"
         final Date expireDate = coupon.getExpiresAsDate();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Utils.TIME_FORMAT_COUPON_EXPIRE);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(AppUtils.TIME_FORMAT_COUPON_EXPIRE);
         final String expireStr = simpleDateFormat.format(expireDate);
 
         holder.tvExpires.setText(" " + expireStr);
@@ -122,12 +122,12 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.ViewHolder
 
                 // If it was unseen, remove Id from the unseen list, save, and update drawer counter
                 if (mUnseenCoupons.contains(coupon.couponId)) {
-                    Log.i(Utils.TAG, "Unseen coupon list contains coupon(" + coupon.couponId + ") at index" + mUnseenCoupons.indexOf(coupon.couponId));
+                    Log.i(AppUtils.TAG, "Unseen coupon list contains coupon(" + coupon.couponId + ") at index" + mUnseenCoupons.indexOf(coupon.couponId));
                     mUnseenCoupons.remove(coupon.couponId);
-                    Log.i(Utils.TAG, "After removing id from unseen list:");
-                    Utils.printCouponIdList(mUnseenCoupons);
-                    Utils.saveListInSharedPref(mUnseenCoupons, Utils.PREF_UNSEEN_COUPONS);
-                    ((DrawerActivity) mContext).updateDrawerCounterLabelAndSave(Utils.PREF_UNREAD_COUPONS, -1);
+                    Log.i(AppUtils.TAG, "After removing id from unseen list:");
+                    AppUtils.printCouponIdList(mUnseenCoupons);
+                    AppUtils.saveListInSharedPref(mUnseenCoupons, AppUtils.PREF_UNSEEN_COUPONS);
+                    ((DrawerActivity) mContext).updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_COUPONS, -1);
                 }
 
                 // Pass coupon data to the detail fragment
@@ -204,7 +204,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.ViewHolder
     public void remove(int position) {
         mCouponList.remove(position);
         notifyItemRemoved(position);
-        Utils.saveListInSharedPref(mCouponList, Utils.PREF_COUPON_LIST);
+        AppUtils.saveListInSharedPref(mCouponList, AppUtils.PREF_COUPON_LIST);
         checkEmpty();
     }
 

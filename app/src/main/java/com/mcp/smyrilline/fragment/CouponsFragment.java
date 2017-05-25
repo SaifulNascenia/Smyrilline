@@ -21,10 +21,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.activity.MainGridActivity;
 import com.mcp.smyrilline.adapter.CouponAdapter;
 import com.mcp.smyrilline.receiver.ContentReceiver;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 import com.onyxbeacon.OnyxBeaconApplication;
 import com.onyxbeacon.OnyxBeaconManager;
 import com.onyxbeacon.listeners.OnyxCouponsListener;
@@ -74,10 +73,10 @@ public class CouponsFragment extends Fragment implements OnyxCouponsListener {
 
         // Get stored coupons
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
-        String couponsListAsString = mSharedPref.getString(Utils.PREF_COUPON_LIST, Utils.PREF_NO_ENTRY);
-        String unseenCouponsAsString = mSharedPref.getString(Utils.PREF_UNSEEN_COUPONS, Utils.PREF_NO_ENTRY);
+        String couponsListAsString = mSharedPref.getString(AppUtils.PREF_COUPON_LIST, AppUtils.PREF_NO_ENTRY);
+        String unseenCouponsAsString = mSharedPref.getString(AppUtils.PREF_UNSEEN_COUPONS, AppUtils.PREF_NO_ENTRY);
 
-        if (!couponsListAsString.equals(Utils.PREF_NO_ENTRY)) {
+        if (!couponsListAsString.equals(AppUtils.PREF_NO_ENTRY)) {
             mCouponList = gson.fromJson(couponsListAsString, new TypeToken<ArrayList<Coupon>>() {
             }.getType());
 
@@ -112,7 +111,7 @@ public class CouponsFragment extends Fragment implements OnyxCouponsListener {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Utils.hideKeyboard(getActivity());
+                AppUtils.hideKeyboard(getActivity());
                 if (query.length() > 0) mAdapter.filter(query);
                 return true;
             }
@@ -167,7 +166,7 @@ public class CouponsFragment extends Fragment implements OnyxCouponsListener {
          * and update list here
          */
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
-        int couponRemovedPosition = sharedPreferences.getInt(Utils.POSITION_COUPON_REMOVED, -1);
+        int couponRemovedPosition = sharedPreferences.getInt(AppUtils.POSITION_COUPON_REMOVED, -1);
 
         if (couponRemovedPosition != -1) {
             long couponId = mCouponList.get(couponRemovedPosition).couponId;
@@ -177,15 +176,15 @@ public class CouponsFragment extends Fragment implements OnyxCouponsListener {
             // Adding the ID to the used list and store it
             ArrayList usedCouponList = ((DrawerActivity) mContext).getUsedCouponList();
             usedCouponList.add(couponId);
-            Log.i(Utils.TAG, "Adding Coupon with id " + couponId + " to the used list");
-            Utils.saveListInSharedPref(usedCouponList, Utils.PREF_USED_COUPONS);
+            Log.i(AppUtils.TAG, "Adding Coupon with id " + couponId + " to the used list");
+            AppUtils.saveListInSharedPref(usedCouponList, AppUtils.PREF_USED_COUPONS);
 
             // Remove the coupon from UI and store the list
             mAdapter.remove(couponRemovedPosition);
-            Log.i(Utils.TAG, "After removing coupon(" + couponId + ") from list:");
-            Utils.printCouponList(mCouponList);
+            Log.i(AppUtils.TAG, "After removing coupon(" + couponId + ") from list:");
+            AppUtils.printCouponList(mCouponList);
 
-            sharedPreferences.edit().putInt(Utils.POSITION_COUPON_REMOVED, -1).apply();
+            sharedPreferences.edit().putInt(AppUtils.POSITION_COUPON_REMOVED, -1).apply();
         }
     }
 
@@ -207,8 +206,8 @@ public class CouponsFragment extends Fragment implements OnyxCouponsListener {
         }
 
         // Save the lists
-        Utils.saveListInSharedPref(filteredList, Utils.PREF_COUPON_LIST);
-        Utils.saveListInSharedPref(unseenCoupons, Utils.PREF_UNSEEN_COUPONS);
+        AppUtils.saveListInSharedPref(filteredList, AppUtils.PREF_COUPON_LIST);
+        AppUtils.saveListInSharedPref(unseenCoupons, AppUtils.PREF_UNSEEN_COUPONS);
 
         return filteredList;
     }

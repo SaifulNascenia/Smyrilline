@@ -59,7 +59,7 @@ import com.mcp.smyrilline.model.Bulletin;
 import com.mcp.smyrilline.receiver.BleStateReceiver;
 import com.mcp.smyrilline.receiver.ContentReceiver;
 import com.mcp.smyrilline.signalr.SignalRService;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 import com.onyxbeacon.OnyxBeaconApplication;
 import com.onyxbeacon.OnyxBeaconManager;
 import com.onyxbeacon.rest.auth.util.AuthData;
@@ -120,7 +120,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         initUI(savedInstanceState);
         // SignalRService initialize before load list (for Bulletins)
         initSignalRService();
-
+        AppUtils.updateTextTranslations();
         // Load lists before setup drawer
         loadSavedLists();
 
@@ -130,13 +130,15 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         // show fragment
 
         Bundle bundle = getIntent().getExtras();
-        String fragmentName = bundle.getString(Utils.START_DRAWER_FRAGMENT);
+        String fragmentName = bundle.getString(AppUtils.START_DRAWER_FRAGMENT);
         if (fragmentName != null) {
             showFragment(fragmentName);
         }
 
         // onyx beacon  (for Coupons)
 //        initOnyxBeacon();
+
+
     }
 
 
@@ -158,7 +160,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     private void showFragment(String fragmentName) {
         // update the main content by replacing fragments
         Fragment fragment = null;
-        boolean loggedIn = mSharedPreferences.getBoolean(Utils.PREF_LOGGED_IN, false);
+        boolean loggedIn = mSharedPreferences.getBoolean(AppUtils.PREF_LOGGED_IN, false);
 
         switch (fragmentName) {
             case ("LoginFragment"):
@@ -241,8 +243,8 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
 
     private void loadSavedLists() {
         // Get used coupon list from memory if available
-        String usedCouponListAsString = mSharedPreferences.getString(Utils.PREF_USED_COUPONS, Utils.PREF_NO_ENTRY);
-        if (!usedCouponListAsString.equals(Utils.PREF_NO_ENTRY))
+        String usedCouponListAsString = mSharedPreferences.getString(AppUtils.PREF_USED_COUPONS, AppUtils.PREF_NO_ENTRY);
+        if (!usedCouponListAsString.equals(AppUtils.PREF_NO_ENTRY))
             mUsedCouponList = gson.fromJson(usedCouponListAsString, new TypeToken<ArrayList<Long>>() {
             }.getType());
         else
@@ -263,13 +265,13 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
                     startActivity(new Intent(DrawerActivity.this, MainGridActivity.class));
                     finish();
                 } else {
-                    Toast.makeText(getApplicationContext(), Utils.fragmentList[position - 1] + "", Toast.LENGTH_LONG).show();
-                    showFragment(Utils.fragmentList[position - 1]);
+                    Toast.makeText(getApplicationContext(), AppUtils.fragmentList[position - 1] + "", Toast.LENGTH_LONG).show();
+                    showFragment(AppUtils.fragmentList[position - 1]);
                 }*/
 
-                showFragment(Utils.fragmentList[position]);
+                showFragment(AppUtils.fragmentList[position]);
 
-                // Toast.makeText(getApplicationContext(), Utils.fragmentList[position] + "", Toast.LENGTH_LONG).show();
+                // Toast.makeText(getApplicationContext(), AppUtils.fragmentList[position] + "", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -467,7 +469,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     @Override
     public void onNewCouponReceived() {
         // update drawer counter
-//        updateDrawerCounterLabelAndSave(Utils.PREF_UNREAD_COUPONS, +1);
+//        updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_COUPONS, +1);
     }
 
     public ArrayList<Long> getUsedCouponList() {
@@ -481,7 +483,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             mBulletinListener.onBulletinReceived(newBulletin);
 
         // update drawer counter
-//        updateDrawerCounterLabelAndSave(Utils.PREF_UNREAD_BULLETINS, +1);
+//        updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_BULLETINS, +1);
     }
 
     @Override
@@ -491,7 +493,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             mBulletinListener.onBulletinListReceived(newBulletinList);
 
         // update drawer counter
-//        updateDrawerCounterLabelAndSave(Utils.PREF_UNREAD_BULLETINS, +newBulletinList.size());
+//        updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_BULLETINS, +newBulletinList.size());
     }
 
     // Called from InboxFragment
@@ -508,7 +510,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
      */
     public void updateDrawerCounterLabelAndSave(String countType, int change) {
         // Check count type bulletin or coupon
-        TextView countLabel = countType == Utils.PREF_UNREAD_BULLETINS ? tvDrawerInboxCount : tvDrawerCouponsCount;
+        TextView countLabel = countType == AppUtils.PREF_UNREAD_BULLETINS ? tvDrawerInboxCount : tvDrawerCouponsCount;
         String currentValue = countLabel.getText().toString().trim().split(" ")[0];
 
         // If current text is not "99+", we'll update counter
@@ -537,7 +539,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            showFragment(Utils.fragmentList[0]);
+            showFragment(AppUtils.fragmentList[0]);
         }
     }
 
@@ -722,12 +724,12 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
 
         // Save to load when app starts
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(Utils.PREF_LOCALE, lang);
+        editor.putString(AppUtils.PREF_LOCALE, lang);
         Log.i("MainActivity", "onCreate() - Saving locale -> " + lang);
         editor.apply();
 
         // Send broadcast to service
-        Log.i(Utils.TAG, "MainActivity: sending locale changed broadcast");
+        Log.i(AppUtils.TAG, "MainActivity: sending locale changed broadcast");
         sendBroadcast(new Intent(SignalRService.ACTION_APP_SETTINGS_CHANGED));
 
         // Restart activity for effects to take place

@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -18,8 +19,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.adapter.RestaurantAdapter;
@@ -28,7 +31,7 @@ import com.mcp.smyrilline.model.InternalStorage;
 import com.mcp.smyrilline.model.Restaurant;
 import com.mcp.smyrilline.model.parentmodel.ParentModel;
 import com.mcp.smyrilline.service.ApiClient;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,9 +75,11 @@ public class RestaurantsFragment extends Fragment {
         mContext = getActivity();
 
         rootView = inflater.inflate(R.layout.fragment_restaurents, container, false);
-        ((DrawerActivity) getActivity()).setToolbarAndToggle((Toolbar) rootView.findViewById(R.id.toolbar));
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar.setTitle("RestaurantFragment");
+        ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
 
-        setUprestaurentRecyclerView();
+        //  setUprestaurentRecyclerView();
 
 
         return rootView;
@@ -87,8 +92,6 @@ public class RestaurantsFragment extends Fragment {
         // Refresh toolbar options
         getActivity().invalidateOptionsMenu();
 
-        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        toolbar.setTitle("RestaurantFragment");
 
         // Init UI
         tvNothingText = (TextView) rootView.findViewById(R.id.tvRestaurantsNothingText);
@@ -97,12 +100,13 @@ public class RestaurantsFragment extends Fragment {
         restaurenstListRecyclerView = (RecyclerView) rootView.findViewById(R.id.restaurents_list_recycler_view);
         restaurenstListRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
-       /* // List of items, will be populated in AsyncTask below
+        // List of items, will be populated in AsyncTask below
         mRestaurantList = new ArrayList<>();
         mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText);
         restaurenstListRecyclerView.setAdapter(mAdapter);
 
-        mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+
 
         materialRefreshLayout = (MaterialRefreshLayout) rootView.findViewById(R.id.refreshRestaurants);
         materialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
@@ -114,87 +118,31 @@ public class RestaurantsFragment extends Fragment {
             @Override
             public void onRefresh(final MaterialRefreshLayout materialRefreshLayout) {
                 // refreshing...
-                if (Utils.isNetworkAvailable(mContext))
-                    new CheckCMSandLoadRestaurantItemsTask().execute();
+                if (AppUtils.isNetworkAvailable(mContext))
+                    initRestaurantList();
                 else {
                     mLoadingView.setVisibility(View.GONE);
                     tvNothingText.setVisibility(View.VISIBLE);
                     materialRefreshLayout.finishRefresh();
-                    Utils.showAlertDialog(mContext, Utils.ALERT_NO_WIFI);
+                    AppUtils.showAlertDialog(mContext, AppUtils.ALERT_NO_WIFI);
                 }
             }
         });
 
-        // We check entrance, to avoid loading again
-        // Only load again if entered from menu
-        boolean enteredFromMenu = mSharedPref.getBoolean(DrawerActivity.ENTERED_FROM_MENU, false);
-        if (enteredFromMenu) {
-            Log.i("progresslog", "initial if");
-            if (Utils.isNetworkAvailable(mContext)) {
-                Log.i("progresslog", "initial nest if");
-                new CheckCMSandLoadRestaurantItemsTask().execute();
-            } else {
-                Log.i("progresslog", "initial nest else");
-                mLoadingView.setVisibility(View.GONE);
-                tvNothingText.setVisibility(View.VISIBLE);
-                Utils.showAlertDialog(mContext, Utils.ALERT_NO_WIFI);
-            }
+
+        if (AppUtils.isNetworkAvailable(getActivity())) {
+
+            initRestaurantList();
+
         } else {
-            Log.i("progresslog", "initial else");
-
-            try {
-                *//*mRestaurantList = (ArrayList<Restaurant>) InternalStorage.readObject(mContext, RESTAURANT_LIST);
-                // fix issue: had to make separate method, otherwise list was not showing
-                mAdapter.setRestaurantList(mRestaurantList);
-                mAdapter.refreshList();*//*
-                mLoadingView.setVisibility(View.GONE);
-                initRestaurantList();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }*/
-
-        initRestaurantList();
-
-    }
-
-
-    private class CheckCMSandLoadRestaurantItemsTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            // network work on background thread
-            String response = Utils.isDomainAvailable(mContext, mContext.getResources().getString(R.string.url_wordpress));
-            if (response.equals(Utils.CONNECTION_OK))
-                initRestaurantList();
-
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(String serverResponse) {
-            super.onPostExecute(serverResponse);
-
             mLoadingView.setVisibility(View.GONE);
-            materialRefreshLayout.finishRefresh();
-
-            if (serverResponse.equals(Utils.CONNECTION_OK)) {
-                if (mAdapter != null)
-                    mAdapter.refreshList();
-
-                // Storing restaurant list, to restore when return from detail
-                // instead of loading from server again
-                try {
-                    InternalStorage.writeObject(mContext, RESTAURANT_LIST, mRestaurantList);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                Utils.showAlertDialog(mContext, serverResponse);
-                tvNothingText.setVisibility(View.VISIBLE);
-            }
+            tvNothingText.setVisibility(View.VISIBLE);
+            AppUtils.showAlertDialog(mContext, AppUtils.ALERT_NO_WIFI);
         }
+
+
     }
+
 
     private void initRestaurantList() {
 
@@ -207,14 +155,26 @@ public class RestaurantsFragment extends Fragment {
             public void onResponse(Call<List<ParentModel>> call, Response<List<ParentModel>> response) {
                 try {
 
-                    //Log.d("onResponse", response.body() + "");
                     parentModelList = response.body();
-                    //Log.d("onResponse", parentModelList.size() + "");
+                    mLoadingView.setVisibility(View.GONE);
+                    materialRefreshLayout.finishRefresh();
 
+                    mRestaurantList.clear();
 
+                    Toast.makeText(getActivity(), "Dataloading complete", Toast.LENGTH_LONG).show();
                     for (int i = 0; i < parentModelList.size(); i++) {
                         ParentModel parentModel = parentModelList.get(i);
-                        Log.d("onResponse", parentModel.getId() + " " + parentModel.getTitle().getRendered());
+
+                        // Create new restaurant from json and add to list
+                        Restaurant restaurant = new Restaurant(parentModel.getId(),
+                                parentModel.getTitle().getRendered(),
+                                parentModel.getContent().getRendered(),
+                                parentModel.getFeaturedImageSourceUrl(),
+                                null,
+                                false);
+                        mRestaurantList.add(restaurant);
+                        mAdapter.notifyDataSetChanged();
+
                     }
 
 

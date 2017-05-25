@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,7 +26,7 @@ import com.mcp.smyrilline.model.Meal;
 import com.mcp.smyrilline.model.MealDate;
 import com.mcp.smyrilline.model.Passenger;
 import com.mcp.smyrilline.model.RouteItem;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,7 +100,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View view) {
                 // Hide keyboard
-                Utils.hideKeyboard(getActivity());
+                AppUtils.hideKeyboard(getActivity());
 
                 mLoginProgressDialog = ProgressDialog.show(mContext, getResources().getString(R.string.please_wait), getResources().getString(R.string.connecting));
                 mLastName = etLastName.getText().toString().trim();
@@ -116,7 +115,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     // Hide keyboard
-                    Utils.hideKeyboard(getActivity());
+                    AppUtils.hideKeyboard(getActivity());
 
                     // Submit
                     btnLogin.performClick();
@@ -130,19 +129,19 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     }
 
     private void startLoginThread() {
-        if (Utils.isNetworkAvailable(getActivity()))
+        if (AppUtils.isNetworkAvailable(getActivity()))
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    final String response = Utils.isDomainAvailable(mContext, URL_BOOKING_SERVICE);
-                    if (response.equals(Utils.CONNECTION_OK))
+                    final String response = AppUtils.isDomainAvailable(mContext, URL_BOOKING_SERVICE);
+                    if (response.equals(AppUtils.CONNECTION_OK))
                         new GetResponseFromSOAPTask().execute(mLoginProgressDialog);
                     else {
                         if (getActivity() != null) { // fragment is still showing
                             getActivity().runOnUiThread(new Runnable() {
                                 public void run() {
                                     mLoginProgressDialog.dismiss();
-                                    Utils.showAlertDialog(getActivity(), response);
+                                    AppUtils.showAlertDialog(getActivity(), response);
                                 }
                             });
                         }
@@ -151,7 +150,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             }).start();
         else {
             mLoginProgressDialog.dismiss();
-            Utils.showAlertDialog(mContext, getString(R.string.alert_no_wifi));
+            AppUtils.showAlertDialog(mContext, getString(R.string.alert_no_wifi));
         }
     }
 
@@ -181,7 +180,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             // convert dob, getting yyyy-MM-dd, need dd/MM/yyyy
             String dob = passengerObject.getString("DateOfBirth");
             SimpleDateFormat givenDobDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat requiredDobDateFormat = new SimpleDateFormat(Utils.DATE_FORMAT_DOB);
+            SimpleDateFormat requiredDobDateFormat = new SimpleDateFormat(AppUtils.DATE_FORMAT_DOB);
             Date dobDate = givenDobDateFormat.parse(dob);
             dob = requiredDobDateFormat.format(dobDate);
 
@@ -217,8 +216,8 @@ public class LoginFragment extends android.support.v4.app.Fragment {
              */
             SimpleDateFormat givenDepartureDateFormat = new SimpleDateFormat("dd-MM-yyyy - HH:mm");
             SimpleDateFormat givenArrivalDateFormat = new SimpleDateFormat("dd.MM.yyyy - HH:mm");
-            SimpleDateFormat ourDateFormat = new SimpleDateFormat(Utils.DATE_FORMAT_ROUTE);
-            SimpleDateFormat ourTimeFormat = new SimpleDateFormat(Utils.TIME_FORMAT_ROUTE);
+            SimpleDateFormat ourDateFormat = new SimpleDateFormat(AppUtils.DATE_FORMAT_ROUTE);
+            SimpleDateFormat ourTimeFormat = new SimpleDateFormat(AppUtils.TIME_FORMAT_ROUTE);
 
             // departure
             Date date = givenDepartureDateFormat.parse(departureDate);  // taking date only
@@ -372,20 +371,20 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                 SharedPreferences.Editor editor = mSharedPref.edit();
                 Gson gson = new Gson();
 
-                editor.putString(Utils.PREF_BOOKING_NAME, bookingName);
-                editor.putString(Utils.PREF_BOOKING_NUMBER, bookingNumber);
-                editor.putString(Utils.PREF_ADULT, adult);
-                editor.putString(Utils.PREF_CHILD, child);
-                editor.putString(Utils.PREF_CHILD12, child12);
-                editor.putString(Utils.PREF_CHILD15, child15);
-                editor.putString(Utils.PREF_INFANT, infant);
-                editor.putString(Utils.PREF_CAR, car);
-                editor.putString(Utils.PREF_MEAL_LIST, gson.toJson(mealDateList));
-                editor.putString(Utils.PREF_ROUTE_LIST, gson.toJson(routeList));
-                editor.putString(Utils.PREF_PASSENGER_LIST, gson.toJson(passengerList));
+                editor.putString(AppUtils.PREF_BOOKING_NAME, bookingName);
+                editor.putString(AppUtils.PREF_BOOKING_NUMBER, bookingNumber);
+                editor.putString(AppUtils.PREF_ADULT, adult);
+                editor.putString(AppUtils.PREF_CHILD, child);
+                editor.putString(AppUtils.PREF_CHILD12, child12);
+                editor.putString(AppUtils.PREF_CHILD15, child15);
+                editor.putString(AppUtils.PREF_INFANT, infant);
+                editor.putString(AppUtils.PREF_CAR, car);
+                editor.putString(AppUtils.PREF_MEAL_LIST, gson.toJson(mealDateList));
+                editor.putString(AppUtils.PREF_ROUTE_LIST, gson.toJson(routeList));
+                editor.putString(AppUtils.PREF_PASSENGER_LIST, gson.toJson(passengerList));
 
                 // User is now logged in
-                editor.putBoolean(Utils.PREF_LOGGED_IN, true);
+                editor.putBoolean(AppUtils.PREF_LOGGED_IN, true);
                 editor.apply();
 
                 TicketFragment ticketFragment = new TicketFragment();
@@ -396,10 +395,10 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                Utils.showAlertDialog(mContext, mContext.getResources().getString(R.string.invalid_input));
+                AppUtils.showAlertDialog(mContext, mContext.getResources().getString(R.string.invalid_input));
             } catch (NullPointerException e) {   // eg. result is null
                 e.printStackTrace();
-                Utils.showAlertDialog(mContext, mContext.getResources().getString(R.string.alert_server_error));
+                AppUtils.showAlertDialog(mContext, mContext.getResources().getString(R.string.alert_server_error));
             } catch (ParseException e) {
                 e.printStackTrace();
             } finally {

@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,9 +18,8 @@ import android.widget.RelativeLayout;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.activity.MainGridActivity;
 import com.mcp.smyrilline.signalr.SignalRService;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -96,9 +93,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         // Get saved values, default is 'all' & 'both'
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
-        mSelectedAges = new StringBuilder(mSharedPref.getString(Utils.PREF_MESSAGE_FILTER_AGE,
+        mSelectedAges = new StringBuilder(mSharedPref.getString(AppUtils.PREF_MESSAGE_FILTER_AGE,
                 MESSAGE_FILTER_AGE_ALL));
-        mSelectedGenders = new StringBuilder(mSharedPref.getString(Utils.PREF_MESSAGE_FILTER_GENDER,
+        mSelectedGenders = new StringBuilder(mSharedPref.getString(AppUtils.PREF_MESSAGE_FILTER_GENDER,
                 MESSAGE_FILTER_GENDER_BOTH));
 
         // Initiate state of filters
@@ -123,16 +120,16 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                         && rlShadowAgeChild11.getVisibility() == View.INVISIBLE
                         && rlShadowGenderMale.getVisibility() == View.INVISIBLE
                         && rlShadowGenderFemale.getVisibility() == View.INVISIBLE) {
-                    Utils.showAlertDialog(mContext, getString(R.string.please_select_age_gender));
+                    AppUtils.showAlertDialog(mContext, getString(R.string.please_select_age_gender));
                     break;
                 } else if (rlShadowAgeAdult.getVisibility() == View.INVISIBLE  // if no age is selected
                         && rlShadowAgeChild15.getVisibility() == View.INVISIBLE
                         && rlShadowAgeChild11.getVisibility() == View.INVISIBLE) {
-                    Utils.showAlertDialog(mContext, getString(R.string.please_select_age));
+                    AppUtils.showAlertDialog(mContext, getString(R.string.please_select_age));
                     break;
                 } else if (rlShadowGenderMale.getVisibility() == View.INVISIBLE    // if no gender is selected
                         && rlShadowGenderFemale.getVisibility() == View.INVISIBLE) {
-                    Utils.showAlertDialog(mContext, getString(R.string.please_select_gender));
+                    AppUtils.showAlertDialog(mContext, getString(R.string.please_select_gender));
                     break;
                 }
 
@@ -162,8 +159,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
                 // Save
                 SharedPreferences.Editor editor = mSharedPref.edit();
-                editor.putString(Utils.PREF_MESSAGE_FILTER_AGE, mSelectedAges.toString());
-                editor.putString(Utils.PREF_MESSAGE_FILTER_GENDER, mSelectedGenders.toString());
+                editor.putString(AppUtils.PREF_MESSAGE_FILTER_AGE, mSelectedAges.toString());
+                editor.putString(AppUtils.PREF_MESSAGE_FILTER_GENDER, mSelectedGenders.toString());
                 editor.apply();
 
                 // Send settings changed broadcast
@@ -171,7 +168,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
                 // Show 'saved' toast
                 if (getActivity() != null)
-                    Utils.showToastInMainUI(getActivity(), getString(R.string.settings_saved));
+                    AppUtils.showToastInMainUI(getActivity(), getString(R.string.settings_saved));
         }
         return false;
     }
