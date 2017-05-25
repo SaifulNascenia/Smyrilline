@@ -11,7 +11,7 @@ public class ParentModel implements Serializable
 
     @SerializedName("id")
     @Expose
-    private long id;
+    private int id;
     @SerializedName("date")
     @Expose
     private String date;
@@ -74,15 +74,15 @@ public class ParentModel implements Serializable
     private Links links;
     private final static long serialVersionUID = 4953262856444897507L;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public ParentModel withId(long id) {
+    public ParentModel withId(int id) {
         this.id = id;
         return this;
     }

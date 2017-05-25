@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.adapter.CouponAdapter;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -39,16 +39,16 @@ public class CouponDetailFragment extends Fragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (Utils.isNetworkAvailable(mContext))
+        if (AppUtils.isNetworkAvailable(mContext))
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    final String response = Utils.isDomainAvailable(mContext, mContext.getResources().getString(R.string.url_wordpress));
-                    if (!response.equals(Utils.CONNECTION_OK))
+                    final String response = AppUtils.isDomainAvailable(mContext, mContext.getResources().getString(R.string.url_wordpress));
+                    if (!response.equals(AppUtils.CONNECTION_OK))
                         if (getActivity() != null) {     // if fragment is switched already
                             getActivity().runOnUiThread(new Runnable() {
                                 public void run() {
-                                    Utils.showAlertDialog(mContext, response + " Cannot load image.");
+                                    AppUtils.showAlertDialog(mContext, response + " Cannot load image.");
                                 }
                             });
                         }
@@ -163,24 +163,24 @@ public class CouponDetailFragment extends Fragment{
 //            // Adding the ID to the used list and store it
 //            ArrayList usedCouponList = ((MainActivity) mContext).getUsedCouponList();
 //            usedCouponList.add(couponId);
-//            Log.w(Utils.TAG, "Adding Coupon with id " + couponId + " to the used list");
-//            Log.w(Utils.TAG, "Printing used coupon list in MainActivity");
-//            Utils.printCouponIdList(((MainActivity) mContext).getUsedCouponList());
-//            Log.w(Utils.TAG, "Printing used coupon list in CouponDetail");
-//            Utils.printCouponIdList(usedCouponList);
-//            Utils.saveListInSharedPref(usedCouponList, Utils.PREF_USED_COUPONS);
+//            Log.w(AppUtils.TAG, "Adding Coupon with id " + couponId + " to the used list");
+//            Log.w(AppUtils.TAG, "Printing used coupon list in MainActivity");
+//            AppUtils.printCouponIdList(((MainActivity) mContext).getUsedCouponList());
+//            Log.w(AppUtils.TAG, "Printing used coupon list in CouponDetail");
+//            AppUtils.printCouponIdList(usedCouponList);
+//            AppUtils.saveListInSharedPref(usedCouponList, AppUtils.PREF_USED_COUPONS);
 //
 //            // Remove the coupon from UI and store the list
 //            couponList.remove(couponPosition);
-//            Log.w(Utils.TAG, "After removing coupon(" + couponId + ") from list:");
-//            Utils.printCouponList(couponList);
-//            Utils.saveListInSharedPref(couponList, Utils.PREF_COUPON_LIST);
+//            Log.w(AppUtils.TAG, "After removing coupon(" + couponId + ") from list:");
+//            AppUtils.printCouponList(couponList);
+//            AppUtils.saveListInSharedPref(couponList, AppUtils.PREF_COUPON_LIST);
 //
 //            mCouponAdapter.notifyItemRemoved(couponPosition);
 //            mCouponAdapter.checkEmpty();
 
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext()).edit();
-        editor.putInt(Utils.POSITION_COUPON_REMOVED, couponPosition).apply();
+        editor.putInt(AppUtils.POSITION_COUPON_REMOVED, couponPosition).apply();
 
         useButton.setText(mContext.getResources().getString(R.string.used));
         useButton.setClickable(false);

@@ -22,7 +22,7 @@ import com.mcp.smyrilline.fragment.InboxFragment;
 import com.mcp.smyrilline.fragment.SettingsFragment;
 import com.mcp.smyrilline.listener.BulletinListener;
 import com.mcp.smyrilline.model.Bulletin;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 import com.mcp.smyrilline.util.VolleySingleton;
 
 import org.json.JSONArray;
@@ -93,11 +93,11 @@ public class SignalRClient {
         Logger logger = new Logger() {
             @Override
             public void log(String message, LogLevel level) {
-//                Log.i(Utils.TAG, "SignalR logger -> " + message);
+//                Log.i(AppUtils.TAG, "SignalR logger -> " + message);
             }
         };
 
-        Log.i(Utils.TAG, "SignalRService: url ->" + mContext.getResources().getString(R.string.url_signalr_service));
+        Log.i(AppUtils.TAG, "SignalRService: url ->" + mContext.getResources().getString(R.string.url_signalr_service));
 
         // Create server connection
         mHubConnection = new HubConnection(mContext.getResources().getString(R.string.url_signalr_service), "", true, logger);
@@ -109,7 +109,7 @@ public class SignalRClient {
         mHubProxy.subscribe(new Object() {
             @SuppressWarnings("unused")
             public void onBulletinSent(BulletinBroadcastViewModel broadcastBulletin) {
-                Log.i(Utils.TAG, "SignalR (conn id-" + mHubConnection.getConnectionId() + ") " +
+                Log.i(AppUtils.TAG, "SignalR (conn id-" + mHubConnection.getConnectionId() + ") " +
                         "bulletin received -> id " + broadcastBulletin.getId());
                 bulletinReceived(broadcastBulletin);
             }
@@ -119,7 +119,7 @@ public class SignalRClient {
         mHubConnection.error(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                Log.e(Utils.TAG, "SignalR hubConnection error!\n" + error.getMessage());
+                Log.e(AppUtils.TAG, "SignalR hubConnection error!\n" + error.getMessage());
             }
         });
 
@@ -127,10 +127,10 @@ public class SignalRClient {
         mHubConnection.closed(new Runnable() {
             @Override
             public void run() {
-                Log.i(Utils.TAG, "SignalR hubConnection -> DISCONNECTED!");
+                Log.i(AppUtils.TAG, "SignalR hubConnection -> DISCONNECTED!");
 
                 // try reconnect
-                if (Utils.isNetworkAvailable(mContext))
+                if (AppUtils.isNetworkAvailable(mContext))
                     tryReconnect();
             }
         });
@@ -158,11 +158,11 @@ public class SignalRClient {
 
                 int id = broadcastBulletin.getId();
                 String content = broadcastBulletin.getDescription();
-                String date = Utils.getCurrentDateAsString(Utils.DATE_FORMAT_BULLETIN_DETAIL);
+                String date = AppUtils.getCurrentDateAsString(AppUtils.DATE_FORMAT_BULLETIN_DETAIL);
                 String imageUrl = mContext.getResources().getString(R.string.url_signalr_root) + broadcastBulletin.getImageUrl();
 
                 Bulletin newBulletin = new Bulletin(id, title, content, date, imageUrl, false);
-                Log.i(Utils.TAG, "SignalR message arrived! -> "
+                Log.i(AppUtils.TAG, "SignalR message arrived! -> "
                         + "\nId: " + id
                         + "\nTitle: " + title
                         + "\nContent: " + content
@@ -173,9 +173,9 @@ public class SignalRClient {
 
                 // Need to load saved list everytime a new bulletin comes
                 // Since bulletin status maybe updated and saved in InboxFragment
-                String savedBulletinListAsString = mSharedPreferences.getString(Utils.PREF_BULLETIN_LIST,
-                        Utils.PREF_NO_ENTRY);
-                if (!savedBulletinListAsString.equals(Utils.PREF_NO_ENTRY)) {
+                String savedBulletinListAsString = mSharedPreferences.getString(AppUtils.PREF_BULLETIN_LIST,
+                        AppUtils.PREF_NO_ENTRY);
+                if (!savedBulletinListAsString.equals(AppUtils.PREF_NO_ENTRY)) {
                     mSavedBulletinList = gson.fromJson(savedBulletinListAsString,
                             new TypeToken<ArrayList<Bulletin>>() {
                             }.getType());
@@ -185,19 +185,19 @@ public class SignalRClient {
                 mSavedBulletinList.add(0, newBulletin);
 
                 // Save new list in memory
-                Utils.saveListInSharedPref(mSavedBulletinList, Utils.PREF_BULLETIN_LIST);
+                AppUtils.saveListInSharedPref(mSavedBulletinList, AppUtils.PREF_BULLETIN_LIST);
 
                 // If app is running, update UI
                 if (mListener != null)
                     mListener.onBulletinReceived(newBulletin);
                 else {
-                    Log.i(Utils.TAG, "SignalRService: MainActivity listener is null");
+                    Log.i(AppUtils.TAG, "SignalRService: MainActivity listener is null");
                     // Update unread bulletin count
-                    Utils.updateUnreadBulletinCount(+1);
+                    AppUtils.updateUnreadBulletinCount(+1);
                 }
 
                 // Show notification
-                Utils.generateNotification(mContext, mContext.getResources().getString(R.string.app_name),
+                AppUtils.generateNotification(mContext, mContext.getResources().getString(R.string.app_name),
                         title, R.mipmap.ic_launcher, InboxFragment.class.getSimpleName()
                 );
 
@@ -221,22 +221,22 @@ public class SignalRClient {
      */
     public void register() {
         mHubProxy.invoke("register",
-                Utils.getAndroidID(),
-                Utils.getDeviceName(),
-                Utils.getAppVersion(),
-                Utils.getCurrentAppLanguage(),
-                Utils.getSavedMessageFilter(Utils.PREF_MESSAGE_FILTER_AGE, SettingsFragment.MESSAGE_FILTER_AGE_ALL),
-                Utils.getSavedMessageFilter(Utils.PREF_MESSAGE_FILTER_GENDER, SettingsFragment.MESSAGE_FILTER_GENDER_BOTH))
+                AppUtils.getAndroidID(),
+                AppUtils.getDeviceName(),
+                AppUtils.getAppVersion(),
+                AppUtils.getCurrentAppLanguage(),
+                AppUtils.getSavedMessageFilter(AppUtils.PREF_MESSAGE_FILTER_AGE, SettingsFragment.MESSAGE_FILTER_AGE_ALL),
+                AppUtils.getSavedMessageFilter(AppUtils.PREF_MESSAGE_FILTER_GENDER, SettingsFragment.MESSAGE_FILTER_GENDER_BOTH))
                 .done(new Action<Void>() {
                     @Override
                     public void run(Void obj) throws Exception {
-                        Log.i(Utils.TAG, "SignalR -> register message SENT!" + "\n"
-                                + "(" + Utils.getAndroidID()
-                                + ", " + Utils.getDeviceName()
-                                + ", " + Utils.getAppVersion()
-                                + ", " + Utils.getCurrentAppLanguage()
-                                + ", " + Utils.getSavedMessageFilter(Utils.PREF_MESSAGE_FILTER_AGE, SettingsFragment.MESSAGE_FILTER_AGE_ALL)
-                                + ", " + Utils.getSavedMessageFilter(Utils.PREF_MESSAGE_FILTER_GENDER, SettingsFragment.MESSAGE_FILTER_GENDER_BOTH)
+                        Log.i(AppUtils.TAG, "SignalR -> register message SENT!" + "\n"
+                                + "(" + AppUtils.getAndroidID()
+                                + ", " + AppUtils.getDeviceName()
+                                + ", " + AppUtils.getAppVersion()
+                                + ", " + AppUtils.getCurrentAppLanguage()
+                                + ", " + AppUtils.getSavedMessageFilter(AppUtils.PREF_MESSAGE_FILTER_AGE, SettingsFragment.MESSAGE_FILTER_AGE_ALL)
+                                + ", " + AppUtils.getSavedMessageFilter(AppUtils.PREF_MESSAGE_FILTER_GENDER, SettingsFragment.MESSAGE_FILTER_GENDER_BOTH)
                                 + ")");
                     }
                 });
@@ -248,7 +248,7 @@ public class SignalRClient {
 
                     @Override
                     public void run(Void obj) throws Exception {
-                        Log.i(Utils.TAG, "SignalR hubConnection start... Done Connecting!" +
+                        Log.i(AppUtils.TAG, "SignalR hubConnection start... Done Connecting!" +
                                 "\n" + "Connection ID -> " + mHubConnection.getConnectionId());
 
                         // Send register message
@@ -256,8 +256,8 @@ public class SignalRClient {
 
                         // Get last received time, and request for bulletin queue
                         String lastReceivedTime = mSharedPreferences
-                                .getString(Utils.PREF_SIGNALR_LAST_RECEIVE_TIME, null);
-                        Log.i(Utils.TAG, "SignalR retrieving last received time -> " + lastReceivedTime);
+                                .getString(AppUtils.PREF_SIGNALR_LAST_RECEIVE_TIME, null);
+                        Log.i(AppUtils.TAG, "SignalR retrieving last received time -> " + lastReceivedTime);
                         if (lastReceivedTime != null)
                             fetchBulletinsSinceTime(lastReceivedTime);
 
@@ -288,7 +288,7 @@ public class SignalRClient {
      * Stop the signalr connection
      */
     public void stopConnection() {
-        Log.i(Utils.TAG, "SignalRClient -> stopConnection() called");
+        Log.i(AppUtils.TAG, "SignalRClient -> stopConnection() called");
         try {
             if (mHubConnection != null)
                 mHubConnection.stop();
@@ -301,7 +301,7 @@ public class SignalRClient {
      * Try to reconnect every one minute
      */
     private void tryReconnect() {
-        Log.i(Utils.TAG, "SignalRClient -> trying to reconnect");
+        Log.i(AppUtils.TAG, "SignalRClient -> trying to reconnect");
 
         // Start ping every minute
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
@@ -319,10 +319,10 @@ public class SignalRClient {
      * @param startTime time from which queue is requested
      */
     private void fetchBulletinsSinceTime(String startTime) {
-        Log.w(Utils.TAG, "SignalR fetchBulletinsSinceTime: " + startTime);
+        Log.w(AppUtils.TAG, "SignalR fetchBulletinsSinceTime: " + startTime);
         final HashMap<String, String> post_params = new HashMap<>();
         post_params.put(BULLETIN_QUEUE_KEY_TIME, startTime);
-        post_params.put(BULLETIN_QUEUE_KEY_CLIENT_ID, Utils.getAndroidID());
+        post_params.put(BULLETIN_QUEUE_KEY_CLIENT_ID, AppUtils.getAndroidID());
 
         StringRequest jsonArrayRequest = new StringRequest(
                 Request.Method.POST,
@@ -330,14 +330,14 @@ public class SignalRClient {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i(Utils.TAG, "SignalR bulletin queue post response -> " + response);
+                        Log.i(AppUtils.TAG, "SignalR bulletin queue post response -> " + response);
                         updateBulletinListAndAcknowledge(response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Log.w(Utils.TAG, "SignalR bulletin queue request error -> " + volleyError.getMessage());
+                        Log.w(AppUtils.TAG, "SignalR bulletin queue request error -> " + volleyError.getMessage());
                     }
                 }) {
             @Override
@@ -351,12 +351,12 @@ public class SignalRClient {
     }
 
     private void saveBulletinReceivedTime() {
-        Log.i(Utils.TAG, "SignalR saving received time -> "
-                + Utils.getCurrentTimeInGmt(Utils.TIME_FORMAT_SIGNALR_RECEIVE_TIME));
+        Log.i(AppUtils.TAG, "SignalR saving received time -> "
+                + AppUtils.getCurrentTimeInGmt(AppUtils.TIME_FORMAT_SIGNALR_RECEIVE_TIME));
         mSharedPreferences
                 .edit()
-                .putString(Utils.PREF_SIGNALR_LAST_RECEIVE_TIME,
-                        Utils.getCurrentTimeInGmt(Utils.TIME_FORMAT_SIGNALR_RECEIVE_TIME))
+                .putString(AppUtils.PREF_SIGNALR_LAST_RECEIVE_TIME,
+                        AppUtils.getCurrentTimeInGmt(AppUtils.TIME_FORMAT_SIGNALR_RECEIVE_TIME))
                 .apply();
 
     }
@@ -402,11 +402,11 @@ public class SignalRClient {
                                 title = "-";
 
                             String content = jsonObject.getString("description");
-                            String date = Utils.getCurrentDateAsString(Utils.DATE_FORMAT_BULLETIN_DETAIL);
+                            String date = AppUtils.getCurrentDateAsString(AppUtils.DATE_FORMAT_BULLETIN_DETAIL);
                             String imageUrl = mContext.getString(R.string.url_signalr_root) + jsonObject.getString("image_url");
 
                             Bulletin newBulletin = new Bulletin(id, title, content, date, imageUrl, false);
-                            Log.i(Utils.TAG, "SignalR message arrived! -> "
+                            Log.i(AppUtils.TAG, "SignalR message arrived! -> "
                                     + "\nId: " + id
                                     + "\nTitle: " + title
                                     + "\nContent: " + content
@@ -420,8 +420,8 @@ public class SignalRClient {
                         // Need to load saved list everytime a new bulletin comes
                         // Since bulletin status maybe updated and saved in InboxFragment
                         String savedBulletinListAsString = mSharedPreferences
-                                .getString(Utils.PREF_BULLETIN_LIST, Utils.PREF_NO_ENTRY);
-                        if (!savedBulletinListAsString.equals(Utils.PREF_NO_ENTRY)) {
+                                .getString(AppUtils.PREF_BULLETIN_LIST, AppUtils.PREF_NO_ENTRY);
+                        if (!savedBulletinListAsString.equals(AppUtils.PREF_NO_ENTRY)) {
                             mSavedBulletinList = gson.fromJson(savedBulletinListAsString,
                                     new TypeToken<ArrayList<Bulletin>>() {
                                     }.getType());
@@ -429,24 +429,24 @@ public class SignalRClient {
 
 
                         mSavedBulletinList.addAll(0, newBulletinList);
-                        Log.i(Utils.TAG, "SignalRService: Showing updated bulletin list -");
-                        Utils.printBulletinList(mSavedBulletinList);
+                        Log.i(AppUtils.TAG, "SignalRService: Showing updated bulletin list -");
+                        AppUtils.printBulletinList(mSavedBulletinList);
 
                         // Must be saved into memory before update UI
                         // because inbox fragment reads from saved list
-                        Utils.saveListInSharedPref(mSavedBulletinList, Utils.PREF_BULLETIN_LIST);
+                        AppUtils.saveListInSharedPref(mSavedBulletinList, AppUtils.PREF_BULLETIN_LIST);
 
                         // If app is running, update UI
                         if (mListener != null)
                             mListener.onBulletinListReceived(newBulletinList);
                         else {
                             // Save updated unread bulletin count
-                            Log.i(Utils.TAG, "SignalRService: MainActivity listener is null");
-                            Utils.updateUnreadBulletinCount(+newBulletinList.size());
+                            Log.i(AppUtils.TAG, "SignalRService: MainActivity listener is null");
+                            AppUtils.updateUnreadBulletinCount(+newBulletinList.size());
                         }
 
                         // Show notification
-                        Utils.generateNotification(mContext,
+                        AppUtils.generateNotification(mContext,
                                 mContext.getResources().getString(R.string.app_name),
                                 newBulletinList.size() + " " + mContext.getString(R.string.bulletins_since_last_time),
                                 R.mipmap.ic_launcher,
@@ -469,13 +469,13 @@ public class SignalRClient {
      * 'BulletinAck(String bulletinId, String phoneId)'
      */
     public void acknowledgeBulletin(final int bulletinId) {
-        mHubProxy.invoke("BulletinAck", String.valueOf(bulletinId), Utils.getAndroidID())
+        mHubProxy.invoke("BulletinAck", String.valueOf(bulletinId), AppUtils.getAndroidID())
                 .done(new Action<Void>() {
                     @Override
                     public void run(Void obj) throws Exception {
-                        Log.i(Utils.TAG, "SignalR -> acknowledge message SENT!" + "\n"
+                        Log.i(AppUtils.TAG, "SignalR -> acknowledge message SENT!" + "\n"
                                 + "(" + bulletinId
-                                + ", " + Utils.getAndroidID()
+                                + ", " + AppUtils.getAndroidID()
                                 + ")");
                     }
                 });
@@ -488,10 +488,10 @@ public class SignalRClient {
      * @param idListString string with list of bulletin ids, seperated by ','
      */
     private void bulkAcknowledgeBulletins(String idListString) {
-        Log.w(Utils.TAG, "SignalR queued bulletin ids to ACK: " + idListString);
+        Log.w(AppUtils.TAG, "SignalR queued bulletin ids to ACK: " + idListString);
         final HashMap<String, String> post_params = new HashMap<>();
         post_params.put(BULLETIN_QUEUE_ACK_SCHEDULE_ID, idListString);
-        post_params.put(BULLETIN_QUEUE_KEY_CLIENT_ID, Utils.getAndroidID());
+        post_params.put(BULLETIN_QUEUE_KEY_CLIENT_ID, AppUtils.getAndroidID());
 
         StringRequest acknowledgePostRequest = new StringRequest(
                 Request.Method.POST,
@@ -499,13 +499,13 @@ public class SignalRClient {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i(Utils.TAG, "SignalR bulletin queue ACK request response -> " + response);
+                        Log.i(AppUtils.TAG, "SignalR bulletin queue ACK request response -> " + response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Log.w(Utils.TAG, "SignalR bulletin queue ACK request error -> " + volleyError.getMessage());
+                        Log.w(AppUtils.TAG, "SignalR bulletin queue ACK request error -> " + volleyError.getMessage());
                     }
                 }) {
             @Override

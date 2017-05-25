@@ -10,7 +10,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 import com.mcp.smyrilline.listener.BulletinListener;
 
 import microsoft.aspnet.signalr.client.Platform;
@@ -35,13 +35,13 @@ public class SignalRService extends Service {
     private BroadcastReceiver mSettingsChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(Utils.TAG, "SignalRService: received broadcast -> " + intent.getAction());
+            Log.i(AppUtils.TAG, "SignalRService: received broadcast -> " + intent.getAction());
             // We need to register with socket again with new language param [SKIP FOR NOW! Enable when Console supports language]
             if (intent.getAction().equals(ACTION_APP_SETTINGS_CHANGED)) {
                 if (mSignalRClient != null)
                     if (mSignalRClient.isConnected()) {
                         mSignalRClient.register();
-                    } else if (Utils.isNetworkAvailable(mContext)) {
+                    } else if (AppUtils.isNetworkAvailable(mContext)) {
                         mSignalRClient.startConnection();
                     }
             }
@@ -78,7 +78,7 @@ public class SignalRService extends Service {
             mReceiverRegistered = true;
         }
 
-        Log.i(Utils.TAG, "Creating Service " + this.toString());
+        Log.i(AppUtils.TAG, "Creating Service " + this.toString());
     }
 
     @Override
@@ -86,10 +86,10 @@ public class SignalRService extends Service {
         WakeLock wakelock = ((PowerManager) getSystemService(POWER_SERVICE))
                 .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SignalRService");
         wakelock.acquire();
-        Log.i(Utils.TAG, "SignalRService start command");
-        if (intent != null) Log.i(Utils.TAG, intent.toUri(0));
+        Log.i(AppUtils.TAG, "SignalRService start command");
+        if (intent != null) Log.i(AppUtils.TAG, intent.toUri(0));
 
-        mShutDown = !Utils.isNetworkAvailable(mContext);
+        mShutDown = !AppUtils.isNetworkAvailable(mContext);
 
         // Get signalr client singleton
         mSignalRClient = SignalRClient.getInstance(mContext);
@@ -99,7 +99,7 @@ public class SignalRService extends Service {
         // or CONNECT intent
         if ((intent == null || intent.getAction().equals(ACTION_CONNECT)
                 || intent.getAction().equals(ACTION_PING))
-                && Utils.isNetworkAvailable(mContext)) {
+                && AppUtils.isNetworkAvailable(mContext)) {
             if (!mSignalRClient.isConnected())
                 mSignalRClient.startConnection();
         } else if (intent != null && ACTION_SHUT_DOWN.equals(intent.getAction())) {   // SHUT DOWN intent
@@ -114,7 +114,7 @@ public class SignalRService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(Utils.TAG, "SignalRService: onDestroy");
+        Log.i(AppUtils.TAG, "SignalRService: onDestroy");
         if (mSignalRClient != null && mSignalRClient.isConnected())
             mSignalRClient.stopConnection();
 

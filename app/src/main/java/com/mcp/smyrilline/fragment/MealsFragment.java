@@ -18,7 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.adapter.MealExpandableListAdapter;
 import com.mcp.smyrilline.model.MealDate;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 
 import java.util.ArrayList;
 
@@ -51,9 +51,9 @@ public class MealsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_meals, container, false);
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
-        String mealListAsString = mSharedPref.getString(Utils.PREF_MEAL_LIST, Utils.PREF_NO_ENTRY);
+        String mealListAsString = mSharedPref.getString(AppUtils.PREF_MEAL_LIST, AppUtils.PREF_NO_ENTRY);
 
-        if (!mealListAsString.equals(Utils.PREF_NO_ENTRY) && !mealListAsString.equals("null")) {
+        if (!mealListAsString.equals(AppUtils.PREF_NO_ENTRY) && !mealListAsString.equals("null")) {
             mMealList = gson.fromJson(mealListAsString, new TypeToken<ArrayList<MealDate>>() {
             }.getType());
 
@@ -82,7 +82,7 @@ public class MealsFragment extends Fragment {
             public void onClick(View view) {
                 // User logged out
                 SharedPreferences.Editor editor = mSharedPref.edit();
-                editor.putBoolean(Utils.PREF_LOGGED_IN, false);
+                editor.putBoolean(AppUtils.PREF_LOGGED_IN, false);
                 editor.apply();
 
                 getActivity().getSupportFragmentManager()

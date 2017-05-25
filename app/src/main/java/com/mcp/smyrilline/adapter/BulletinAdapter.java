@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.model.Bulletin;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -58,7 +58,7 @@ public class BulletinAdapter extends RecyclerView.Adapter<BulletinAdapter.ViewHo
 
         // We're getting eg. "date": "Sep 02, 2016 04:15 PM"
         String date = bulletin.getDate();
-        String convertedDate = Utils.convertDateFormat(date, Utils.DATE_FORMAT_BULLETIN_DETAIL, Utils.DATE_FORMAT_BULLETIN);
+        String convertedDate = AppUtils.convertDateFormat(date, AppUtils.DATE_FORMAT_BULLETIN_DETAIL, AppUtils.DATE_FORMAT_BULLETIN);
         holder.tvBulletinDate.setText(convertedDate);
     }
 
@@ -75,7 +75,7 @@ public class BulletinAdapter extends RecyclerView.Adapter<BulletinAdapter.ViewHo
     public void remove(int position) {
         mBulletinList.remove(position);
         notifyItemRemoved(position);
-        Utils.saveListInSharedPref(mBulletinList, Utils.PREF_BULLETIN_LIST);
+        AppUtils.saveListInSharedPref(mBulletinList, AppUtils.PREF_BULLETIN_LIST);
 
         if (mBulletinList.isEmpty())
             tvNothingText.setVisibility(View.VISIBLE);

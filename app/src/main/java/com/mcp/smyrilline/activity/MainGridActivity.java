@@ -7,11 +7,10 @@ import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.fragment.LoginFragment;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 
 public class MainGridActivity extends AppCompatActivity {
 
@@ -46,31 +45,31 @@ public class MainGridActivity extends AppCompatActivity {
 
         switch (view.getId()) {
             case R.id.imgGridViewBooking:
-                fragmentName = Utils.fragmentList[0];
+                fragmentName = AppUtils.fragmentList[0];
                 break;
             case R.id.imgGridShipTracker:
-                fragmentName = Utils.fragmentList[1];
+                fragmentName = AppUtils.fragmentList[1];
                 break;
             case (R.id.imgGridInbox):
-                fragmentName = Utils.fragmentList[2];
+                fragmentName = AppUtils.fragmentList[2];
                 break;
             case R.id.imgGridDutyFree:
-                fragmentName = Utils.fragmentList[3];
+                fragmentName = AppUtils.fragmentList[3];
                 break;
             case R.id.imgGridRestaurants:
-                fragmentName = Utils.fragmentList[4];
+                fragmentName = AppUtils.fragmentList[4];
                 break;
             case R.id.imgGridDestinations:
-                fragmentName = Utils.fragmentList[5];
+                fragmentName = AppUtils.fragmentList[5];
                 break;
             case R.id.imgGridCoupons:
-                fragmentName = Utils.fragmentList[6];
+                fragmentName = AppUtils.fragmentList[6];
                 break;
             case R.id.imgGridSettings:
-                fragmentName = Utils.fragmentList[7];
+                fragmentName = AppUtils.fragmentList[7];
                 break;
             case R.id.imgGridInfo:
-                fragmentName = Utils.fragmentList[8];
+                fragmentName = AppUtils.fragmentList[8];
                 break;
             default:
                 fragmentName = LoginFragment.class.getSimpleName();
@@ -78,7 +77,7 @@ public class MainGridActivity extends AppCompatActivity {
 
         Intent intent = new Intent();
         intent.setClass(this, DrawerActivity.class);
-        intent.putExtra(Utils.START_DRAWER_FRAGMENT, fragmentName);
+        intent.putExtra(AppUtils.START_DRAWER_FRAGMENT, fragmentName);
         startActivity(intent);
         // close this activity
         finish();

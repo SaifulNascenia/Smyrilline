@@ -29,7 +29,7 @@ import com.mcp.smyrilline.adapter.PassengerPagerAdapter;
 import com.mcp.smyrilline.adapter.RoutePagerAdapter;
 import com.mcp.smyrilline.model.Passenger;
 import com.mcp.smyrilline.model.RouteItem;
-import com.mcp.smyrilline.util.Utils;
+import com.mcp.smyrilline.util.AppUtils;
 import com.mcp.smyrilline.util.InnerViewPager;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
@@ -95,13 +95,13 @@ public class TicketDetailFragment extends Fragment {
         // Get saved ticket data from memory
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
 
-        tvBookingNumber.setText(sharedPreferences.getString(Utils.PREF_BOOKING_NUMBER, Utils.PREF_NO_ENTRY));
-        tvBookingCar.setText(sharedPreferences.getString(Utils.PREF_CAR, Utils.PREF_NO_ENTRY));
-        tvTicketAdult.setText(sharedPreferences.getString(Utils.PREF_ADULT, Utils.ZERO));
-        tvTicketInfant.setText(sharedPreferences.getString(Utils.PREF_INFANT, Utils.ZERO));
+        tvBookingNumber.setText(sharedPreferences.getString(AppUtils.PREF_BOOKING_NUMBER, AppUtils.PREF_NO_ENTRY));
+        tvBookingCar.setText(sharedPreferences.getString(AppUtils.PREF_CAR, AppUtils.PREF_NO_ENTRY));
+        tvTicketAdult.setText(sharedPreferences.getString(AppUtils.PREF_ADULT, AppUtils.ZERO));
+        tvTicketInfant.setText(sharedPreferences.getString(AppUtils.PREF_INFANT, AppUtils.ZERO));
 
         // Get child count from memory
-        String childCount = sharedPreferences.getString(Utils.PREF_CHILD, Utils.ZERO);
+        String childCount = sharedPreferences.getString(AppUtils.PREF_CHILD, AppUtils.ZERO);
         tvTicketChild.setText(childCount);
 
         // Show ellipsis only if child is more than one
@@ -116,8 +116,8 @@ public class TicketDetailFragment extends Fragment {
                         llChildrenDetail.setVisibility(View.GONE);
                     else {
                         llChildrenDetail.setVisibility(View.VISIBLE);
-                        tvChildren12.setText(sharedPreferences.getString(Utils.PREF_CHILD12, Utils.ZERO));
-                        tvChildren15.setText(sharedPreferences.getString(Utils.PREF_CHILD15, Utils.ZERO));
+                        tvChildren12.setText(sharedPreferences.getString(AppUtils.PREF_CHILD12, AppUtils.ZERO));
+                        tvChildren15.setText(sharedPreferences.getString(AppUtils.PREF_CHILD15, AppUtils.ZERO));
                     }
                 }
             });
@@ -126,15 +126,15 @@ public class TicketDetailFragment extends Fragment {
         // Load saved lists
         Gson gson = new Gson();
 
-        String passengerListAsString = sharedPreferences.getString(Utils.PREF_PASSENGER_LIST, Utils.PREF_NO_ENTRY);
-        if (!passengerListAsString.equals(Utils.PREF_NO_ENTRY) && !passengerListAsString.equals("null")) {
+        String passengerListAsString = sharedPreferences.getString(AppUtils.PREF_PASSENGER_LIST, AppUtils.PREF_NO_ENTRY);
+        if (!passengerListAsString.equals(AppUtils.PREF_NO_ENTRY) && !passengerListAsString.equals("null")) {
             mPassengerList = gson.fromJson(passengerListAsString, new TypeToken<ArrayList<Passenger>>() {
             }.getType());
         } else
             mPassengerList = new ArrayList<>();
 
-        String routeListAsString = sharedPreferences.getString(Utils.PREF_ROUTE_LIST, Utils.PREF_NO_ENTRY);
-        if (!routeListAsString.equals(Utils.PREF_NO_ENTRY) && !routeListAsString.equals("null")) {
+        String routeListAsString = sharedPreferences.getString(AppUtils.PREF_ROUTE_LIST, AppUtils.PREF_NO_ENTRY);
+        if (!routeListAsString.equals(AppUtils.PREF_NO_ENTRY) && !routeListAsString.equals("null")) {
             mRouteList = gson.fromJson(routeListAsString, new TypeToken<ArrayList<RouteItem>>() {
             }.getType());
         } else
@@ -171,7 +171,7 @@ public class TicketDetailFragment extends Fragment {
             public void onClick(View view) {
                 // User logged out
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(Utils.PREF_LOGGED_IN, false);
+                editor.putBoolean(AppUtils.PREF_LOGGED_IN, false);
                 editor.apply();
 
                 getActivity().getSupportFragmentManager()
@@ -182,7 +182,7 @@ public class TicketDetailFragment extends Fragment {
         });
 
         // Draw barcode
-        String bookingNumber = sharedPreferences.getString(Utils.PREF_BOOKING_NUMBER, Utils.PREF_NO_ENTRY);
+        String bookingNumber = sharedPreferences.getString(AppUtils.PREF_BOOKING_NUMBER, AppUtils.PREF_NO_ENTRY);
         // Calculate control number from 12 digits BBBBBBBBNNNT
         // B - booking, N - passenger index, T - type ie. 0
         String fullCode = getFullCode(bookingNumber + "001" + 0);
