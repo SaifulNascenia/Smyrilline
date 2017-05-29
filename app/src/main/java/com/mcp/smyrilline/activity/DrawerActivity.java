@@ -147,14 +147,20 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
 
         mDrawerListItems = new ArrayList<>();
         mDrawerListItems.add(new DrawerItem(getString(R.string.view_booking), R.drawable.ic_grid_ticket_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.duty_free), R.drawable.ic_grid_duty_free_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.coupons), R.drawable.ic_grid_coupons_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.restaurants), R.drawable.ic_grid_restaurants_white));
         mDrawerListItems.add(new DrawerItem(getString(R.string.ship_tracker), R.drawable.ic_grid_ship_tracker_white));
         mDrawerListItems.add(new DrawerItem(getString(R.string.inbox), R.drawable.ic_grid_inbox_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.duty_free), R.drawable.ic_grid_duty_free_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.restaurants), R.drawable.ic_grid_restaurants_white));
         mDrawerListItems.add(new DrawerItem(getString(R.string.destinations), R.drawable.ic_grid_destinations_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.coupons), R.drawable.ic_grid_coupons_white));
         mDrawerListItems.add(new DrawerItem(getString(R.string.settings), R.drawable.ic_grid_settings_white));
         mDrawerListItems.add(new DrawerItem(getString(R.string.info), R.drawable.ic_grid_info_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.help), R.drawable.ic_grid_info_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.logout), R.drawable.ic_grid_info_white));
+
+
+
+
     }
 
     private void showFragment(String fragmentName) {
@@ -257,7 +263,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
         mDrawerListView = (ListView) findViewById(R.id.drawer_listview);
-        mDrawerListView.setAdapter(new NavDrawerAdapter(this, R.layout.list_item_drawer, mDrawerListItems));
+        mDrawerListView.setAdapter(new NavDrawerAdapter(this, R.layout.list_item_drawer, mDrawerListItems,mDrawerListView));
         mDrawerListView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
