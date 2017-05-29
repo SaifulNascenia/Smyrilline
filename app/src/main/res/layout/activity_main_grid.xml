@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/img_smyrilline_background"
+    android:padding="@dimen/activity_horizontal_margin"
     tools:context="com.mcp.smyrilline.activity.MainGridActivity">
 
     <android.support.v7.widget.Toolbar
@@ -15,6 +16,7 @@
         android:layout_alignParentTop="true"
         android:background="@android:color/transparent"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:visibility="gone"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,23 +25,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:orientation="vertical"
-        android:weightSum="3"
         android:background="@android:color/transparent"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.mcp.smyrilline.activity.DrawerActivity">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scaleType="centerCrop" />
+        <!-- <ImageView
+             android:layout_width="match_parent"
+             android:layout_height="0dp"
+             android:layout_weight="1"
+             android:scaleType="centerCrop"
+             android:visibility="gone" />-->
 
         <android.support.v7.widget.GridLayout
             android:id="@+id/gridLayoutNavigation"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_height="match_parent"
             android:stretchMode="spacingWidthUniform"
             app:columnCount="3"
             app:rowCount="3"
@@ -49,6 +50,7 @@
                 android:id="@+id/llGridViewBooking"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginRight="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -81,6 +83,8 @@
                 android:id="@+id/llGridShipTracker"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginLeft="@dimen/main_grid_divider_size"
+                android:layout_marginRight="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -111,6 +115,7 @@
                 android:id="@+id/llGridInbox"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginLeft="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -141,6 +146,7 @@
                 android:id="@+id/llGridDutyFree"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginRight="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -171,6 +177,8 @@
                 android:id="@+id/llGridRestaurants"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginLeft="@dimen/main_grid_divider_size"
+                android:layout_marginRight="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -201,6 +209,7 @@
                 android:id="@+id/llGridDestinations"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginLeft="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -231,6 +240,7 @@
                 android:id="@+id/llGridCoupons"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginRight="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -261,6 +271,8 @@
                 android:id="@+id/llGridSettings"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginLeft="@dimen/main_grid_divider_size"
+                android:layout_marginRight="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -291,6 +303,7 @@
                 android:id="@+id/llGridInfo"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginLeft="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -316,6 +329,70 @@
                     android:text="@string/info"
                     android:textColor="@android:color/white" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llGridHelp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginRight="@dimen/main_grid_divider_size"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"
+                app:layout_rowWeight="1">
+
+                <ImageView
+                    android:id="@+id/imgGridHelp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/bkg_white_65_grey_outline_3dp_corner"
+                    android:onClick="onClick"
+                    android:padding="18dp"
+                    android:src="@drawable/ic_grid_settings_blue" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.2"
+                    android:padding="4dp"
+                    android:text="@string/help"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llGridLogout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="@dimen/main_grid_divider_size"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"
+                app:layout_rowWeight="1">
+
+                <ImageView
+                    android:id="@+id/imgGridLogout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/bkg_white_65_grey_outline_3dp_corner"
+                    android:onClick="onClick"
+                    android:padding="18dp"
+                    android:src="@drawable/ic_grid_info_blue" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.2"
+                    android:padding="4dp"
+                    android:text="@string/logout"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+
         </android.support.v7.widget.GridLayout>
     </LinearLayout>
 </RelativeLayout>
