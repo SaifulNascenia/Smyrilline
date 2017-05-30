@@ -145,7 +145,8 @@ public class AppUtils extends MultiDexApplication {
     public static String LABEL_NEW;
     private Locale locale = null;
     public static String[] fragmentList = {"LoginFragment", "ShipTrackerFragment", "InboxFragment", "DutyFreeFragment",
-            "RestaurantsFragment", "DestinationsFragment", "CouponsFragment", "SettingsFragment", "InfoFragment"
+            "RestaurantsFragment", "DestinationsFragment", "CouponsFragment", "SettingsFragment", "InfoFragment",
+            "HelpFragment",
     };
 
     private static SharedPreferences mSharedPref;
