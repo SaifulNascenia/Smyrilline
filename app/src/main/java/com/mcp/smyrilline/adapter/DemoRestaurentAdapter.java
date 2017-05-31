@@ -30,8 +30,11 @@ public class DemoRestaurentAdapter extends RecyclerView.Adapter<DemoRestaurentAd
 
     @Override
     public RestaurentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        /*View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.restaurents_grid_item, parent, false);
+*/
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item_duty_free, parent, false);
 
         return new RestaurentViewHolder(itemView);
     }
