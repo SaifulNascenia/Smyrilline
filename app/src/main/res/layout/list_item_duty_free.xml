@@ -6,54 +6,79 @@
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="@dimen/duty_free_recylerview_item_height"
         android:elevation="3dp"
-        card_view:cardCornerRadius="0dp">
+        card_view:cardCornerRadius="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/small_padding"
+            android:paddingRight="@dimen/small_padding">
 
             <TextView
-                android:id="@+id/recipe_name_textview"
+                android:id="@+id/product_name_textview"
+                style="@android:style/TextAppearance.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:padding="@dimen/small_padding"
                 android:text="Good Day"
-                android:textSize="22sp"
+                android:textColor="@color/textColorPrimary"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/recipe_details_textview"
+                android:id="@+id/product_short_details_textview"
+                style="@android:style/TextAppearance.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/recipe_name_textview"
+                android:layout_below="@+id/product_name_textview"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:padding="@dimen/small_padding"
                 android:text="fklalk fkadfjkl fjklajdslfjkljl;a"
-                android:textSize="14sp" />
+                android:textColor="@color/textColorSecondary" />
 
             <ImageView
-                android:id="@+id/person_photo"
+                android:id="@+id/product_imageview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/price"
-                android:layout_below="@id/recipe_details_textview"
-                android:padding="@dimen/small_padding"
+                android:layout_height="0dp"
+                android:layout_above="@+id/r1"
+                android:layout_below="@id/product_short_details_textview"
+                android:layout_marginBottom="@dimen/very_large_margin"
+                android:layout_marginTop="@dimen/small_margin"
                 android:scaleType="fitXY"
                 android:src="@drawable/cheese_5" />
 
-            <TextView
-                android:id="@+id/price"
+            <RelativeLayout
+                android:id="@+id/r1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:padding="@dimen/small_padding"
-                android:text="Good day "
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:id="@+id/product_price_number_textview"
+                    style="@android:style/TextAppearance.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/product_price"
+                    android:text="78"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="normal" />
+
+
+                <TextView
+                    android:id="@+id/product_price"
+                    style="@android:style/TextAppearance.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:text="€ 68"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
 
         </RelativeLayout>

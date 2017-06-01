@@ -16,5 +16,13 @@
 
 
     <dimen name="app_bar_height">256dp</dimen>
+    <dimen name="very_large_margin">12dp</dimen>
+
+    <dimen name="very_very_small_textsize">8sp</dimen>
+    <dimen name="small_textsize">14sp</dimen>
+    <dimen name="medium_textsize">16sp</dimen>
+    <dimen name="large_dimen">22sp</dimen>
+
+    <dimen name="duty_free_recylerview_item_height">220dp</dimen>
 
 </resources>

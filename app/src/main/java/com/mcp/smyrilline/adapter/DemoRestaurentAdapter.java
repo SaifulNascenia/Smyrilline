@@ -43,8 +43,8 @@ public class DemoRestaurentAdapter extends RecyclerView.Adapter<DemoRestaurentAd
     @Override
     public void onBindViewHolder(RestaurentViewHolder holder, int position) {
 
-        holder.recipeNameTextView.setText(demoRestaurentList.get(position).getRecipeName());
-        holder.recipeDetailsTextView.setText(demoRestaurentList.get(position).getRecipeDetails());
+        holder.productNameTextView.setText(demoRestaurentList.get(position).getRecipeName());
+        holder.productShortDetailsTextview.setText(demoRestaurentList.get(position).getRecipeDetails());
     }
 
     @Override
@@ -54,14 +54,14 @@ public class DemoRestaurentAdapter extends RecyclerView.Adapter<DemoRestaurentAd
 
     public class RestaurentViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView recipeNameTextView;
-        public TextView recipeDetailsTextView;
+        public TextView productNameTextView;
+        public TextView productShortDetailsTextview;
 
         public RestaurentViewHolder(View view) {
             super(view);
 
-            recipeNameTextView = (TextView) view.findViewById(R.id.recipe_name_textview);
-            recipeDetailsTextView = (TextView) view.findViewById(R.id.recipe_details_textview);
+            productNameTextView = (TextView) view.findViewById(R.id.product_name_textview);
+            productShortDetailsTextview = (TextView) view.findViewById(R.id.product_short_details_textview);
         }
     }
 
