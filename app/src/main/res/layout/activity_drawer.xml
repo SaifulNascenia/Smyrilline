@@ -21,8 +21,8 @@
         android:layout_width="190dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="#B3000000"
         android:choiceMode="singleChoice"
-        android:background="@android:color/transparent"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />

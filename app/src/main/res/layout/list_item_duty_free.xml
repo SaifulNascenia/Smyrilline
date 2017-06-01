@@ -1,12 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="280dp"
         android:elevation="3dp"
         card_view:cardCornerRadius="0dp">
 
@@ -19,7 +19,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:text="Good Girl"
+                android:padding="@dimen/small_padding"
+                android:text="Good Day"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -27,20 +28,20 @@
                 android:id="@+id/recipe_details_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:maxLength="10"
                 android:layout_below="@+id/recipe_name_textview"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:padding="@dimen/small_padding"
                 android:text="fklalk fkadfjkl fjklajdslfjkljl;a"
                 android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/person_photo"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="match_parent"
                 android:layout_above="@+id/price"
-                android:paddingTop="@dimen/small_padding"
-                android:paddingBottom="@dimen/small_padding"
                 android:layout_below="@id/recipe_details_textview"
+                android:padding="@dimen/small_padding"
                 android:scaleType="fitXY"
                 android:src="@drawable/cheese_5" />
 
@@ -49,7 +50,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:text="Good Girl"
+                android:padding="@dimen/small_padding"
+                android:text="Good day "
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
