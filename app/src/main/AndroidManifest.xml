@@ -26,10 +26,10 @@
         <activity
             android:name=".activity.MainGridActivity"
             android:label="@string/app_name">
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
         <activity android:name=".activity.DrawerActivity">
             <intent-filter>
@@ -39,15 +39,14 @@
 
         <activity
             android:name=".activity.DutyFreeProductDetailsActivity"
-            android:theme="@style/AppTheme"
-            android:label="@string/app_name">
-            <intent-filter>
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
+-->
         </activity>
-
 
 
     </application>
