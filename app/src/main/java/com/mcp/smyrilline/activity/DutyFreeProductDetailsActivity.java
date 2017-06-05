@@ -62,35 +62,18 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
         productDetailsTextView = (ExpandableTextView) findViewById(R.id.expandable_TextView);
         productDetailsTextView.setText(text);
 
-        ViewTreeObserver vto = this.productDetailsTextView.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            /*@Override
-            public void onGlobalLayout() {
-                ViewTreeObserver obs = tv.getViewTreeObserver();
-                obs.removeGlobalOnLayoutListener(this);
-                Log.i("textline", tv.getLineCount() + "");
-
-            }*/
-
+          productDetailsTextView.post(new Runnable() {
             @Override
-            public void onGlobalLayout() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    productDetailsTextView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            public void run() {
+                int lineCount = productDetailsTextView.getLineCount();
+                // Use lineCount here
+                Log.i("textline", productDetailsTextView.getLineCount() + "");
 
-
-                } else {
-                    //noinspection deprecation
-                    productDetailsTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-
-
+                if (lineCount == 3) {
+                    toggleTextView.setVisibility(View.VISIBLE);
                 }
-                //
-                // mycode
-                //
-                Log.i("textlinehi", productDetailsTextView.getLineCount() + "");
-            }
 
+            }
         });
 
         // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
