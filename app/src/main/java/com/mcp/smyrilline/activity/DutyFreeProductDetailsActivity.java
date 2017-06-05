@@ -1,6 +1,7 @@
 package com.mcp.smyrilline.activity;
 
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -61,6 +62,36 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
         productDetailsTextView = (ExpandableTextView) findViewById(R.id.expandable_TextView);
         productDetailsTextView.setText(text);
 
+        ViewTreeObserver vto = this.productDetailsTextView.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            /*@Override
+            public void onGlobalLayout() {
+                ViewTreeObserver obs = tv.getViewTreeObserver();
+                obs.removeGlobalOnLayoutListener(this);
+                Log.i("textline", tv.getLineCount() + "");
+
+            }*/
+
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    productDetailsTextView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+
+                } else {
+                    //noinspection deprecation
+                    productDetailsTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+
+                }
+                //
+                // mycode
+                //
+                Log.i("textlinehi", productDetailsTextView.getLineCount() + "");
+            }
+
+        });
 
         // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
         productDetailsTextView.setAnimationDuration(300L);
