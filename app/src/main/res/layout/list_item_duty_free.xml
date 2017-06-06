@@ -17,13 +17,13 @@
 
             <TextView
                 android:id="@+id/product_name_textview"
-                style="@android:style/TextAppearance.Small"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:text="Good Day"
-                android:textColor="@color/textColorPrimary"
-                android:textStyle="bold" />
+                android:textColor="@color/largetextColor"
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/product_short_details_textview"
@@ -34,7 +34,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="fklalk fkadfjkl fjklajdslfjkljl;a"
-                android:textColor="@color/textColorSecondary" />
+                android:textColor="@color/smalltextColor" />
 
             <ImageView
                 android:id="@+id/product_imageview"
@@ -42,7 +42,7 @@
                 android:layout_height="0dp"
                 android:layout_above="@+id/r1"
                 android:layout_below="@id/product_short_details_textview"
-                android:layout_marginBottom="@dimen/very_large_margin"
+                android:layout_marginBottom="@dimen/small_margin"
                 android:layout_marginTop="@dimen/small_margin"
                 android:scaleType="fitXY"
                 android:src="@drawable/cheese_5" />
@@ -52,31 +52,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true">
+                android:layout_alignParentLeft="true">
 
                 <TextView
-                    android:id="@+id/product_price_number_textview"
+                    android:id="@+id/quantity_product_price_number_textview"
                     style="@android:style/TextAppearance.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/product_price"
+                    android:layout_toRightOf="@+id/quantity_product_price"
                     android:text="78"
                     android:textColor="@color/colorPrimary"
                     android:textStyle="normal" />
 
 
                 <TextView
-                    android:id="@+id/product_price"
-                    style="@android:style/TextAppearance.Medium"
+                    android:id="@+id/quantity_product_price"
+                    style="@android:style/TextAppearance.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="@dimen/small_margin"
-                    android:text="€ 68"
+                    android:text="€ 268"
                     android:textColor="@color/colorPrimary"
-                    android:textStyle="bold" />
+                    android:textStyle="normal" />
             </RelativeLayout>
 
 

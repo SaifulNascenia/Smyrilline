@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00a8ff</color>
+    <!-- <color name="colorPrimary">#00a8ff</color>-->
+    <color name="colorPrimary">#0a95dc</color>
     <color name="colorPrimaryDark">#0086CC</color>
     <color name="colorAccent">#00a8ff</color>
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#727272</color>
+
+
     <color name="grey_black_textcolor">#424242</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="white_65_opaque">#A6FFFFFF</color>
@@ -22,4 +25,9 @@
     <color name="bkg_settings_msg_filters">#00a8ff</color>
     <color name="bkg_60_percent_opaque_black">#99000000</color>
     <color name="bkg_40_percent_opaque_black">#4D000000</color>
+
+    <color name="smalltextColor">#767576</color>
+    <color name="largetextColor">#434343</color>
+    <color name="light_grey_bkg">#ececec</color>
+
 </resources>
