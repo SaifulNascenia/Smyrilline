@@ -62,7 +62,7 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
         productDetailsTextView = (ExpandableTextView) findViewById(R.id.expandable_TextView);
         productDetailsTextView.setText(text);
 
-          productDetailsTextView.post(new Runnable() {
+        productDetailsTextView.post(new Runnable() {
             @Override
             public void run() {
                 int lineCount = productDetailsTextView.getLineCount();
