@@ -132,7 +132,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:maxLines="3" />
+                        android:maxLines="3"
+                        android:textColor="@color/textColorSecondary" />
 
                     <TextView
                         android:id="@+id/toggle_TextView"
@@ -169,11 +170,12 @@
                             android:gravity="center_horizontal">
 
                             <TextView
-                                style="@style/TextAppearance.AppCompat.Large"
+                                style="@style/TextAppearance.AppCompat.Medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="@dimen/small_padding"
-                                android:text="Quantity" />
+                                android:text="Quantity"
+                                android:textColor="@color/textColorSecondary" />
 
                         </LinearLayout>
 
@@ -190,11 +192,12 @@
                             android:gravity="center_horizontal">
 
                             <TextView
-                                style="@style/TextAppearance.AppCompat.Large"
+                                style="@style/TextAppearance.AppCompat.Medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="@dimen/small_padding"
-                                android:text="Total" />
+                                android:text="Total"
+                                android:textColor="@color/textColorSecondary" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -287,6 +290,7 @@
                     android:layout_margin="@dimen/small_margin"
                     android:background="@color/colorPrimary"
                     android:text="Place the order"
+                    android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"
                     android:visibility="visible" />
