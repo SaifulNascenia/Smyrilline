@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     android:background="@color/bkg_light_grey">
 
+
     <com.cjj.MaterialRefreshLayout
-        android:id="@+id/refreshRestaurants"
+        android:id="@+id/refreshDestination"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:visibility="visible"
         app:overlay="true"
         app:wave_color="@android:color/transparent"
@@ -25,11 +25,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
         android:background="@color/colorPrimaryDark"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
-
 
     <ProgressBar
         android:id="@+id/restaurantsLoadingView"

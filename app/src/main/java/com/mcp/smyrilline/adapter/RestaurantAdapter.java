@@ -45,6 +45,19 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Restaurant restaurant = restaurantList.get(position);
+
+        //bindDataonRestaurentView(restaurant, holder);
+        bindDataonDestinationView(restaurant, holder);
+
+
+    }
+
+    private void bindDataonDestinationView(Restaurant restaurant, ViewHolder holder) {
+        holder.tvRestaurantTitle.setText(Html.fromHtml(restaurant.getTitle()));
+    }
+
+    private void bindDataonRestaurentView(Restaurant restaurant, ViewHolder holder) {
+
         holder.tvRestaurantTitle.setText(Html.fromHtml(restaurant.getTitle()));
 
         AQuery aq = new AQuery(context);
@@ -66,6 +79,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
                         .commit();
             }
         });*/
+
     }
 
 
