@@ -1,45 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="8dp">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        cardview:cardCornerRadius="7dp"
-        cardview:cardElevation="@dimen/design_appbar_elevation"
-        cardview:cardPreventCornerOverlap="false"
-        cardview:cardUseCompatPadding="true">
+        cardview:cardCornerRadius="1dp">-->
 
-        <RelativeLayout
-            android:id="@+id/rlRestaurantListItem"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@android:color/white">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlRestaurantListItem"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@android:color/white">
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/imgRestaurant"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/img_placeholder_restaurant"
-                android:scaleType="centerCrop"
-                cardview:riv_corner_radius="7dp" />
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imgRestaurant"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/parent_feature_image"
+        android:scaleType="centerCrop" />
 
-            <TextView
-                android:id="@+id/tvRestaurantTitle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bkg_60_percent_opaque_black"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="Resturent Name"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
 
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+    <TextView
+        android:id="@+id/tvRestaurantTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bkg_60_percent_opaque_black"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:text="Resturent Name"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/windowBackground" />
+
+</RelativeLayout><!-- </android.support.v7.widget.CardView>
+</LinearLayout>-->

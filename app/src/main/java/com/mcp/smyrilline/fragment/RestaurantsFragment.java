@@ -76,6 +76,7 @@ public class RestaurantsFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_restaurents, container, false);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar.setBackground(null);
         toolbar.setTitle("RestaurantFragment");
         ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
 
