@@ -1,6 +1,7 @@
 package com.mcp.smyrilline.activity;
 
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,11 +14,13 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
+import com.mcp.smyrilline.util.AppUtils;
 
 import at.blogc.android.views.*;
 
@@ -97,4 +100,21 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent();
+                intent.setClass(this, DrawerActivity.class);
+                intent.putExtra(AppUtils.START_DRAWER_FRAGMENT, AppUtils.fragmentList[3]);
+                startActivity(intent);
+                // close this activity
+                finish();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
 }

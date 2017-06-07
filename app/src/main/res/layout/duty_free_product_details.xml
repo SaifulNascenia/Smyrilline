@@ -104,6 +104,16 @@
 
 
                 </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="2dip"
+                    android:layout_gravity="bottom"
+                    android:background="#ececec"
+                    android:orientation="horizontal"
+                    app:layout_collapseMode="parallax" />
+
+
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>
@@ -154,7 +164,8 @@
                     android:layout_below="@+id/expandview"
                     android:layout_margin="@dimen/small_margin"
                     android:background="@drawable/cardbackground"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
 
                     <LinearLayout
@@ -322,7 +333,7 @@
                     android:layout_below="@id/quantity_layout"
                     android:layout_margin="@dimen/small_margin"
                     android:background="@color/colorPrimary"
-                    android:text="Place the order"
+                    android:text="Location"
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"

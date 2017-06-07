@@ -18,7 +18,7 @@
     <!-- the navigation drawer -->
     <ListView
         android:id="@+id/drawer_listview"
-        android:layout_width="190dp"
+        android:layout_width="170dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="#B3000000"
