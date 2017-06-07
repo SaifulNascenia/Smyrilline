@@ -7,7 +7,13 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/duty_free_recylerview_item_height"
-        card_view:cardCornerRadius="2dp">
+        card_view:cardCornerRadius="0dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/cardbackground" />
 
         <RelativeLayout
             android:layout_width="match_parent"
