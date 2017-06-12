@@ -12,7 +12,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL = "http://stage-smy-wp.mcp.com/wordpress/wp-json/wp/v2/";
+    //public static final String BASE_URL = "http://stage-smy-wp.mcp.com/wordpress/wp-json/wp/v2/";
+    public static final String BASE_URL = "http://stage-smy-wp.mcp.com:82/api/SmyrilLine/";
+
 
     private static Retrofit retrofit = null;
 

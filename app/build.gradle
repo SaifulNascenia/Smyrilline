@@ -62,4 +62,5 @@ dependencies {
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'at.blogc:expandabletextview:1.0.3'
 
+    compile 'javax.annotation:javax.annotation-api:1.2'
 }
