@@ -120,7 +120,9 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         initUI(savedInstanceState);
         // SignalRService initialize before load list (for Bulletins)
         initSignalRService();
+
         AppUtils.updateTextTranslations();
+
         // Load lists before setup drawer
         loadSavedLists();
 
@@ -128,7 +130,6 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         setupNavigationDrawer();
 
         // show fragment
-
         Bundle bundle = getIntent().getExtras();
         String fragmentName = bundle.getString(AppUtils.START_DRAWER_FRAGMENT);
         if (fragmentName != null) {

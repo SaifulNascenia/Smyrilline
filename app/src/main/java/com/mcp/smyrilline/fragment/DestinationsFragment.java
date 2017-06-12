@@ -83,7 +83,7 @@ public class DestinationsFragment extends Fragment {
 
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         tvRestaurantsNothingText = (TextView) rootView.findViewById(R.id.tvRestaurantsNothingText);
-        materialRefreshLayout = (MaterialRefreshLayout) rootView.findViewById(R.id.refreshDestination);
+        materialRefreshLayout = (MaterialRefreshLayout) rootView.findViewById(R.id.refreshRestaurants);//
 
         DestinationRecylerView = (RecyclerView) rootView.findViewById(R.id.restaurents_list_recycler_view);
         DestinationRecylerView.setLayoutManager(new LinearLayoutManager(mContext));

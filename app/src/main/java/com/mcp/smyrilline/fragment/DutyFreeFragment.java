@@ -6,28 +6,42 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.activity.DutyFreeProductDetailsActivity;
 import com.mcp.smyrilline.adapter.DemoRestaurentAdapter;
+import com.mcp.smyrilline.adapter.DutyFreeAdapter;
+import com.mcp.smyrilline.interfaces.ApiInterfaces;
 import com.mcp.smyrilline.interfaces.ClickListener;
 import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
 import com.mcp.smyrilline.model.DemoRestaurent;
+import com.mcp.smyrilline.model.dutyfreemodels.DutyFree;
+import com.mcp.smyrilline.service.ApiClient;
+import com.mcp.smyrilline.util.AppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static com.mcp.smyrilline.util.McpApplication.context;
 
@@ -42,10 +56,12 @@ public class DutyFreeFragment extends Fragment {
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
-    private List<DemoRestaurent> demoRestaurentList = new ArrayList<>();
-    private DemoRestaurentAdapter restaurentRecyclerViewAdapter;
+    private RecyclerView dutyFreeRecyclerView;
+    private DutyFreeAdapter dutyFreeAdapter;
 
-    private RecyclerView restaurentRecyclerView;
+    private DutyFree dutyFree;
+
+    private CoordinatorLayout coordinatorLayout;
 
     @Nullable
     @Override
@@ -53,19 +69,15 @@ public class DutyFreeFragment extends Fragment {
 
 
         _rootView = inflater.inflate(R.layout.fragment_duty_free, container, false);
-        toolbar = (Toolbar) _rootView.findViewById(R.id.toolbar);
+
+        initView();
         toolbar.setTitle("Tax Free Shop");
         ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
 
-
-        collapsingToolbarLayout = (CollapsingToolbarLayout) _rootView.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
 
-        setUprestaurentRecyclerView();
-
-
-        restaurentRecyclerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
-                restaurentRecyclerView,
+        dutyFreeRecyclerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
+                dutyFreeRecyclerView,
                 new ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
@@ -81,28 +93,61 @@ public class DutyFreeFragment extends Fragment {
                 }));
 
 
+        loadDutyFreeproductList();
+
+
         return _rootView;
+    }
+
+    private void initView() {
+
+
+        coordinatorLayout = (CoordinatorLayout) _rootView.findViewById(R.id.main_content);
+        toolbar = (Toolbar) _rootView.findViewById(R.id.toolbar);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) _rootView.findViewById(R.id.collapsing_toolbar);
+        dutyFreeRecyclerView = (RecyclerView) _rootView.findViewById(R.id.recycler_view);
+    }
+
+    private void loadDutyFreeproductList() {
+        Retrofit retrofit = ApiClient.getClient();
+        ApiInterfaces apiInterfaces = retrofit.create(ApiInterfaces.class);
+        Call<DutyFree> call = apiInterfaces.fetchDutyFreeProductsList(AppUtils.WP_PARAM_LANGUAGE);
+
+        call.enqueue(new Callback<DutyFree>() {
+            @Override
+            public void onResponse(Call<DutyFree> call, Response<DutyFree> response) {
+
+                try {
+
+                    dutyFree = response.body();
+                    setUprestaurentRecyclerView();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<DutyFree> call, Throwable t) {
+                Log.d("onResponse", "onFailure " + t.toString());
+            }
+        });
+
+
     }
 
 
     private void setUprestaurentRecyclerView() {
 
 
-        demoRestaurentList.add(new DemoRestaurent("Coffee", "Nice taste"));
-        demoRestaurentList.add(new DemoRestaurent("Coffee", "Freshly brewed coffee.Awesome taste."));
-        demoRestaurentList.add(new DemoRestaurent("Coffee", "Freshly brewed coffee"));
-        demoRestaurentList.add(new DemoRestaurent("Coffee", "Freshly brewed coffee"));
-        demoRestaurentList.add(new DemoRestaurent("Coffee", "Freshly brewed coffee"));
+        dutyFreeAdapter = new DutyFreeAdapter(getActivity(), dutyFree.getChildren());
 
-
-        restaurentRecyclerViewAdapter = new DemoRestaurentAdapter(getActivity(), demoRestaurentList);
-        restaurentRecyclerView = (RecyclerView) _rootView.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
-        restaurentRecyclerView.setLayoutManager(mLayoutManager);
-        restaurentRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-        restaurentRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        restaurentRecyclerView.setAdapter(restaurentRecyclerViewAdapter);
-
+        dutyFreeRecyclerView.setLayoutManager(mLayoutManager);
+        dutyFreeRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        dutyFreeRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        dutyFreeRecyclerView.setAdapter(dutyFreeAdapter);
 
     }
 
