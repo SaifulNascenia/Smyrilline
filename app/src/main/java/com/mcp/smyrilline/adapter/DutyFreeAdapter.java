@@ -12,6 +12,7 @@ import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.model.DemoRestaurent;
 import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.model.dutyfreemodels.DutyFree;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -52,6 +53,14 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
         holder.productQuantityTextView.setText(dutyFreeChildList.get(position).getText2().
                 substring(dutyFreeChildList.get(position).getText2().indexOf(",") + 1,
                         dutyFreeChildList.get(position).getText2().length()));
+
+
+        Picasso.with(mContext)
+                .load(mContext.getResources().
+                        getString(R.string.image_downloaded_base_url) +
+                        dutyFreeChildList.get(position).getImageUrl())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(holder.productImageView);
 
     }
 
