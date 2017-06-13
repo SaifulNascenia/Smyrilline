@@ -22,8 +22,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
@@ -38,6 +40,7 @@ import com.mcp.smyrilline.model.DemoRestaurent;
 import com.mcp.smyrilline.model.dutyfreemodels.DutyFree;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.AppUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +50,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.mcp.smyrilline.R.id.imageView;
 import static com.mcp.smyrilline.util.McpApplication.context;
 
 /**
@@ -72,7 +76,9 @@ public class DutyFreeFragment extends Fragment {
     private Button retryInternetBtn;
     private View dutyFreeLoadingProgressBar;
     private RelativeLayout rootLayout;
+    private TextView timeTextview;
 
+    private ImageView shopImageView;
 
     @Nullable
     @Override
@@ -118,7 +124,8 @@ public class DutyFreeFragment extends Fragment {
         retryInternetBtn = (Button) _rootView.findViewById(R.id.retry_internet);
         dutyFreeLoadingProgressBar = _rootView.findViewById(R.id.dutyFreeLoadingView);
         rootLayout = (RelativeLayout) _rootView.findViewById(R.id.root_layout);
-
+        timeTextview = (TextView) _rootView.findViewById(R.id.time_textview);
+        shopImageView = (ImageView) _rootView.findViewById(R.id.shop_image);
     }
 
     private void loadDutyFreeproductList() {
@@ -130,6 +137,7 @@ public class DutyFreeFragment extends Fragment {
             @Override
             public void onResponse(Call<DutyFree> call, Response<DutyFree> response) {
                 try {
+                    //  Toast.makeText(getActivity(), "onT" , Toast.LENGTH_LONG).show();
 
                     dutyFree = response.body();
 
@@ -137,10 +145,20 @@ public class DutyFreeFragment extends Fragment {
                     ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
                     collapsingToolbarLayout.setTitleEnabled(false);
 
-                    setUprestaurentRecyclerView();
-
                     dutyFreeLoadingProgressBar.setVisibility(View.GONE);
                     coordinatorLayout.setVisibility(View.VISIBLE);
+
+                    timeTextview.setText(dutyFree.getText1());
+
+
+                    Picasso.with(getActivity())
+                            .load(getActivity().getResources().
+                                    getString(R.string.image_downloaded_base_url) +
+                                    dutyFree.getImageUrl())
+                            .placeholder(R.mipmap.ic_launcher)
+                            .into(shopImageView);
+
+                    setUprestaurentRecyclerView();
 
                 } catch (Exception e) {
                     e.printStackTrace();
