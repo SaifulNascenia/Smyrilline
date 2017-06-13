@@ -8,14 +8,14 @@ import java.util.ArrayList;
  */
 
 public class Restaurant implements Serializable {
-    private int id;
+    private String id;
     private String title;
     private String description;
     private String image_url;
     private ArrayList<RestaurantMenuInfoGroup> menuList;
     private boolean applyCss = true;
 
-    public Restaurant(int id,
+    public Restaurant(String id,
                       String title,
                       String description,
                       String image_url,
@@ -29,7 +29,7 @@ public class Restaurant implements Serializable {
         this.applyCss = applyCss;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

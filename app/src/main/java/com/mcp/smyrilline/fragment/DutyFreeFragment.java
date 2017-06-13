@@ -37,6 +37,7 @@ import com.mcp.smyrilline.interfaces.ApiInterfaces;
 import com.mcp.smyrilline.interfaces.ClickListener;
 import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
 import com.mcp.smyrilline.model.DemoRestaurent;
+import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.model.dutyfreemodels.DutyFree;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.AppUtils;
@@ -88,16 +89,15 @@ public class DutyFreeFragment extends Fragment {
         _rootView = inflater.inflate(R.layout.fragment_duty_free, container, false);
 
         initView();
-        final DutyFreeFragment duty = this;
-
         dutyFreeRecyclerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
                 dutyFreeRecyclerView,
                 new ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
 
-                        startActivity(new Intent(getActivity(), DutyFreeProductDetailsActivity.class));
-
+                        Child dutyFreeItemObj = dutyFree.getChildren().get(position);
+                        startActivity(new Intent(getActivity(), DutyFreeProductDetailsActivity.class)
+                                .putExtra("dutyFreeItemObj", dutyFreeItemObj));
                     }
 
                     @Override

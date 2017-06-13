@@ -30,6 +30,8 @@ import com.mcp.smyrilline.interfaces.ApiInterfaces;
 import com.mcp.smyrilline.model.InternalStorage;
 import com.mcp.smyrilline.model.Restaurant;
 import com.mcp.smyrilline.model.parentmodel.ParentModel;
+import com.mcp.smyrilline.model.restaurentsmodel.Child;
+import com.mcp.smyrilline.model.restaurentsmodel.ListOfRestaurent;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.AppUtils;
 
@@ -66,7 +68,7 @@ public class RestaurantsFragment extends Fragment {
     private View mLoadingView;
     private TextView tvNothingText;
 
-    private List<ParentModel> parentModelList;
+    private List<ListOfRestaurent> parentModelList;
 
     @Nullable
     @Override
@@ -103,7 +105,7 @@ public class RestaurantsFragment extends Fragment {
 
         // List of items, will be populated in AsyncTask below
         mRestaurantList = new ArrayList<>();
-        mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText);
+        mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText, AppUtils.fragmentList[4]);
         restaurenstListRecyclerView.setAdapter(mAdapter);
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
@@ -149,28 +151,28 @@ public class RestaurantsFragment extends Fragment {
 
         Retrofit retrofit = ApiClient.getClient();
         ApiInterfaces apiInterfaces = retrofit.create(ApiInterfaces.class);
-        Call<List<ParentModel>> call = apiInterfaces.fetchAllRestaurentsAndBarsInfo();
+        Call<List<ListOfRestaurent>> call = apiInterfaces.fetchAllRestaurentsAndBarsInfo();
 
-        call.enqueue(new Callback<List<ParentModel>>() {
+        call.enqueue(new Callback<List<ListOfRestaurent>>() {
             @Override
-            public void onResponse(Call<List<ParentModel>> call, Response<List<ParentModel>> response) {
+            public void onResponse(Call<List<ListOfRestaurent>> call, Response<List<ListOfRestaurent>> response) {
                 try {
 
                     parentModelList = response.body();
+                    Log.d("onResponse", parentModelList + "");
+
                     mLoadingView.setVisibility(View.GONE);
                     materialRefreshLayout.finishRefresh();
-
                     mRestaurantList.clear();
 
-                    Toast.makeText(getActivity(), "Dataloading complete", Toast.LENGTH_LONG).show();
-                    for (int i = 0; i < parentModelList.size(); i++) {
-                        ParentModel parentModel = parentModelList.get(i);
+                    for(int i= 0;i<response.body().get(0).getChildren().size();i++){
 
-                        // Create new restaurant from json and add to list
-                        Restaurant restaurant = new Restaurant(parentModel.getId(),
-                                parentModel.getTitle().getRendered(),
-                                parentModel.getContent().getRendered(),
-                                parentModel.getFeaturedImageSourceUrl(),
+                        Child restaturent =  response.body().get(0).getChildren().get(i);
+                        Restaurant restaurant = new Restaurant(
+                                restaturent.getId(),
+                                restaturent.getName(),
+                                null,
+                                restaturent.getImageUrl(),
                                 null,
                                 false);
                         mRestaurantList.add(restaurant);
@@ -178,6 +180,7 @@ public class RestaurantsFragment extends Fragment {
 
                     }
 
+                    //Toast.makeText(getActivity(), "Dataloading complete " + mRestaurantList.size(), Toast.LENGTH_LONG).show();
 
                 } catch (Exception e) {
                     Log.d("onResponse", "error");
@@ -186,7 +189,7 @@ public class RestaurantsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<ParentModel>> call, Throwable t) {
+            public void onFailure(Call<List<ListOfRestaurent>> call, Throwable t) {
                 Log.d("onResponse", "onFailure " + t.toString());
             }
         });
