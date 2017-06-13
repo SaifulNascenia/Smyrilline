@@ -120,4 +120,6 @@
     <string name="please_select_gender">Bitte wählen Sie eine Geschlechtsgruppe.</string>
     <string name="bulletins_since_last_time">bulletins since last time</string>
     <string name="please_select_age_gender">Bitte wählen Alter und Geschlecht.</string>
+    <string name="no_internet_message">
+        Keine Internetverbindung. Stellen Sie sicher, dass Wi-Fi oder Cellular Daten eingeschaltet sind, dann versuchen Sie es erneut</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.mcp.smyrilline.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -8,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -54,6 +58,7 @@ public class DutyFreeFragment extends Fragment {
 
     private View _rootView;
     private Toolbar toolbar;
+    private Toolbar extraToolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
     private RecyclerView dutyFreeRecyclerView;
@@ -62,6 +67,12 @@ public class DutyFreeFragment extends Fragment {
     private DutyFree dutyFree;
 
     private CoordinatorLayout coordinatorLayout;
+    private View noInternetConnetionView;
+
+    private Button retryInternetBtn;
+    private View dutyFreeLoadingProgressBar;
+    private RelativeLayout rootLayout;
+
 
     @Nullable
     @Override
@@ -71,10 +82,7 @@ public class DutyFreeFragment extends Fragment {
         _rootView = inflater.inflate(R.layout.fragment_duty_free, container, false);
 
         initView();
-        toolbar.setTitle("Tax Free Shop");
-        ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
-
-        collapsingToolbarLayout.setTitleEnabled(false);
+        final DutyFreeFragment duty = this;
 
         dutyFreeRecyclerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
                 dutyFreeRecyclerView,
@@ -101,11 +109,16 @@ public class DutyFreeFragment extends Fragment {
 
     private void initView() {
 
-
+        extraToolbar = (Toolbar) _rootView.findViewById(R.id.extra_toolbar);
         coordinatorLayout = (CoordinatorLayout) _rootView.findViewById(R.id.main_content);
         toolbar = (Toolbar) _rootView.findViewById(R.id.toolbar);
         collapsingToolbarLayout = (CollapsingToolbarLayout) _rootView.findViewById(R.id.collapsing_toolbar);
         dutyFreeRecyclerView = (RecyclerView) _rootView.findViewById(R.id.recycler_view);
+        noInternetConnetionView = _rootView.findViewById(R.id.no_internet_layout);
+        retryInternetBtn = (Button) _rootView.findViewById(R.id.retry_internet);
+        dutyFreeLoadingProgressBar = _rootView.findViewById(R.id.dutyFreeLoadingView);
+        rootLayout = (RelativeLayout) _rootView.findViewById(R.id.root_layout);
+
     }
 
     private void loadDutyFreeproductList() {
@@ -116,11 +129,18 @@ public class DutyFreeFragment extends Fragment {
         call.enqueue(new Callback<DutyFree>() {
             @Override
             public void onResponse(Call<DutyFree> call, Response<DutyFree> response) {
-
                 try {
 
                     dutyFree = response.body();
+
+                    toolbar.setTitle("Tax Free Shop");
+                    ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
+                    collapsingToolbarLayout.setTitleEnabled(false);
+
                     setUprestaurentRecyclerView();
+
+                    dutyFreeLoadingProgressBar.setVisibility(View.GONE);
+                    coordinatorLayout.setVisibility(View.VISIBLE);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -130,7 +150,18 @@ public class DutyFreeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<DutyFree> call, Throwable t) {
-                Log.d("onResponse", "onFailure " + t.toString());
+                //Log.d("onResponse", "onFailure " + t.toString());
+                // Toast.makeText(getActivity(), "onfailure " + t.toString(), Toast.LENGTH_LONG).show();
+
+                dutyFreeLoadingProgressBar.setVisibility(View.GONE);
+                extraToolbar.setVisibility(View.VISIBLE);
+                extraToolbar.setTitle("Tax Free Shop");
+                ((DrawerActivity) getActivity()).setToolbarAndToggle(extraToolbar);
+                noInternetConnetionView.setVisibility(View.VISIBLE);
+                AppUtils.withoutInternetConnectionView(getActivity(),
+                        getActivity().getIntent(),
+                        retryInternetBtn);
+                rootLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.windowBackground));
             }
         });
 

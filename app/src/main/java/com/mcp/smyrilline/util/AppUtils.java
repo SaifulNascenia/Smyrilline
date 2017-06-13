@@ -159,6 +159,42 @@ public class AppUtils extends MultiDexApplication {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+
+    public static void withoutInternetConnectionView(final Context context,
+                                                     final Intent intent,
+                                                     Button retryBtn) {
+
+
+        final Activity activity = (Activity) context;
+        retryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+                    Log.i("fragmenterror", "ontry");
+                    //getFragmentManager().beginTransaction().detach(duty).attach(duty).commit();
+
+                    // Intent intent = getActivity().getIntent();
+                    activity.overridePendingTransition(0, 0);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    activity.finish();
+                    activity.overridePendingTransition(0, 0);
+                    intent.putExtra(AppUtils.START_DRAWER_FRAGMENT, AppUtils.fragmentList[3]);
+                    activity.startActivity(intent);
+
+
+                } catch (Exception e) {
+
+                    Log.i("fragmenterror", e.getMessage().toString());
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+
+    }
+
     /**
      * Check Http connection for a given url
      *
