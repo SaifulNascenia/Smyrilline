@@ -21,6 +21,7 @@ import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.adapter.RestaurantAdapter;
 import com.mcp.smyrilline.model.Restaurant;
 import com.mcp.smyrilline.model.RestaurantMenuInfoGroup;
+import com.mcp.smyrilline.util.AppUtils;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,6 @@ public class DestinationsFragment extends Fragment {
     private View rootView;
 
     private Toolbar toolbar;
-    private Context mContext;
     private MaterialRefreshLayout materialRefreshLayout;
     private TextView tvRestaurantsNothingText;
     private RelativeLayout.LayoutParams params;
@@ -57,19 +57,19 @@ public class DestinationsFragment extends Fragment {
         ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
         mDestinationList = new ArrayList<>();
 
-        Restaurant restaurant1 = new Restaurant(1, "IceLand", "", null, null, false);
+        Restaurant restaurant1 = new Restaurant("1", "IceLand", "", null, null, false);
         mDestinationList.add(restaurant1);
-        Restaurant restaurant2 = new Restaurant(1, "IceLand", "", null, null, false);
+        Restaurant restaurant2 = new Restaurant("1", "Faroe IceLand", "", null, null, false);
         mDestinationList.add(restaurant2);
-        Restaurant restaurant3 = new Restaurant(1, "IceLand", "", null, null, false);
+        Restaurant restaurant3 = new Restaurant("1", "North IceLand", "", null, null, false);
         mDestinationList.add(restaurant3);
-        Restaurant restaurant4 = new Restaurant(1, "IceLand", "", null, null, false);
+        Restaurant restaurant4 = new Restaurant("1", "IceLand", "", null, null, false);
         mDestinationList.add(restaurant4);
-        Restaurant restaurant5 = new Restaurant(1, "IceLand", "", null, null, false);
+        Restaurant restaurant5 = new Restaurant("1", "IceLand", "", null, null, false);
         mDestinationList.add(restaurant5);
 
 
-        mAdapter = new RestaurantAdapter(mContext, mDestinationList, tvRestaurantsNothingText);
+        mAdapter = new RestaurantAdapter(getActivity(), mDestinationList, tvRestaurantsNothingText, AppUtils.fragmentList[5]);
         DestinationRecylerView.setAdapter(mAdapter);
 
       /*  params = (RelativeLayout.LayoutParams) materialRefreshLayout.getLayoutParams();
@@ -86,7 +86,7 @@ public class DestinationsFragment extends Fragment {
         materialRefreshLayout = (MaterialRefreshLayout) rootView.findViewById(R.id.refreshRestaurants);//
 
         DestinationRecylerView = (RecyclerView) rootView.findViewById(R.id.restaurents_list_recycler_view);
-        DestinationRecylerView.setLayoutManager(new LinearLayoutManager(mContext));
+        DestinationRecylerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
     }
 }

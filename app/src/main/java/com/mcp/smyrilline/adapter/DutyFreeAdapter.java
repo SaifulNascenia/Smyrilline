@@ -47,7 +47,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
 
         holder.productShortDetailsTextview.setText(dutyFreeChildList.get(position).getText1());
 
-        holder.productPriceTextView.setText(dutyFreeChildList.get(position).getText2().
+        holder.productPriceTextView.setText("€ " + dutyFreeChildList.get(position).getText2().
                 substring(1, dutyFreeChildList.get(position).getText2().indexOf(",")));
 
         holder.productQuantityTextView.setText(dutyFreeChildList.get(position).getText2().

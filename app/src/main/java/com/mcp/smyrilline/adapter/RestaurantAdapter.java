@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidquery.AQuery;
 
@@ -16,6 +17,10 @@ import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 
 import com.mcp.smyrilline.model.Restaurant;
+import com.mcp.smyrilline.util.AppUtils;
+import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -27,11 +32,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     private final Context context;
     private ArrayList<Restaurant> restaurantList;
     private TextView tvNothingText;
+    private String accessedClassName;
 
-    public RestaurantAdapter(Context context, ArrayList<Restaurant> restaurantList, TextView tvNothingText) {
+    public RestaurantAdapter(Context context,
+                             ArrayList<Restaurant> restaurantList,
+                             TextView tvNothingText,
+                             String accessedClassName) {
+
         this.context = context;
         this.restaurantList = restaurantList;
         this.tvNothingText = tvNothingText;
+        this.accessedClassName = accessedClassName;
     }
 
     @Override
@@ -45,9 +56,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Restaurant restaurant = restaurantList.get(position);
+        // Toast.makeText(context, "holder", Toast.LENGTH_LONG).show();
 
-        //bindDataonRestaurentView(restaurant, holder);
-        bindDataonDestinationView(restaurant, holder);
+        if (accessedClassName.equals(AppUtils.fragmentList[4])) {
+            bindDataonRestaurentView(restaurant, holder);
+        } else {
+            bindDataonDestinationView(restaurant, holder);
+        }
 
 
     }
@@ -58,11 +73,20 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
     private void bindDataonRestaurentView(Restaurant restaurant, ViewHolder holder) {
 
+
         holder.tvRestaurantTitle.setText(Html.fromHtml(restaurant.getTitle()));
 
-        AQuery aq = new AQuery(context);
+     /*   AQuery aq = new AQuery(context);
         aq.id(holder.imgRestaurant).image(restaurant.getImageUrl(),
                 false, true, 0, 0, null, AQuery.FADE_IN);
+*/
+        Picasso.with(context)
+                .load(context.getResources().
+                        getString(R.string.image_downloaded_base_url) +
+                        restaurant.getImageUrl())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(holder.imgRestaurant);
+
 
         /*holder.rlRestaurantListItem.setOnClickListener(new View.OnClickListener() {
             @Override

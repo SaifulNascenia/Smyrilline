@@ -18,8 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
+import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.util.AppUtils;
 
 import at.blogc.android.views.*;
@@ -45,24 +47,25 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
             "lectus, feugiat eget ";
 
     private ExpandableTextView productDetailsTextView;
-    TextView toggleTextView;
+    private TextView toggleTextView;
+    private Child dutyFreeItemObj;
+
+    private TextView productNameTextview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.duty_free_product_details);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        initView();
+
+        dutyFreeItemObj = getIntent().getParcelableExtra("dutyFreeItemObj");
+
         toolbar.setTitle("Tax Free Shop");
-
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitleEnabled(false);
-
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        productDetailsTextView = (ExpandableTextView) findViewById(R.id.expandable_TextView);
         productDetailsTextView.setText(text);
 
         productDetailsTextView.post(new Runnable() {
@@ -78,10 +81,8 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
 
             }
         });
-
         // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
         productDetailsTextView.setAnimationDuration(300L);
-        toggleTextView = (TextView) findViewById(R.id.toggle_TextView);
         toggleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +98,25 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+        fetchDutyFreeItemDetails();
+
+    }
+
+    private void fetchDutyFreeItemDetails() {
+
+
+    }
+
+    private void initView() {
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+        productDetailsTextView = (ExpandableTextView) findViewById(R.id.expandable_TextView);
+        toggleTextView = (TextView) findViewById(R.id.toggle_TextView);
+        productNameTextview = (TextView) findViewById(R.id.product_name_textview);
 
     }
 
