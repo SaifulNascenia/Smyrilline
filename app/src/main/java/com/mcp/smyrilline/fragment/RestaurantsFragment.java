@@ -1,6 +1,7 @@
 package com.mcp.smyrilline.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -10,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,8 +28,11 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
+import com.mcp.smyrilline.activity.DutyFreeProductDetailsActivity;
 import com.mcp.smyrilline.adapter.RestaurantAdapter;
 import com.mcp.smyrilline.interfaces.ApiInterfaces;
+import com.mcp.smyrilline.interfaces.ClickListener;
+import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
 import com.mcp.smyrilline.model.InternalStorage;
 import com.mcp.smyrilline.model.Restaurant;
 import com.mcp.smyrilline.model.parentmodel.ParentModel;
@@ -83,8 +88,35 @@ public class RestaurantsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_restaurents, container, false);
 
         initView();
+        restaurenstListRecyclerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
+                restaurenstListRecyclerView,
+                new ClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+
+                        Toast.makeText(getActivity(), parentModelList.size() + " " +
+                                        parentModelList.get(0).getChildren().get(position).getName(),
+                                Toast.LENGTH_LONG).show();
 
 
+                        IndividualResturentDetailsFragment individualResturentDetailsFragment = new
+                                IndividualResturentDetailsFragment();
+
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        fm.popBackStack();
+
+                        fm.beginTransaction().
+                                replace(R.id.content_frame, individualResturentDetailsFragment)
+                                .commit();
+
+
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                }));
         toolbar.setBackground(null);
         toolbar.setTitle("RestaurantFragment");
         ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
