@@ -24,6 +24,8 @@ import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.util.AppUtils;
 
+import org.w3c.dom.Text;
+
 import at.blogc.android.views.*;
 
 
@@ -51,6 +53,8 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
     private Child dutyFreeItemObj;
 
     private TextView productNameTextview;
+    private TextView productPriceNumberTextview;
+    private TextView productPriceTextView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +69,17 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
         toolbar.setTitle("Tax Free Shop");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        productPriceTextView.setText("€ " + dutyFreeItemObj.getText2().
+                substring(1, dutyFreeItemObj.getText2().indexOf(",")));
+
+
+        productPriceNumberTextview.setText(dutyFreeItemObj.getText2().
+                substring(dutyFreeItemObj.getText2().indexOf(",") + 1,
+                        dutyFreeItemObj.getText2().length()));
+
+        productNameTextview.setText(dutyFreeItemObj.getName());
 
         productDetailsTextView.setText(text);
 
@@ -117,6 +132,8 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
         productDetailsTextView = (ExpandableTextView) findViewById(R.id.expandable_TextView);
         toggleTextView = (TextView) findViewById(R.id.toggle_TextView);
         productNameTextview = (TextView) findViewById(R.id.product_name_textview);
+        productPriceNumberTextview = (TextView) findViewById(R.id.product_price_number_textview);
+        productPriceTextView = (TextView) findViewById(R.id.product_price);
 
     }
 
