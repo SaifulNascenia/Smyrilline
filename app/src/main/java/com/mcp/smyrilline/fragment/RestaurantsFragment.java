@@ -18,6 +18,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,8 @@ public class RestaurantsFragment extends Fragment {
     private TextView tvNothingText;
 
     private List<ListOfRestaurent> parentModelList;
+    private View noInternetConnetionView;
+    private Button retryInternetBtn;
 
     @Nullable
     @Override
@@ -76,8 +79,12 @@ public class RestaurantsFragment extends Fragment {
 
         mContext = getActivity();
 
+
         rootView = inflater.inflate(R.layout.fragment_restaurents, container, false);
-        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+
+        initView();
+
+
         toolbar.setBackground(null);
         toolbar.setTitle("RestaurantFragment");
         ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
@@ -88,20 +95,26 @@ public class RestaurantsFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View rootView, Bundle savedInstanceState) {
-        super.onViewCreated(rootView, savedInstanceState);
+    private void initView() {
 
-        // Refresh toolbar options
-        getActivity().invalidateOptionsMenu();
-
-
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        noInternetConnetionView = rootView.findViewById(R.id.no_internet_layout);
+        retryInternetBtn = (Button) rootView.findViewById(R.id.retry_internet);
         // Init UI
         tvNothingText = (TextView) rootView.findViewById(R.id.tvRestaurantsNothingText);
         tvNothingText.setVisibility(View.GONE);
         mLoadingView = rootView.findViewById(R.id.restaurantsLoadingView);
         restaurenstListRecyclerView = (RecyclerView) rootView.findViewById(R.id.restaurents_list_recycler_view);
         restaurenstListRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
+    }
+
+    @Override
+    public void onViewCreated(View rootView, Bundle savedInstanceState) {
+        super.onViewCreated(rootView, savedInstanceState);
+
+        // Refresh toolbar options
+        getActivity().invalidateOptionsMenu();
 
         // List of items, will be populated in AsyncTask below
         mRestaurantList = new ArrayList<>();
@@ -111,7 +124,7 @@ public class RestaurantsFragment extends Fragment {
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
 
-        materialRefreshLayout = (MaterialRefreshLayout) rootView.findViewById(R.id.refreshRestaurants);
+       /* materialRefreshLayout = (MaterialRefreshLayout) rootView.findViewById(R.id.refreshRestaurants);
         materialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
             @Override
             public void onfinish() {
@@ -131,16 +144,18 @@ public class RestaurantsFragment extends Fragment {
                 }
             }
         });
-
+*/
 
         if (AppUtils.isNetworkAvailable(getActivity())) {
 
             initRestaurantList();
 
         } else {
-            mLoadingView.setVisibility(View.GONE);
+            /*mLoadingView.setVisibility(View.GONE);
             tvNothingText.setVisibility(View.VISIBLE);
             AppUtils.showAlertDialog(mContext, AppUtils.ALERT_NO_WIFI);
+*/
+            setWithoutInternetView();
         }
 
 
@@ -162,12 +177,12 @@ public class RestaurantsFragment extends Fragment {
                     Log.d("onResponse", parentModelList + "");
 
                     mLoadingView.setVisibility(View.GONE);
-                    materialRefreshLayout.finishRefresh();
+                    //   materialRefreshLayout.finishRefresh();
                     mRestaurantList.clear();
 
-                    for(int i= 0;i<response.body().get(0).getChildren().size();i++){
+                    for (int i = 0; i < response.body().get(0).getChildren().size(); i++) {
 
-                        Child restaturent =  response.body().get(0).getChildren().get(i);
+                        Child restaturent = response.body().get(0).getChildren().get(i);
                         Restaurant restaurant = new Restaurant(
                                 restaturent.getId(),
                                 restaturent.getName(),
@@ -191,10 +206,24 @@ public class RestaurantsFragment extends Fragment {
             @Override
             public void onFailure(Call<List<ListOfRestaurent>> call, Throwable t) {
                 Log.d("onResponse", "onFailure " + t.toString());
+
+                setWithoutInternetView();
+
+
             }
         });
 
 
+    }
+
+    private void setWithoutInternetView() {
+        mLoadingView.setVisibility(View.GONE);
+        noInternetConnetionView.setVisibility(View.VISIBLE);
+        AppUtils.withoutInternetConnectionView(getActivity(),
+                getActivity().getIntent(),
+                retryInternetBtn);
+
+        toolbar.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
     }
 
     private void setUprestaurentRecyclerView() {
