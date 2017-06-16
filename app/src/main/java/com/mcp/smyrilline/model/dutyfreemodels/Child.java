@@ -28,9 +28,16 @@ public class Child implements Parcelable {
     @Expose
     private Object children;
 
+    public Child(String id, String name, String imageUrl, String text1, String text2, Object children) {
+        this.id = id;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.text1 = text1;
+        this.text2 = text2;
+        this.children = children;
+    }
 
-
-    public final static Creator<Child> CREATOR = new Creator<Child>() {
+   /* public final static Creator<Child> CREATOR = new Creator<Child>() {
 
 
         @SuppressWarnings({
@@ -51,7 +58,7 @@ public class Child implements Parcelable {
             return (new Child[size]);
         }
 
-    };
+    };*/
 
     public String getId() {
         return id;

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
+        android:id="@+id/root_card_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/duty_free_recylerview_item_height"
         card_view:cardCornerRadius="0dp">
@@ -29,7 +29,8 @@
                 android:layout_alignParentTop="true"
                 android:text="Good Day"
                 android:textColor="@color/largetextColor"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/product_short_details_textview"

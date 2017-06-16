@@ -1,22 +1,28 @@
 package com.mcp.smyrilline.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.model.DemoRestaurent;
 import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.model.dutyfreemodels.DutyFree;
+import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
 import java.util.List;
+
+import static android.R.attr.width;
 
 /**
  * Created by saiful on 6/12/17.
@@ -26,10 +32,14 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
 
     private Context mContext;
     private List<Child> dutyFreeChildList;
+    private String thisAdapterUsedClassName;
 
-    public DutyFreeAdapter(Context mContext, List<Child> dutyFreeChildList) {
+
+    public DutyFreeAdapter(Context mContext, List<Child> dutyFreeChildList, String thisAdapterUsedClassName) {
+
         this.mContext = mContext;
         this.dutyFreeChildList = dutyFreeChildList;
+        this.thisAdapterUsedClassName = thisAdapterUsedClassName;
     }
 
     @Override
@@ -42,6 +52,33 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
 
     @Override
     public void onBindViewHolder(DutyFreeAdapter.DutyFreeViewHolder holder, int position) {
+
+
+        if (thisAdapterUsedClassName.equals(AppUtils.fragmentList[4])) {
+
+            setViewOnRestaurentRecylerView(holder, position);
+
+        } else {
+
+            setViewOnDutyFreeRecylerView(holder, position);
+        }
+
+
+    }
+
+    private void setViewOnRestaurentRecylerView(DutyFreeViewHolder holder, int position) {
+
+        //holder.rootCardView.setMinimumHeight(100);
+       holder.rootCardView.setLayoutParams(new LinearLayout.LayoutParams(width, 160));
+
+        holder.productNameTextView.setText(dutyFreeChildList.get(position).getName());
+
+        holder.productShortDetailsTextview.setText(dutyFreeChildList.get(position).getText1());
+
+    }
+
+    private void setViewOnDutyFreeRecylerView(DutyFreeViewHolder holder, int position) {
+
 
         holder.productNameTextView.setText(dutyFreeChildList.get(position).getName());
 
@@ -72,6 +109,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
 
     public class DutyFreeViewHolder extends RecyclerView.ViewHolder {
 
+        public CardView rootCardView;
         public TextView productNameTextView;
         public TextView productShortDetailsTextview;
         public ImageView productImageView;
@@ -81,6 +119,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
         public DutyFreeViewHolder(View view) {
             super(view);
 
+            rootCardView = (CardView) view.findViewById(R.id.root_card_view);
             productNameTextView = (TextView) view.findViewById(R.id.product_name_textview);
             productShortDetailsTextview = (TextView) view.findViewById(R.id.product_short_details_textview);
             productImageView = (ImageView) view.findViewById(R.id.product_imageview);

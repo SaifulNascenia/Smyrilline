@@ -63,4 +63,9 @@ dependencies {
     compile 'at.blogc:expandabletextview:1.0.3'
 
     compile 'javax.annotation:javax.annotation-api:1.2'
+
+    compile 'com.jakewharton:butterknife:8.6.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+
+    provided 'javax.annotation:jsr250-api:1.0'
 }

@@ -190,7 +190,7 @@ public class DutyFreeFragment extends Fragment {
     private void setUprestaurentRecyclerView() {
 
 
-        dutyFreeAdapter = new DutyFreeAdapter(getActivity(), dutyFree.getChildren());
+        dutyFreeAdapter = new DutyFreeAdapter(getActivity(), dutyFree.getChildren(),AppUtils.fragmentList[3]);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
         dutyFreeRecyclerView.setLayoutManager(mLayoutManager);
