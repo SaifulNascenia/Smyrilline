@@ -1,13 +1,17 @@
 package com.mcp.smyrilline.activity;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.mcp.smyrilline.BuildConfig;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.fragment.LoginFragment;
 import com.mcp.smyrilline.util.AppUtils;
@@ -25,6 +29,19 @@ public class MainGridActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            Log.i("versiondetails", "versionName " + pInfo.versionName
+                    + " versionCode " + pInfo.versionCode);
+
+            Log.i("versiondetails", "build " + "versionName " + BuildConfig.VERSION_NAME
+                    + " versionCode " + BuildConfig.VERSION_CODE);
+
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         initUI();
     }

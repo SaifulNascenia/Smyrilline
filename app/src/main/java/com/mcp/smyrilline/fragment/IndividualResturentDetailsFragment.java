@@ -1,5 +1,6 @@
 package com.mcp.smyrilline.fragment;
 
+import android.content.pm.PackageInfo;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import com.mcp.smyrilline.interfaces.ApiInterfaces;
 import com.mcp.smyrilline.model.restaurentsmodel.RestaurentDetails;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.AppUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
     private DutyFreeAdapter dutyFreeAdapter, breakFastItemsRecylerViewAdapter,
             lunchItemsRecylerViewAdapter, dinnerItemsRecylerViewAdapter;
 
-    private ImageView breakfastItemsExpandImageview, openCloseExpandImageview,
+    private ImageView restaurentImage, breakfastItemsExpandImageview, openCloseExpandImageview,
             lunchItemExpandImageView, dinnerItemsExpandImageView;
 
     private Unbinder unbinder;
@@ -184,6 +186,8 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         rootViewCoordinatorLayout = (CoordinatorLayout) _rootView.findViewById(R.id.main_content);
         collapsingToolbarLayout = (CollapsingToolbarLayout) _rootView.findViewById(R.id.collapsing_toolbar);
 
+        restaurentImage = (ImageView) _rootView.findViewById(R.id.restaurent_image);
+
         restaurentTimeInfoCardView = (CardView) _rootView.findViewById(R.id.restaurent_time_info_view);
 
         openCloseExpandImageview = (ImageView) _rootView.findViewById(R.id.open_close_expand_imageview);
@@ -238,6 +242,14 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
     private void bindApiDataWithView() {
 
+        Picasso.with(getActivity())
+                .load(getActivity().getResources().
+                        getString(R.string.image_downloaded_base_url) +
+                        restaurentDetails.getImageUrl())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(restaurentImage);
+
+
         breakFastTimeTextView.setText(restaurentDetails.getBreakfastTime());
         lunchTimeTextView.setText(restaurentDetails.getLunchTime());
         dinnerTimeTextView.setText(restaurentDetails.getDinnerTime());
@@ -249,11 +261,12 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         restaurentDetailsInfoTextView.post(new Runnable() {
             @Override
             public void run() {
-                int lineCount = restaurentDetailsInfoTextView.getLineCount();
+                //  int lineCount = restaurentDetailsInfoTextView.getLineCount();
+
                 // Use lineCount here
                 Log.i("textline", restaurentDetailsInfoTextView.getLineCount() + "");
 
-                if (lineCount == 3) {
+                if (restaurentDetailsInfoTextView.getLineCount() == 3) {
                     expandTextView.setVisibility(View.VISIBLE);
                 }
 
@@ -297,7 +310,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
         if (lunchItemsRecylerView.getVisibility() == View.GONE) {
 
-            breakfastItemsExpandImageview.setImageResource(R.drawable.up_arrow);
+            lunchItemExpandImageView.setImageResource(R.drawable.up_arrow);
             lunchItemsRecylerView.setVisibility(View.VISIBLE);
         } else {
             lunchItemExpandImageView.setImageResource(R.drawable.down_arrow);
