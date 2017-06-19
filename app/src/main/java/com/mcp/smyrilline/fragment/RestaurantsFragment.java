@@ -78,14 +78,19 @@ public class RestaurantsFragment extends Fragment {
     private View noInternetConnetionView;
     private Button retryInternetBtn;
 
+    private Bundle bundle;
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         mContext = getActivity();
 
-
         rootView = inflater.inflate(R.layout.fragment_restaurents, container, false);
+
+        bundle = new Bundle();
 
         initView();
         restaurenstListRecyclerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
@@ -98,15 +103,18 @@ public class RestaurantsFragment extends Fragment {
                                         parentModelList.get(0).getChildren().get(position).getName(),
                                 Toast.LENGTH_LONG).show();
 
+                        bundle.putString("RESTAURENT_ID",
+                                parentModelList.get(0).getChildren().get(position).getId());
 
                         IndividualResturentDetailsFragment individualResturentDetailsFragment = new
                                 IndividualResturentDetailsFragment();
+                        individualResturentDetailsFragment.setArguments(bundle);
 
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        fm.popBackStack();
-
-                        fm.beginTransaction().
-                                replace(R.id.content_frame, individualResturentDetailsFragment)
+                        //FragmentManager fm = getActivity().getSupportFragmentManager();
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .replace(R.id.content_frame, individualResturentDetailsFragment)
                                 .commit();
 
 
@@ -117,8 +125,10 @@ public class RestaurantsFragment extends Fragment {
 
                     }
                 }));
+
+
         toolbar.setBackground(null);
-        toolbar.setTitle("RestaurantFragment");
+        toolbar.setTitle("Restaurants");
         ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
 
         //  setUprestaurentRecyclerView();

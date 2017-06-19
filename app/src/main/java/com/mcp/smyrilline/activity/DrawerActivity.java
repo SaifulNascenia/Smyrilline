@@ -18,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -35,6 +36,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -744,12 +746,23 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
 
     @Override
     public void onBackPressed() {
-        if (isNavDrawerOpen())
+
+       /* if (isNavDrawerOpen())
             closeNavDrawer();
         else {
             startActivity(new Intent(this, MainGridActivity.class));
             finish();
+        }*/
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
+            Toast.makeText(getBaseContext(), "backstack has " + getSupportFragmentManager().getBackStackEntryCount(), Toast.LENGTH_LONG).show();
+        } else {
+            super.onBackPressed();
+            startActivity(new Intent(this, MainGridActivity.class));
+            finish();
+            Toast.makeText(getBaseContext(), "no backstack has", Toast.LENGTH_LONG).show();
         }
+
     }
 
     /**
@@ -767,4 +780,6 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
     }
+
+
 }

@@ -2,29 +2,19 @@ package com.mcp.smyrilline.activity;
 
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.util.AppUtils;
-
-import org.w3c.dom.Text;
 
 import at.blogc.android.views.*;
 
@@ -64,24 +54,24 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
 
         initView();
 
-        dutyFreeItemObj = getIntent().getParcelableExtra("dutyFreeItemObj");
+        dutyFreeItemObj = getIntent().getExtras().getParcelable("dutyFreeItemObj");
+        Log.i("dutyobj", dutyFreeItemObj.getText3());
 
         toolbar.setTitle("Tax Free Shop");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        productPriceTextView.setText("€ " + dutyFreeItemObj.getText3().
+                substring(1, dutyFreeItemObj.getText3().indexOf(",")));
 
-        productPriceTextView.setText("€ " + dutyFreeItemObj.getText2().
-                substring(1, dutyFreeItemObj.getText2().indexOf(",")));
 
-
-        productPriceNumberTextview.setText(dutyFreeItemObj.getText2().
-                substring(dutyFreeItemObj.getText2().indexOf(",") + 1,
-                        dutyFreeItemObj.getText2().length()));
+        productPriceNumberTextview.setText(dutyFreeItemObj.getText3().
+                substring(dutyFreeItemObj.getText3().indexOf(",") + 1,
+                        dutyFreeItemObj.getText3().length()));
 
         productNameTextview.setText(dutyFreeItemObj.getName());
 
-        productDetailsTextView.setText(text);
+        productDetailsTextView.setText(dutyFreeItemObj.getText1());
 
         productDetailsTextView.post(new Runnable() {
             @Override
