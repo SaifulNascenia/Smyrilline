@@ -71,10 +71,10 @@ public class RestaurantsFragment extends Fragment {
     private ArrayList<Restaurant> mRestaurantList;
     private Context mContext;
     private SharedPreferences mSharedPref;
-    private View mLoadingView;
     private TextView tvNothingText;
-
     private List<ListOfRestaurent> parentModelList;
+
+    private View mLoadingView;
     private View noInternetConnetionView;
     private Button retryInternetBtn;
 
@@ -105,6 +105,8 @@ public class RestaurantsFragment extends Fragment {
 
                         bundle.putString("RESTAURENT_ID",
                                 parentModelList.get(0).getChildren().get(position).getId());
+                        bundle.putString("RESTAURENT_NAME", parentModelList.get(0).getChildren().
+                                get(position).getName());
 
                         IndividualResturentDetailsFragment individualResturentDetailsFragment = new
                                 IndividualResturentDetailsFragment();
@@ -140,12 +142,12 @@ public class RestaurantsFragment extends Fragment {
     private void initView() {
 
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        mLoadingView = rootView.findViewById(R.id.restaurantsLoadingView);
         noInternetConnetionView = rootView.findViewById(R.id.no_internet_layout);
         retryInternetBtn = (Button) rootView.findViewById(R.id.retry_internet);
         // Init UI
         tvNothingText = (TextView) rootView.findViewById(R.id.tvRestaurantsNothingText);
         tvNothingText.setVisibility(View.GONE);
-        mLoadingView = rootView.findViewById(R.id.restaurantsLoadingView);
         restaurenstListRecyclerView = (RecyclerView) rootView.findViewById(R.id.restaurents_list_recycler_view);
         restaurenstListRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 

@@ -7,21 +7,13 @@
     android:background="@color/windowBackground"
     android:fitsSystemWindows="true">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/extra_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        android:visibility="gone"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
-
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:card_view="http://schemas.android.com/tools"
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.AppBarLayout
@@ -62,6 +54,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    android:visibility="visible"
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -281,7 +274,7 @@
                             android:layout_height="wrap_content"
                             android:padding="@dimen/small_padding">
 
-                            <TextView
+                            <at.blogc.android.views.ExpandableTextView
                                 android:id="@+id/restaurent_info_expandable_TextView"
                                 style="@style/TextAppearance.AppCompat.Medium"
                                 android:layout_width="match_parent"
@@ -296,9 +289,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:layout_below="@+id/expandable_TextView"
+                                android:layout_below="@+id/restaurent_info_expandable_TextView"
                                 android:text="view more"
-                                android:textColor="@color/textColorSecondary"
+                                android:textColor="@color/colorPrimary"
                                 android:visibility="gone" />
 
                         </RelativeLayout>
@@ -780,4 +773,25 @@
 
 
     </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/extra_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:visibility="gone"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    <ProgressBar
+        android:id="@+id/restaurantsLoadingView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:visibility="visible" />
+
+    <include
+        android:id="@+id/no_internet_layout"
+        layout="@layout/no_internet_connection_layout"
+        android:visibility="gone" />
 </RelativeLayout>

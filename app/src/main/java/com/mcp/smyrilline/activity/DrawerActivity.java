@@ -755,12 +755,12 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         }*/
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStackImmediate();
-            Toast.makeText(getBaseContext(), "backstack has " + getSupportFragmentManager().getBackStackEntryCount(), Toast.LENGTH_LONG).show();
+            // Toast.makeText(getBaseContext(), "backstack has " + getSupportFragmentManager().getBackStackEntryCount(), Toast.LENGTH_LONG).show();
         } else {
             super.onBackPressed();
             startActivity(new Intent(this, MainGridActivity.class));
             finish();
-            Toast.makeText(getBaseContext(), "no backstack has", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getBaseContext(), "no backstack has", Toast.LENGTH_LONG).show();
         }
 
     }
