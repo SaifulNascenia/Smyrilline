@@ -4,23 +4,28 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
+import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.adapter.DutyFreeAdapter;
 import com.mcp.smyrilline.interfaces.ApiInterfaces;
 import com.mcp.smyrilline.model.restaurentsmodel.RestaurentDetails;
@@ -29,6 +34,7 @@ import com.mcp.smyrilline.util.AppUtils;
 
 import java.util.List;
 
+import at.blogc.android.views.ExpandableTextView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import retrofit2.Call;
@@ -45,13 +51,13 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
     private View _rootView;
 
-    private RecyclerView breakfastItemsRecylerView, launchItemsRecylerView, dinnerItemsRecylerView;
+    private RecyclerView breakfastItemsRecylerView, lunchItemsRecylerView, dinnerItemsRecylerView;
 
     private DutyFreeAdapter dutyFreeAdapter, breakFastItemsRecylerViewAdapter,
             lunchItemsRecylerViewAdapter, dinnerItemsRecylerViewAdapter;
 
     private ImageView breakfastItemsExpandImageview, openCloseExpandImageview,
-            launchItemExpandImageView, dinnerItemsExpandImageView;
+            lunchItemExpandImageView, dinnerItemsExpandImageView;
 
     private Unbinder unbinder;
 
@@ -59,9 +65,10 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
     private RelativeLayout openCloseTimeLayout;
 
     private CardView restaurentTimeInfoCardView, restaurentInfoDetailsCardView, adultChildrenCardInfoView;
+    private ExpandableTextView restaurentDetailsInfoTextView;
 
-    private TextView breakFastTimeTextView, launchTimeTextView, dinnerTimeTextView,
-            restaurentDetailsInfoTextView, expandTextView, adultsTitleTextView, childrenTitleTextView,
+    private TextView breakFastTimeTextView, lunchTimeTextView, dinnerTimeTextView,
+            expandTextView, adultsTitleTextView, childrenTitleTextView,
             topBreakfastTitleTextview, topBreakfastItemInfoTextview, topPrebookTitleTextview,
             topPreBookPriceTextView, topOnBoardPriceTextView, topSavingsAmountTextView,
             topTimeTitleTextView, topTimesTextView,
@@ -71,12 +78,31 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
     private RestaurentDetails restaurentDetails;
 
+    private Toolbar toolbar, noInternetViewToolbar;
+    private CoordinatorLayout rootViewCoordinatorLayout;
+
+    private View mLoadingView;
+    private View noInternetConnetionView;
+    private Button retryInternetBtn;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+
+    private String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+            "Ut volutpat interdum interdum. Nulla laoreet lacus diam, vitae " +
+            "sodales sapien commodo faucibus. Vestibulum et feugiat enim. Donec " +
+            "semper mi et euismod tempor. Sed sodales eleifend mi id varius. Nam " +
+            "et ornare enim, sit amet gravida sapien. Quisque gravida et enim vel " +
+            "volutpat. Vivamus egestas ut felis a blandit. Vivamus fringilla " +
+            "dignissim mollis.dictum hendrerit ultrices. Ut vitae vestibulum dolor. Donec auctor ante" +
+            " eget libero molestie porta. Nam tempor fringilla ultricies. Nam sem " +
+            "lectus, feugiat eget ";
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         _rootView = inflater.inflate(R.layout.fragment_restaurent_details, container, false);
-
 
         //add dependency lib
         unbinder = ButterKnife.bind(this, _rootView);
@@ -85,6 +111,16 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         fetchRestaurentDetails();
 
         return _rootView;
+    }
+
+    private void setWithoutInternetView() {
+        mLoadingView.setVisibility(View.GONE);
+        noInternetConnetionView.setVisibility(View.VISIBLE);
+        AppUtils.withoutInternetConnectionView(getActivity(),
+                getActivity().getIntent(),
+                retryInternetBtn);
+
+
     }
 
     private void fetchRestaurentDetails() {
@@ -101,6 +137,19 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                 //Toast.makeText(getActivity(), response.body().toString(), Toast.LENGTH_LONG).show();
                 Log.i("restaurentdetails", restaurentDetails.getName() + "/n");
                 Log.i("restaurentdetails", response.body().toString());
+
+                mLoadingView.setVisibility(View.GONE);
+
+
+                toolbar.setBackground(null);
+                toolbar.setTitle(getArguments().getString("RESTAURENT_NAME"));
+                ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
+                collapsingToolbarLayout.setTitle(null);
+                collapsingToolbarLayout.setTitleEnabled(false);
+
+
+                bindApiDataWithView();
+
                 setUprestaurentRecyclerView();
 
 
@@ -109,12 +158,31 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
             @Override
             public void onFailure(Call<RestaurentDetails> call, Throwable t) {
 
+                rootViewCoordinatorLayout.setVisibility(View.GONE);
+                noInternetViewToolbar.setVisibility(View.VISIBLE);
+                noInternetViewToolbar.setTitle(getArguments().getString("RESTAURENT_NAME"));
+                noInternetViewToolbar.setBackgroundColor(
+                        getActivity().getResources().getColor(R.color.colorPrimary));
+                ((DrawerActivity) getActivity()).setToolbarAndToggle(noInternetViewToolbar);
+
+                setWithoutInternetView();
+
             }
         });
 
     }
 
     private void initView() {
+
+        toolbar = (Toolbar) _rootView.findViewById(R.id.toolbar);
+        noInternetViewToolbar = (Toolbar) _rootView.findViewById(R.id.extra_toolbar);
+
+        mLoadingView = _rootView.findViewById(R.id.restaurantsLoadingView);
+        noInternetConnetionView = _rootView.findViewById(R.id.no_internet_layout);
+        retryInternetBtn = (Button) _rootView.findViewById(R.id.retry_internet);
+
+        rootViewCoordinatorLayout = (CoordinatorLayout) _rootView.findViewById(R.id.main_content);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) _rootView.findViewById(R.id.collapsing_toolbar);
 
         restaurentTimeInfoCardView = (CardView) _rootView.findViewById(R.id.restaurent_time_info_view);
 
@@ -124,11 +192,11 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         openCloseTimeLayout = (RelativeLayout) _rootView.findViewById(R.id.open_close_time_layout);
 
         breakFastTimeTextView = (TextView) _rootView.findViewById(R.id.restaurent_breakfast_time_textview);
-        launchTimeTextView = (TextView) _rootView.findViewById(R.id.restaurent_lunch_time_textview);
+        lunchTimeTextView = (TextView) _rootView.findViewById(R.id.restaurent_lunch_time_textview);
         dinnerTimeTextView = (TextView) _rootView.findViewById(R.id.restaurent_dinner_time_textview);
 
         restaurentInfoDetailsCardView = (CardView) _rootView.findViewById(R.id.restaurent_Details_view);
-        restaurentDetailsInfoTextView = (TextView) _rootView.findViewById(R.id.restaurent_info_expandable_TextView);
+        restaurentDetailsInfoTextView = (ExpandableTextView) _rootView.findViewById(R.id.restaurent_info_expandable_TextView);
         expandTextView = (TextView) _rootView.findViewById(R.id.toggle_TextView);
 
         adultChildrenCardInfoView = (CardView) _rootView.findViewById(R.id.adult_children_view);
@@ -160,9 +228,53 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         dinnerItemsExpandImageView.setOnClickListener(this);
         dinnerItemsRecylerView = (RecyclerView) _rootView.findViewById(R.id.dinner_list_item_recylerView);
 
-        launchItemExpandImageView = (ImageView) _rootView.findViewById(R.id.lunch_list_expand_imageview);
-        launchItemExpandImageView.setOnClickListener(this);
-        launchItemsRecylerView = (RecyclerView) _rootView.findViewById(R.id.lunch_list_item_recylerView);
+        lunchItemExpandImageView = (ImageView) _rootView.findViewById(R.id.lunch_list_expand_imageview);
+        lunchItemExpandImageView.setOnClickListener(this);
+        lunchItemsRecylerView = (RecyclerView) _rootView.findViewById(R.id.lunch_list_item_recylerView);
+
+
+    }
+
+
+    private void bindApiDataWithView() {
+
+        breakFastTimeTextView.setText(restaurentDetails.getBreakfastTime());
+        lunchTimeTextView.setText(restaurentDetails.getLunchTime());
+        dinnerTimeTextView.setText(restaurentDetails.getDinnerTime());
+
+        Log.i("opclse", restaurentDetails.getOpenCloseTimeText());
+
+        restaurentDetailsInfoTextView.setText(restaurentDetails.getOpenCloseTimeText());
+
+        restaurentDetailsInfoTextView.post(new Runnable() {
+            @Override
+            public void run() {
+                int lineCount = restaurentDetailsInfoTextView.getLineCount();
+                // Use lineCount here
+                Log.i("textline", restaurentDetailsInfoTextView.getLineCount() + "");
+
+                if (lineCount == 3) {
+                    expandTextView.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+        // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
+        restaurentDetailsInfoTextView.setAnimationDuration(300L);
+        expandTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (restaurentDetailsInfoTextView.isExpanded()) {
+                    restaurentDetailsInfoTextView.collapse();
+                    expandTextView.setText("view more");
+
+                } else {
+                    restaurentDetailsInfoTextView.expand();
+                    expandTextView.setText("view less");
+
+                }
+            }
+        });
 
 
     }
@@ -181,15 +293,15 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         }
     }
 
-    private void setLaunchExpandImageViewAction() {
+    private void setLunchExpandImageViewAction() {
 
-        if (launchItemsRecylerView.getVisibility() == View.GONE) {
+        if (lunchItemsRecylerView.getVisibility() == View.GONE) {
 
             breakfastItemsExpandImageview.setImageResource(R.drawable.up_arrow);
-            launchItemsRecylerView.setVisibility(View.VISIBLE);
+            lunchItemsRecylerView.setVisibility(View.VISIBLE);
         } else {
-            launchItemExpandImageView.setImageResource(R.drawable.down_arrow);
-            launchItemsRecylerView.setVisibility(View.GONE);
+            lunchItemExpandImageView.setImageResource(R.drawable.down_arrow);
+            lunchItemsRecylerView.setVisibility(View.GONE);
 
         }
     }
@@ -229,10 +341,10 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                 restaurentDetails.getLunchItems(),
                 "Lunch");
 
-        launchItemsRecylerView.setLayoutManager(mLayoutManager2);
-        launchItemsRecylerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(10), true));
-        launchItemsRecylerView.setItemAnimator(new DefaultItemAnimator());
-        launchItemsRecylerView.setAdapter(lunchItemsRecylerViewAdapter);
+        lunchItemsRecylerView.setLayoutManager(mLayoutManager2);
+        lunchItemsRecylerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(10), true));
+        lunchItemsRecylerView.setItemAnimator(new DefaultItemAnimator());
+        lunchItemsRecylerView.setAdapter(lunchItemsRecylerViewAdapter);
 
 
         dinnerItemsRecylerViewAdapter = new DutyFreeAdapter(getActivity(),
@@ -255,7 +367,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                 setBreakfastListExpandImageviewAction();
                 break;
             case R.id.lunch_list_expand_imageview:
-                setLaunchExpandImageViewAction();
+                setLunchExpandImageViewAction();
                 break;
             case R.id.dinner_list_expand_imageview:
                 setDinnerExpandViewImageViewAction();
@@ -338,8 +450,6 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
-
-
 
 
 }
