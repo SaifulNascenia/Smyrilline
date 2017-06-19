@@ -1,6 +1,5 @@
 package com.mcp.smyrilline.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -9,50 +8,36 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.activity.DutyFreeProductDetailsActivity;
-import com.mcp.smyrilline.adapter.DemoRestaurentAdapter;
 import com.mcp.smyrilline.adapter.DutyFreeAdapter;
 import com.mcp.smyrilline.interfaces.ApiInterfaces;
 import com.mcp.smyrilline.interfaces.ClickListener;
 import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
-import com.mcp.smyrilline.model.DemoRestaurent;
 import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.model.dutyfreemodels.DutyFree;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-
-import static com.mcp.smyrilline.R.id.imageView;
-import static com.mcp.smyrilline.util.McpApplication.context;
 
 /**
  * Created by raqib on 5/11/17.
@@ -140,7 +125,7 @@ public class DutyFreeFragment extends Fragment {
                     //  Toast.makeText(getActivity(), "onT" , Toast.LENGTH_LONG).show();
 
                     dutyFree = response.body();
-
+                    //  Log.i("dutydata", dutyFree.toString());
                     toolbar.setTitle("Tax Free Shop");
                     ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
                     collapsingToolbarLayout.setTitleEnabled(false);
@@ -190,7 +175,7 @@ public class DutyFreeFragment extends Fragment {
     private void setUprestaurentRecyclerView() {
 
 
-        dutyFreeAdapter = new DutyFreeAdapter(getActivity(), dutyFree.getChildren(),AppUtils.fragmentList[3]);
+        dutyFreeAdapter = new DutyFreeAdapter(getActivity(), dutyFree.getChildren(), AppUtils.fragmentList[3]);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
         dutyFreeRecyclerView.setLayoutManager(mLayoutManager);

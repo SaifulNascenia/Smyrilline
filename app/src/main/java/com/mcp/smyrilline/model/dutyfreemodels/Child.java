@@ -3,9 +3,12 @@ package com.mcp.smyrilline.model.dutyfreemodels;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.Parcelable.Creator;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class Child implements Parcelable {
 
@@ -24,20 +27,13 @@ public class Child implements Parcelable {
     @SerializedName("text2")
     @Expose
     private String text2;
+    @SerializedName("text3")
+    @Expose
+    private String text3;
     @SerializedName("children")
     @Expose
     private Object children;
-
-    public Child(String id, String name, String imageUrl, String text1, String text2, Object children) {
-        this.id = id;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.text1 = text1;
-        this.text2 = text2;
-        this.children = children;
-    }
-
-   /* public final static Creator<Child> CREATOR = new Creator<Child>() {
+    public final static Creator<Child> CREATOR = new Creator<Child>() {
 
 
         @SuppressWarnings({
@@ -50,6 +46,7 @@ public class Child implements Parcelable {
             instance.imageUrl = ((String) in.readValue((String.class.getClassLoader())));
             instance.text1 = ((String) in.readValue((String.class.getClassLoader())));
             instance.text2 = ((String) in.readValue((String.class.getClassLoader())));
+            instance.text3 = ((String) in.readValue((String.class.getClassLoader())));
             instance.children = ((Object) in.readValue((Object.class.getClassLoader())));
             return instance;
         }
@@ -58,7 +55,7 @@ public class Child implements Parcelable {
             return (new Child[size]);
         }
 
-    };*/
+    };
 
     public String getId() {
         return id;
@@ -100,6 +97,14 @@ public class Child implements Parcelable {
         this.text2 = text2;
     }
 
+    public String getText3() {
+        return text3;
+    }
+
+    public void setText3(String text3) {
+        this.text3 = text3;
+    }
+
     public Object getChildren() {
         return children;
     }
@@ -108,12 +113,18 @@ public class Child implements Parcelable {
         this.children = children;
     }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(name);
         dest.writeValue(imageUrl);
         dest.writeValue(text1);
         dest.writeValue(text2);
+        dest.writeValue(text3);
         dest.writeValue(children);
     }
 

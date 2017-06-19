@@ -34,7 +34,7 @@ public class ListOfRestaurent implements Parcelable
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
         public ListOfRestaurent createFromParcel(Parcel in) {
             ListOfRestaurent instance = new ListOfRestaurent();
@@ -52,7 +52,7 @@ public class ListOfRestaurent implements Parcelable
         }
 
     }
-    ;
+            ;
 
     public Object getId() {
         return id;

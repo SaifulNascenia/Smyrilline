@@ -33,7 +33,7 @@ public class Child implements Parcelable
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
         public Child createFromParcel(Parcel in) {
             Child instance = new Child();
@@ -51,7 +51,7 @@ public class Child implements Parcelable
         }
 
     }
-    ;
+            ;
 
     public String getId() {
         return id;

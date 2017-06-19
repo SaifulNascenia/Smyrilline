@@ -1,20 +1,20 @@
 
-package com.mcp.smyrilline.model.dutyfreemodels;
+package com.mcp.smyrilline.model.restaurentsmodel;
 
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class DutyFree implements Parcelable
+public class LunchItem implements Parcelable
 {
 
     @SerializedName("id")
     @Expose
-    private Object id;
+    private String id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -32,37 +32,37 @@ public class DutyFree implements Parcelable
     private Object text3;
     @SerializedName("children")
     @Expose
-    private List<Child> children = null;
-    public final static Creator<DutyFree> CREATOR = new Creator<DutyFree>() {
+    private Object children;
+    public final static Creator<LunchItem> CREATOR = new Creator<LunchItem>() {
 
 
         @SuppressWarnings({
-                "unchecked"
+            "unchecked"
         })
-        public DutyFree createFromParcel(Parcel in) {
-            DutyFree instance = new DutyFree();
-            instance.id = ((Object) in.readValue((Object.class.getClassLoader())));
+        public LunchItem createFromParcel(Parcel in) {
+            LunchItem instance = new LunchItem();
+            instance.id = ((String) in.readValue((String.class.getClassLoader())));
             instance.name = ((String) in.readValue((String.class.getClassLoader())));
             instance.imageUrl = ((String) in.readValue((String.class.getClassLoader())));
             instance.text1 = ((String) in.readValue((String.class.getClassLoader())));
             instance.text2 = ((String) in.readValue((String.class.getClassLoader())));
             instance.text3 = ((Object) in.readValue((Object.class.getClassLoader())));
-            in.readList(instance.children, (Child.class.getClassLoader()));
+            instance.children = ((Object) in.readValue((Object.class.getClassLoader())));
             return instance;
         }
 
-        public DutyFree[] newArray(int size) {
-            return (new DutyFree[size]);
+        public LunchItem[] newArray(int size) {
+            return (new LunchItem[size]);
         }
 
     }
-            ;
+    ;
 
-    public Object getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Object id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -106,11 +106,11 @@ public class DutyFree implements Parcelable
         this.text3 = text3;
     }
 
-    public List<Child> getChildren() {
+    public Object getChildren() {
         return children;
     }
 
-    public void setChildren(List<Child> children) {
+    public void setChildren(Object children) {
         this.children = children;
     }
 
@@ -126,7 +126,7 @@ public class DutyFree implements Parcelable
         dest.writeValue(text1);
         dest.writeValue(text2);
         dest.writeValue(text3);
-        dest.writeList(children);
+        dest.writeValue(children);
     }
 
     public int describeContents() {

@@ -131,8 +131,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:padding="@dimen/small_padding">
+                            android:layout_gravity="center">
 
 
                             <ImageView
@@ -140,75 +139,121 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:layout_alignParentLeft="true"
-                                android:src="@mipmap/ic_launcher" />
+                                android:layout_marginTop="1dp"
+                                android:alpha=".68"
+                                android:padding="@dimen/medium_padding"
+                                android:src="@drawable/ic_black_clock" />
 
                             <TextView
                                 android:id="@+id/time_textview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_above="@+id/bottom_indicator_view"
+                                android:layout_above="@+id/open_close_bottom_indicator_view"
                                 android:layout_marginBottom="8dp"
                                 android:layout_toRightOf="@+id/clock_imageView"
-                                android:text="Openings and Closing Time"
+                                android:text="Opening and Closing Time"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                                 android:textColor="@color/textColorSecondary"
                                 android:textStyle="bold" />
 
 
                             <ImageView
-                                android:id="@+id/expand_imageview"
+                                android:id="@+id/open_close_expand_imageview"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:layout_alignParentRight="true"
-                                android:padding="@dimen/small_padding"
+                                android:layout_marginRight="@dimen/small_margin"
+                                android:alpha="1"
+                                android:padding="@dimen/medium_padding"
                                 android:src="@drawable/down_arrow" />
 
                             <LinearLayout
-                                android:id="@+id/bottom_indicator_view"
+                                android:id="@+id/open_close_bottom_indicator_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="3dp"
-                                android:layout_below="@+id/expand_imageview"
+                                android:layout_below="@+id/open_close_expand_imageview"
                                 android:layout_marginTop="@dimen/small_margin"
                                 android:background="@drawable/cardbackground"
-                                android:orientation="horizontal" />
+                                android:orientation="horizontal"
+                                android:visibility="invisible" />
 
-
-                            <LinearLayout
-                                android:id="@+id/restaurent_time_layout"
+                            <RelativeLayout
+                                android:id="@+id/open_close_time_layout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/bottom_indicator_view"
-                                android:layout_margin="20dp"
-                                android:orientation="vertical"
-                                android:visibility="visible">
+                                android:layout_below="@id/open_close_bottom_indicator_view"
+                                android:gravity="center"
+                                android:visibility="gone">
 
                                 <TextView
-                                    android:id="@+id/breakfasttime_textview"
-                                    android:layout_width="match_parent"
+                                    android:id="@+id/restaurent_breakfast_time_title_textview"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="Breakfast time: 08:00-22:00"
+                                    android:paddingTop="@dimen/medium_padding"
+                                    android:text="Breakfast:"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                                     android:textColor="@color/textColorSecondary" />
 
                                 <TextView
-                                    android:id="@+id/launchtime_textview"
-                                    android:layout_width="match_parent"
+                                    android:id="@+id/restaurent_breakfast_time_textview"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="Launch time: 08:00-22:00"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_toEndOf="@+id/restaurent_breakfast_time_title_textview"
+                                    android:paddingTop="@dimen/medium_padding"
+                                    android:text="08:00-22:00"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                                     android:textColor="@color/textColorSecondary" />
 
                                 <TextView
-                                    android:id="@+id/dinnertime_textview"
-                                    android:layout_width="match_parent"
+                                    android:id="@+id/restaurent_lunch_time_title_textview"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="Dinner time: 08:00-22:00"
+                                    android:layout_below="@+id/restaurent_breakfast_time_title_textview"
+                                    android:paddingTop="@dimen/medium_padding"
+                                    android:text="Lunch:"
                                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                                     android:textColor="@color/textColorSecondary" />
-                            </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/restaurent_lunch_time_textview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignStart="@+id/restaurent_breakfast_time_textview"
+                                    android:layout_below="@+id/restaurent_breakfast_time_textview"
+                                    android:paddingTop="@dimen/medium_padding"
+                                    android:text="08:00-22:00"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                    android:textColor="@color/textColorSecondary" />
+
+                                <TextView
+                                    android:id="@+id/restaurent_dinner_time_title_textview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/restaurent_lunch_time_title_textview"
+                                    android:paddingBottom="@dimen/medium_padding"
+                                    android:paddingTop="@dimen/medium_padding"
+                                    android:text="Dinner:"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                    android:textColor="@color/textColorSecondary" />
+
+
+                                <TextView
+                                    android:id="@+id/restaurent_dinner_time_textview"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_alignStart="@+id/restaurent_lunch_time_textview"
+                                    android:paddingBottom="@dimen/medium_padding"
+                                    android:paddingTop="@dimen/medium_padding"
+                                    android:text="08:00-22:00"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                                    android:textColor="@color/textColorSecondary" />
+
+
+                            </RelativeLayout>
+
 
                         </RelativeLayout>
 
@@ -237,7 +282,7 @@
                             android:padding="@dimen/small_padding">
 
                             <TextView
-                                android:id="@+id/expandable_TextView"
+                                android:id="@+id/restaurent_info_expandable_TextView"
                                 style="@style/TextAppearance.AppCompat.Medium"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -287,6 +332,7 @@
                                 android:visibility="visible">
 
                                 <TextView
+                                    android:id="@+id/adults_title_textview"
                                     style="@style/TextAppearance.AppCompat.Medium"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
@@ -298,6 +344,7 @@
                                     android:textStyle="bold" />
 
                                 <TextView
+                                    android:id="@+id/children_title_textview"
                                     style="@style/TextAppearance.AppCompat.Medium"
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
@@ -322,7 +369,7 @@
                                 <RelativeLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1.2">
+                                    android:layout_weight="1.5">
 
                                     <TextView
                                         android:id="@+id/breakfast_title_textview"
@@ -334,11 +381,12 @@
                                         android:textStyle="bold" />
 
                                     <TextView
+                                        android:id="@+id/breakfast_item_info_textview"
                                         style="@style/TextAppearance.AppCompat.Medium"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_below="@+id/breakfast_title_textview"
-                                        android:text="No available during the winter sailing"
+                                        android:text="Not available during the winter"
                                         android:textSize="@dimen/resturent_info_Textsize"
                                         android:textStyle="normal" />
 
@@ -347,8 +395,8 @@
                                 <RelativeLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/small_margin"
-                                    android:layout_weight="2.02">
+                                    android:layout_weight="1.46"
+                                    android:paddingLeft="8dp">
 
                                     <TextView
                                         android:id="@+id/prebook_title_textview"
@@ -380,8 +428,8 @@
                                         android:textSize="@dimen/resturent_info_Textsize"
                                         android:textStyle="normal" />
 
-
                                     <TextView
+                                        android:id="@+id/save_textview"
                                         style="@style/TextAppearance.AppCompat.Medium"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -397,8 +445,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="right"
-                                    android:layout_weight=".8"
-                                    android:paddingLeft="@dimen/small_padding">
+                                    android:layout_weight="0.99">
 
                                     <TextView
                                         android:id="@+id/times_title_textview"
@@ -410,6 +457,7 @@
                                         android:textStyle="bold" />
 
                                     <TextView
+                                        android:id="@+id/top_time_textview"
                                         style="@style/TextAppearance.AppCompat.Medium"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -434,6 +482,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/small_margin"
                                 android:layout_marginLeft="@dimen/small_margin"
                                 android:layout_marginRight="@dimen/medium_margin"
                                 android:layout_marginTop="@dimen/small_margin"
@@ -442,10 +491,10 @@
                                 <RelativeLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1.2">
+                                    android:layout_weight="1.5">
 
                                     <TextView
-                                        android:id="@+id/dinner_title_textview"
+                                        android:id="@+id/bottom_breakfast_title_textview"
                                         style="@style/TextAppearance.AppCompat.Medium"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -454,11 +503,12 @@
                                         android:textStyle="bold" />
 
                                     <TextView
+                                        android:id="@+id/bottom_breakfast_info_textview"
                                         style="@style/TextAppearance.AppCompat.Medium"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_below="@+id/dinner_title_textview"
-                                        android:text="No available during the winter sailing"
+                                        android:layout_below="@+id/bottom_breakfast_title_textview"
+                                        android:text="Not available during the winter sailing"
                                         android:textSize="@dimen/resturent_info_Textsize"
                                         android:textStyle="normal" />
 
@@ -467,8 +517,8 @@
                                 <RelativeLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/small_margin"
-                                    android:layout_weight="2.02">
+                                    android:layout_weight="1.46"
+                                    android:paddingLeft="8dp">
 
                                     <TextView
                                         android:id="@+id/bottom_prebook_title_textview"
@@ -496,12 +546,13 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_below="@+id/bottom_prebook_title_textview"
-                                        android:text="Onboard price: $16.1000"
+                                        android:text="Onboard price: $16.10000"
                                         android:textSize="@dimen/resturent_info_Textsize"
                                         android:textStyle="normal" />
 
 
                                     <TextView
+                                        android:id="@+id/bottom_savings_textview"
                                         style="@style/TextAppearance.AppCompat.Medium"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -516,8 +567,8 @@
                                 <RelativeLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight=".8"
-                                    android:paddingLeft="@dimen/small_padding">
+                                    android:layout_gravity="right"
+                                    android:layout_weight=".99">
 
                                     <TextView
                                         android:id="@+id/seating_times_textview"
@@ -529,6 +580,7 @@
                                         android:textStyle="bold" />
 
                                     <TextView
+                                        android:id="@+id/bottom_times_textview"
                                         style="@style/TextAppearance.AppCompat.Medium"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -586,7 +638,9 @@
                                 android:layout_height="40dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerInParent="true"
-                                android:padding="@dimen/small_padding"
+                                android:layout_marginRight="@dimen/small_margin"
+                                android:alpha="1"
+                                android:padding="@dimen/medium_padding"
                                 android:src="@drawable/down_arrow" />
 
                         </RelativeLayout>
@@ -599,7 +653,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/breakfast_item_view"
-                        android:layout_marginTop="@dimen/small_margin" />
+                        android:layout_marginTop="@dimen/small_margin"
+                        android:nestedScrollingEnabled="false"
+                        android:visibility="gone" />
 
                     <android.support.v7.widget.CardView
                         android:id="@+id/lunch_item_view"
@@ -640,7 +696,9 @@
                                 android:layout_height="40dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerInParent="true"
-                                android:padding="@dimen/small_padding"
+                                android:layout_marginRight="@dimen/small_margin"
+                                android:alpha="1"
+                                android:padding="@dimen/medium_padding"
                                 android:src="@drawable/down_arrow" />
 
                         </RelativeLayout>
@@ -653,7 +711,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/lunch_item_view"
-                        android:layout_marginTop="@dimen/small_margin" />
+                        android:layout_marginTop="@dimen/small_margin"
+                        android:visibility="gone" />
 
                     <android.support.v7.widget.CardView
                         android:id="@+id/dinner_item_view"
@@ -694,7 +753,9 @@
                                 android:layout_height="40dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerInParent="true"
-                                android:padding="@dimen/small_padding"
+                                android:layout_marginRight="@dimen/small_margin"
+                                android:alpha="1"
+                                android:padding="@dimen/medium_padding"
                                 android:src="@drawable/down_arrow" />
 
                         </RelativeLayout>
@@ -707,7 +768,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/dinner_item_view"
-                        android:layout_marginTop="@dimen/small_margin" />
+                        android:layout_marginTop="@dimen/small_margin"
+                        android:visibility="gone" />
 
 
                 </RelativeLayout>
