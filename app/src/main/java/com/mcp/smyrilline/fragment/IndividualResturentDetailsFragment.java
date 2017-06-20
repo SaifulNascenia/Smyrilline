@@ -88,15 +88,6 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
     private Button retryInternetBtn;
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
-    private String text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-            "Ut volutpat interdum interdum. Nulla laoreet lacus diam, vitae " +
-            "sodales sapien commodo faucibus. Vestibulum et feugiat enim. Donec " +
-            "semper mi et euismod tempor. Sed sodales eleifend mi id varius. Nam " +
-            "et ornare enim, sit amet gravida sapien. Quisque gravida et enim vel " +
-            "volutpat. Vivamus egestas ut felis a blandit. Vivamus fringilla " +
-            "dignissim mollis.dictum hendrerit ultrices. Ut vitae vestibulum dolor. Donec auctor ante" +
-            " eget libero molestie porta. Nam tempor fringilla ultricies. Nam sem " +
-            "lectus, feugiat eget ";
 
     @Nullable
     @Override
@@ -150,7 +141,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                 collapsingToolbarLayout.setTitleEnabled(false);
 
 
-                bindApiDataWithView();
+                bindViewWithApiData();
 
                 setUprestaurentRecyclerView();
 
@@ -239,8 +230,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
     }
 
-
-    private void bindApiDataWithView() {
+    private void bindViewWithApiData() {
 
         Picasso.with(getActivity())
                 .load(getActivity().getResources().
@@ -254,21 +244,46 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         lunchTimeTextView.setText(restaurentDetails.getLunchTime());
         dinnerTimeTextView.setText(restaurentDetails.getDinnerTime());
 
-        Log.i("opclse", restaurentDetails.getOpenCloseTimeText());
 
         restaurentDetailsInfoTextView.setText(restaurentDetails.getOpenCloseTimeText());
-
+        
         restaurentDetailsInfoTextView.post(new Runnable() {
             @Override
             public void run() {
                 //  int lineCount = restaurentDetailsInfoTextView.getLineCount();
 
-                // Use lineCount here
-                Log.i("textline", restaurentDetailsInfoTextView.getLineCount() + "");
+                int start, end;
+                String firstLine, secondLine, thirdLine;
 
                 if (restaurentDetailsInfoTextView.getLineCount() == 3) {
-                    expandTextView.setVisibility(View.VISIBLE);
+                    // Use lineCount here
+                    start = restaurentDetailsInfoTextView.getLayout().getLineStart(0);
+                    end = restaurentDetailsInfoTextView.getLayout().getLineEnd(0);
+                    firstLine = restaurentDetailsInfoTextView.getText().toString().substring(start, end);
+
+                    start = restaurentDetailsInfoTextView.getLayout().getLineStart(1);
+                    end = restaurentDetailsInfoTextView.getLayout().getLineEnd(1);
+                    secondLine = restaurentDetailsInfoTextView.getText().toString().substring(start, end);
+
+                    start = restaurentDetailsInfoTextView.getLayout().getLineStart(2);
+                    end = restaurentDetailsInfoTextView.getLayout().getLineEnd(2);
+                    thirdLine = restaurentDetailsInfoTextView.getText().toString().substring(start, end);
+
+                    String totalThreeLineText = firstLine + secondLine + thirdLine;
+
+                /*Log.i("textline", totalThreeLineText);
+                Log.i("textline", totalThreeLineText.length() + " " +
+                        restaurentDetails.getOpenCloseTimeText().length() + "/n" + thirdLine);
+*/
+
+                    if (!(totalThreeLineText.length() ==
+                            restaurentDetails.getOpenCloseTimeText().length())
+                            ) {
+
+                        expandTextView.setVisibility(View.VISIBLE);
+                    }
                 }
+
 
             }
         });
