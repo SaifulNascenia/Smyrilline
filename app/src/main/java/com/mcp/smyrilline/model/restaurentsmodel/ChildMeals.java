@@ -9,8 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class ChildMeals implements Parcelable
-{
+public class ChildMeals implements Parcelable {
 
     @SerializedName("name")
     @Expose
@@ -29,7 +28,7 @@ public class ChildMeals implements Parcelable
     private String save;
     @SerializedName("time")
     @Expose
-    private Object time;
+    private String time;
     @SerializedName("seatingTime")
     @Expose
     private String seatingTime;
@@ -40,7 +39,7 @@ public class ChildMeals implements Parcelable
 
 
         @SuppressWarnings({
-            "unchecked"
+                "unchecked"
         })
         public ChildMeals createFromParcel(Parcel in) {
             ChildMeals instance = new ChildMeals();
@@ -49,7 +48,7 @@ public class ChildMeals implements Parcelable
             instance.prebookPrice = ((String) in.readValue((String.class.getClassLoader())));
             instance.onboardPrice = ((String) in.readValue((String.class.getClassLoader())));
             instance.save = ((String) in.readValue((String.class.getClassLoader())));
-            instance.time = ((Object) in.readValue((Object.class.getClassLoader())));
+            instance.time = ((String) in.readValue((Object.class.getClassLoader())));
             instance.seatingTime = ((String) in.readValue((String.class.getClassLoader())));
             instance.seatingText = ((String) in.readValue((String.class.getClassLoader())));
             return instance;
@@ -59,8 +58,7 @@ public class ChildMeals implements Parcelable
             return (new ChildMeals[size]);
         }
 
-    }
-    ;
+    };
 
     public String getName() {
         return name;
@@ -102,11 +100,11 @@ public class ChildMeals implements Parcelable
         this.save = save;
     }
 
-    public Object getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Object time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -143,7 +141,7 @@ public class ChildMeals implements Parcelable
     }
 
     public int describeContents() {
-        return  0;
+        return 0;
     }
 
 }

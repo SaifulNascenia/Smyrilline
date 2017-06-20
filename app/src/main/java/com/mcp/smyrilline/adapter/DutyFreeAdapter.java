@@ -59,7 +59,6 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
 
     }
 
-
     @Override
     public DutyFreeAdapter.DutyFreeViewHolder onCreateViewHolder(ViewGroup parent, int position) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -86,31 +85,51 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
 
         holder.rootCardView.getLayoutParams().height = dpToPx(160);
 
+        holder.productNameTextView.setVisibility(View.GONE);
+        holder.productQuantityTextView.setVisibility(View.GONE);
+        holder.productShortDetailsTextview.setTextColor(mContext.getResources().
+                getColor(R.color.textColorSecondary));
+        holder.productShortDetailsTextview.setTextSize(16);
+
         if (thisAdapterUsedClassName.equals("Breakfast")) {
 
             BreakfastItem breakfastItem = (BreakfastItem) dutyFreeChildList.get(position);
 
-            holder.productNameTextView.setText(breakfastItem.getName());
-            //  holder.productShortDetailsTextview.setText(breakfastItem.getText1());
+            holder.productShortDetailsTextview.setText(breakfastItem.getName());
+
+            Picasso.with(mContext)
+                    .load(mContext.getResources().
+                            getString(R.string.image_downloaded_base_url) +
+                            breakfastItem.getImageUrl())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .into(holder.productImageView);
+
+
         } else if (thisAdapterUsedClassName.equals("Lunch")) {
 
             LunchItem lunchItem = (LunchItem) dutyFreeChildList.get(position);
 
-            holder.productNameTextView.setText(lunchItem.getName());
-            //  holder.productShortDetailsTextview.setText(breakfastItem.getText1());
+            holder.productShortDetailsTextview.setText(lunchItem.getName());
+
+            Picasso.with(mContext)
+                    .load(mContext.getResources().
+                            getString(R.string.image_downloaded_base_url) +
+                            lunchItem.getImageUrl())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .into(holder.productImageView);
         } else {
             DinnerItem dinnerItem = (DinnerItem) dutyFreeChildList.get(position);
 
-            holder.productNameTextView.setText(dinnerItem.getName());
-            //  holder.productShortDetailsTextview.setText(breakfastItem.getText1());
+            holder.productShortDetailsTextview.setText(dinnerItem.getName());
+
+            Picasso.with(mContext)
+                    .load(mContext.getResources().
+                            getString(R.string.image_downloaded_base_url) +
+                            dinnerItem.getImageUrl())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .into(holder.productImageView);
         }
 
-    }
-
-
-    private int dpToPx(int dp) {
-        Resources r = mContext.getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
     private void setViewOnDutyFreeRecylerView(DutyFreeViewHolder holder, int position) {
@@ -118,7 +137,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
         Log.i("dutydata", dutyFreeChildList.get(position).getName()+"\n"+
                 dutyFreeChildList.get(position).getText1()+"\n"+);*/
 
-        Child child = (Child) dutyFreeChildList.get(position);
+        Child dutyFreeItemChild = (Child) dutyFreeChildList.get(position);
         /*holder.productNameTextView.setText((Child) dutyFreeChildList.get(position).getName());
 
         holder.productShortDetailsTextview.setText(dutyFreeChildList.get(position).getText2());
@@ -138,25 +157,30 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
                 .placeholder(R.mipmap.ic_launcher)
                 .into(holder.productImageView);
 */
-        holder.productNameTextView.setText(child.getName());
+        holder.productNameTextView.setText(dutyFreeItemChild.getName());
 
-        holder.productShortDetailsTextview.setText(child.getText2());
+        holder.productShortDetailsTextview.setText(dutyFreeItemChild.getText2());
 
-        holder.productPriceTextView.setText("€ " + child.getText3().
-                substring(1, child.getText3().indexOf(",")));
+        holder.productPriceTextView.setText("€ " + dutyFreeItemChild.getText3().
+                substring(1, dutyFreeItemChild.getText3().indexOf(",")));
 
-        holder.productQuantityTextView.setText(child.getText3().
-                substring(child.getText3().indexOf(",") + 1,
-                        child.getText3().length()));
+        holder.productQuantityTextView.setText(dutyFreeItemChild.getText3().
+                substring(dutyFreeItemChild.getText3().indexOf(",") + 1,
+                        dutyFreeItemChild.getText3().length()));
 
 
         Picasso.with(mContext)
                 .load(mContext.getResources().
                         getString(R.string.image_downloaded_base_url) +
-                        child.getImageUrl())
+                        dutyFreeItemChild.getImageUrl())
                 .placeholder(R.mipmap.ic_launcher)
                 .into(holder.productImageView);
 
+    }
+
+    private int dpToPx(int dp) {
+        Resources r = mContext.getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
     @Override
