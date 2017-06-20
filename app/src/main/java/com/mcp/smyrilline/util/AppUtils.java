@@ -162,7 +162,8 @@ public class AppUtils extends MultiDexApplication {
 
     public static void withoutInternetConnectionView(final Context context,
                                                      final Intent intent,
-                                                     Button retryBtn) {
+                                                     Button retryBtn,
+                                                     final String reloadedFragmentName) {
 
 
         final Activity activity = (Activity) context;
@@ -179,7 +180,7 @@ public class AppUtils extends MultiDexApplication {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     activity.finish();
                     activity.overridePendingTransition(0, 0);
-                    intent.putExtra(AppUtils.START_DRAWER_FRAGMENT, AppUtils.fragmentList[3]);
+                    intent.putExtra(AppUtils.START_DRAWER_FRAGMENT, reloadedFragmentName);
                     activity.startActivity(intent);
 
 

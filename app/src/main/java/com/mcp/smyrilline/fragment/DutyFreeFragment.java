@@ -163,7 +163,8 @@ public class DutyFreeFragment extends Fragment {
                 noInternetConnetionView.setVisibility(View.VISIBLE);
                 AppUtils.withoutInternetConnectionView(getActivity(),
                         getActivity().getIntent(),
-                        retryInternetBtn);
+                        retryInternetBtn,
+                        AppUtils.fragmentList[3]);
                 rootLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.windowBackground));
             }
         });

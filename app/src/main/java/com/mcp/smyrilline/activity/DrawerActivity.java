@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mcp.smyrilline.adapter.LanguageSpinnerAdapter;
+import com.mcp.smyrilline.fragment.IndividualResturentDetailsFragment;
 import com.mcp.smyrilline.fragment.InfoFragment;
 import com.mcp.smyrilline.fragment.SettingsFragment;
 import com.mcp.smyrilline.model.DrawerItem;
@@ -208,6 +209,9 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             case ("InfoFragment"):
                 fragment = new InfoFragment();
                 break;
+           /* case ("IndividualResturentDetailsFragment"):
+                fragment = new IndividualResturentDetailsFragment();
+                break;*/
         }
 
         // Only LoginFragment is Parent, others are child

@@ -9,6 +9,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -90,6 +91,9 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
     private Button retryInternetBtn;
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
+    private static String restaurentId;
+    private static String restaurentName;
+
 
     @Nullable
     @Override
@@ -103,6 +107,25 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         unbinder = ButterKnife.bind(this, _rootView);
         initView();
 
+
+        retryInternetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "retry",
+                        Toast.LENGTH_LONG).show();
+                IndividualResturentDetailsFragment individualResturentDetailsFragment = new
+                        IndividualResturentDetailsFragment();
+
+                //FragmentManager fm = getActivity().getSupportFragmentManager();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .addToBackStack(null)
+                        .detach(individualResturentDetailsFragment)
+                        .attach(individualResturentDetailsFragment)
+                        .commit();
+            }
+        });
+
         fetchRestaurentDetails();
 
         return _rootView;
@@ -111,9 +134,31 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
     private void setWithoutInternetView() {
         mLoadingView.setVisibility(View.GONE);
         noInternetConnetionView.setVisibility(View.VISIBLE);
-        AppUtils.withoutInternetConnectionView(getActivity(),
+        /*AppUtils.withoutInternetConnectionView(getActivity(),
                 getActivity().getIntent(),
-                retryInternetBtn);
+                retryInternetBtn,
+                "IndividualResturentDetailsFragment");
+        */
+
+
+        // Reload current fragment
+        /*Fragment frg = null;
+        frg = getSupportFragmentManager().findFragmentByTag("Your_Fragment_TAG");
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
+*/
+       /* IndividualResturentDetailsFragment individualResturentDetailsFragment = new
+                IndividualResturentDetailsFragment();
+
+        //FragmentManager fm = getActivity().getSupportFragmentManager();
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(null)
+                .detach(individualResturentDetailsFragment)
+                .attach(individualResturentDetailsFragment)
+                .commit();*/
 
 
     }
@@ -123,7 +168,9 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         Retrofit retrofit = ApiClient.getClient();
         ApiInterfaces apiInterfaces = retrofit.create(ApiInterfaces.class);
         Call<RestaurentDetails> call = apiInterfaces.fetchRestaurentDetails(AppUtils.WP_PARAM_LANGUAGE,
-                getArguments().getString("RESTAURENT_ID"));
+                //        getArguments().getString("RESTAURENT_ID"));
+                "1");
+
         call.enqueue(new Callback<RestaurentDetails>() {
             @Override
             public void onResponse(Call<RestaurentDetails> call, Response<RestaurentDetails> response) {
@@ -137,7 +184,10 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
 
                 toolbar.setBackground(null);
-                toolbar.setTitle(getArguments().getString("RESTAURENT_NAME"));
+
+                //toolbar.setTitle(getArguments().getString("RESTAURENT_NAME"));
+                toolbar.setTitle("Norona");
+
                 ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
                 collapsingToolbarLayout.setTitle(null);
                 collapsingToolbarLayout.setTitleEnabled(false);
@@ -155,7 +205,8 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
                 rootViewCoordinatorLayout.setVisibility(View.GONE);
                 noInternetViewToolbar.setVisibility(View.VISIBLE);
-                noInternetViewToolbar.setTitle(getArguments().getString("RESTAURENT_NAME"));
+                //noInternetViewToolbar.setTitle(getArguments().getString("RESTAURENT_NAME"));
+                noInternetViewToolbar.setTitle("Norona");
                 noInternetViewToolbar.setBackgroundColor(
                         getActivity().getResources().getColor(R.color.colorPrimary));
                 ((DrawerActivity) getActivity()).setToolbarAndToggle(noInternetViewToolbar);
@@ -352,7 +403,6 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
         }
     }
-
 
     private void setUprestaurentRecyclerView() {
 

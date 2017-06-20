@@ -530,10 +530,10 @@
                                         android:layout_height="wrap_content"
                                         android:layout_toRightOf="@+id/bottom_prebook_title_textview"
                                         android:text=" $ 30"
-                                        android:visibility="gone"
                                         android:textColor="@color/colorPrimary"
                                         android:textSize="@dimen/resturent_info_Textsize"
-                                        android:textStyle="bold" />
+                                        android:textStyle="bold"
+                                        android:visibility="gone" />
 
                                     <TextView
                                         android:id="@+id/bottom_onboard_textview"
