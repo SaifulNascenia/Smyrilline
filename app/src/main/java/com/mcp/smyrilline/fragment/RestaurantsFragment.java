@@ -265,7 +265,8 @@ public class RestaurantsFragment extends Fragment {
         noInternetConnetionView.setVisibility(View.VISIBLE);
         AppUtils.withoutInternetConnectionView(getActivity(),
                 getActivity().getIntent(),
-                retryInternetBtn);
+                retryInternetBtn,
+                AppUtils.fragmentList[4]);
 
         toolbar.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
     }
