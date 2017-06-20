@@ -14,6 +14,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
@@ -196,11 +198,13 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
         adultChildrenCardInfoView = (CardView) _rootView.findViewById(R.id.adult_children_view);
         adultsTitleTextView = (TextView) _rootView.findViewById(R.id.adults_title_textview);
+        adultsTitleTextView.setOnClickListener(this);
         childrenTitleTextView = (TextView) _rootView.findViewById(R.id.children_title_textview);
+        childrenTitleTextView.setOnClickListener(this);
         topBreakfastTitleTextview = (TextView) _rootView.findViewById(R.id.breakfast_title_textview);
         topBreakfastItemInfoTextview = (TextView) _rootView.findViewById(R.id.breakfast_item_info_textview);
         topPrebookTitleTextview = (TextView) _rootView.findViewById(R.id.prebook_title_textview);
-        topPreBookPriceTextView = (TextView) _rootView.findViewById(R.id.prebook_price_textview);
+        //  topPreBookPriceTextView = (TextView) _rootView.findViewById(R.id.prebook_price_textview);
         topOnBoardPriceTextView = (TextView) _rootView.findViewById(R.id.onboard_textview);
         topSavingsAmountTextView = (TextView) _rootView.findViewById(R.id.save_textview);
         topTimeTitleTextView = (TextView) _rootView.findViewById(R.id.times_title_textview);
@@ -246,7 +250,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
 
         restaurentDetailsInfoTextView.setText(restaurentDetails.getOpenCloseTimeText());
-        
+
         restaurentDetailsInfoTextView.post(new Runnable() {
             @Override
             public void run() {
@@ -304,6 +308,8 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
             }
         });
 
+        setApiDataOnAdultMealsInfoView();
+        setApiDataOnChildrenMealsInfoView();
 
     }
 
@@ -360,7 +366,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         );
 
         breakfastItemsRecylerView.setLayoutManager(mLayoutManager1);
-        breakfastItemsRecylerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(10), true));
+        breakfastItemsRecylerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(3), true));
         breakfastItemsRecylerView.setItemAnimator(new DefaultItemAnimator());
         breakfastItemsRecylerView.setAdapter(breakFastItemsRecylerViewAdapter);
 
@@ -370,7 +376,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                 "Lunch");
 
         lunchItemsRecylerView.setLayoutManager(mLayoutManager2);
-        lunchItemsRecylerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(10), true));
+        lunchItemsRecylerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(3), true));
         lunchItemsRecylerView.setItemAnimator(new DefaultItemAnimator());
         lunchItemsRecylerView.setAdapter(lunchItemsRecylerViewAdapter);
 
@@ -380,7 +386,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                 "Dinner");
 
         dinnerItemsRecylerView.setLayoutManager(mLayoutManager3);
-        dinnerItemsRecylerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(10), true));
+        dinnerItemsRecylerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(3), true));
         dinnerItemsRecylerView.setItemAnimator(new DefaultItemAnimator());
         dinnerItemsRecylerView.setAdapter(dinnerItemsRecylerViewAdapter);
 
@@ -400,15 +406,183 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
             case R.id.dinner_list_expand_imageview:
                 setDinnerExpandViewImageViewAction();
                 break;
-
             case R.id.open_close_expand_imageview:
-                setopenCloseExpandImageviewAction();
+                setOpenCloseExpandImageviewAction();
+                break;
+            case R.id.adults_title_textview:
+                setAdultsTitleTextViewAction();
+                break;
+            case R.id.children_title_textview:
+                setChildrenTitleTextviewAction();
+                break;
+        }
+
+    }
+
+    private void setAdultsTitleTextViewAction() {
+
+        adultsTitleTextView.setBackgroundColor(
+                getActivity().getResources().getColor(R.color.colorPrimary));
+        adultsTitleTextView.setTextColor(
+                getActivity().getResources().getColor(R.color.windowBackground));
+
+        childrenTitleTextView.setBackgroundColor(
+                getActivity().getResources().getColor(R.color.light_grey_bkg));
+        childrenTitleTextView.setTextColor(
+                getActivity().getResources().getColor(R.color.grey_black_textcolor));
+
+        setApiDataOnAdultMealsInfoView();
+
+    }
+
+    private void setApiDataOnAdultMealsInfoView() {
+
+        // Top view
+        topBreakfastTitleTextview.setText(restaurentDetails.getAdultMeals().get(0)
+                .getName());
+        topBreakfastItemInfoTextview.setText(restaurentDetails.getAdultMeals().get(0)
+                .getTag());
+
+        topPrebookTitleTextview.setText(Html.fromHtml("Prebook price: " + "<font color=#0a95dc>" +
+                restaurentDetails.getAdultMeals().get(0)
+                        .getPrebookPrice() + "</font>"
+        ));
+
+        /*topPreBookPriceTextView.setText(restaurentDetails.getAdultMeals().get(0)
+                .getPrebookPrice());
+        */
+        topOnBoardPriceTextView.setText("Onboard price: " + restaurentDetails.getAdultMeals().get(0)
+                .getOnboardPrice());
+        topSavingsAmountTextView.setText("Save: " + restaurentDetails.getAdultMeals().get(0)
+                .getSave());
+
+        if (restaurentDetails.getAdultMeals().get(0).getTime() != null) {
+
+            topTimeTitleTextView.setText("Times");
+            topTimesTextView.setText(restaurentDetails.getAdultMeals().get(0).getTime());
+        } else {
+            topTimeTitleTextView.setText("Seatings: " + restaurentDetails.getAdultMeals().get(0)
+                    .getSeatingTime());
+            topTimesTextView.setText(restaurentDetails.getAdultMeals().get(0).getSeatingText());
+        }
+
+        // Bottom View
+
+        bottomBreakfastTitleTextview.setText(restaurentDetails.getAdultMeals().get(1)
+                .getName());
+        bottomBreakfastItemInfoTextview.setText(restaurentDetails.getAdultMeals().get(1)
+                .getTag());
+        //bottomPrebookTitleTextview.setText("Prebook price: ");
+
+        bottomPrebookTitleTextview.setText(Html.fromHtml("Prebook price: " + "<font color=#0a95dc>" +
+                restaurentDetails.getAdultMeals().get(1)
+                        .getPrebookPrice() + "</font>"
+        ));
+
+        /*bottomPreBookPriceTextView.setText(restaurentDetails.getAdultMeals().get(1)
+                .getPrebookPrice());
+        */
+
+        bottomOnBoardPriceTextView.setText("Onboard price: " + restaurentDetails.getAdultMeals().get(1)
+                .getOnboardPrice());
+        bottomSavingsAmountTextView.setText("Save: " + restaurentDetails.getAdultMeals().get(1)
+                .getSave());
+
+        if (restaurentDetails.getAdultMeals().get(1).getTime() != null) {
+
+            bottomTimeTitleTextView.setText("Times");
+            bottomTimesTextView.setText(restaurentDetails.getAdultMeals().get(1).getTime());
+        } else {
+            bottomTimeTitleTextView.setText("Seatings: " + restaurentDetails.getAdultMeals().get(1)
+                    .getSeatingTime());
+            bottomTimesTextView.setText(restaurentDetails.getAdultMeals().get(1).getSeatingText());
+        }
+
+
+    }
+
+    private void setChildrenTitleTextviewAction() {
+
+        adultsTitleTextView.setBackgroundColor(
+                getActivity().getResources().getColor(R.color.light_grey_bkg));
+        adultsTitleTextView.setTextColor(
+                getActivity().getResources().getColor(R.color.grey_black_textcolor));
+        childrenTitleTextView.setBackgroundColor(
+                getActivity().getResources().getColor(R.color.colorPrimary));
+        childrenTitleTextView.setTextColor(
+                getActivity().getResources().getColor(R.color.windowBackground));
+
+        setApiDataOnChildrenMealsInfoView();
+
+    }
+
+    private void setApiDataOnChildrenMealsInfoView() {
+
+        // Top view
+        topBreakfastTitleTextview.setText(restaurentDetails.getChildrenMeals().get(0)
+                .getName());
+        topBreakfastItemInfoTextview.setText(restaurentDetails.getChildrenMeals().get(0)
+                .getTag());
+
+        topPrebookTitleTextview.setText(Html.fromHtml("Prebook price: " + "<font color=#0a95dc>" +
+                restaurentDetails.getChildrenMeals().get(0)
+                        .getPrebookPrice() + "</font>"
+        ));
+
+        /*topPreBookPriceTextView.setText(restaurentDetails.getChildrenMeals().get(0)
+                .getPrebookPrice());
+        */
+        topOnBoardPriceTextView.setText("Onboard price: " + restaurentDetails.getChildrenMeals().get(0)
+                .getOnboardPrice());
+        topSavingsAmountTextView.setText("Save: " + restaurentDetails.getChildrenMeals().get(0)
+                .getSave());
+
+        if (restaurentDetails.getChildrenMeals().get(0).getTime() != null) {
+
+            topTimeTitleTextView.setText("Times");
+            topTimesTextView.setText(restaurentDetails.getChildrenMeals().get(0).getTime());
+        } else {
+            topTimeTitleTextView.setText("Seatings: " + restaurentDetails.getChildrenMeals().get(0)
+                    .getSeatingTime());
+            topTimesTextView.setText(restaurentDetails.getChildrenMeals().get(0).getSeatingText());
+        }
+
+        // Bottom View
+
+        bottomBreakfastTitleTextview.setText(restaurentDetails.getChildrenMeals().get(1)
+                .getName());
+        bottomBreakfastItemInfoTextview.setText(restaurentDetails.getChildrenMeals().get(1)
+                .getTag());
+        //bottomPrebookTitleTextview.setText("Prebook price: ");
+
+        bottomPrebookTitleTextview.setText(Html.fromHtml("Prebook price: " + "<font color=#0a95dc>" +
+                restaurentDetails.getChildrenMeals().get(1)
+                        .getPrebookPrice() + "</font>"
+        ));
+
+        /*bottomPreBookPriceTextView.setText(restaurentDetails.getChildrenMeals().get(1)
+                .getPrebookPrice());
+        */
+
+        bottomOnBoardPriceTextView.setText("Onboard price: " + restaurentDetails.getChildrenMeals().get(1)
+                .getOnboardPrice());
+        bottomSavingsAmountTextView.setText("Save: " + restaurentDetails.getChildrenMeals().get(1)
+                .getSave());
+
+        if (restaurentDetails.getChildrenMeals().get(1).getTime() != null) {
+
+            bottomTimeTitleTextView.setText("Times");
+            bottomTimesTextView.setText(restaurentDetails.getChildrenMeals().get(1).getTime());
+        } else {
+            bottomTimeTitleTextView.setText("Seatings: " + restaurentDetails.getChildrenMeals().get(1)
+                    .getSeatingTime());
+            bottomTimesTextView.setText(restaurentDetails.getChildrenMeals().get(1).getSeatingText());
         }
 
     }
 
 
-    private void setopenCloseExpandImageviewAction() {
+    private void setOpenCloseExpandImageviewAction() {
 
         openCloseExpandImageview.setOnClickListener(new View.OnClickListener() {
             @Override
