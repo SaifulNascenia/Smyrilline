@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -143,6 +144,9 @@ public class DutyFreeFragment extends Fragment {
                             .placeholder(R.mipmap.ic_launcher)
                             .into(shopImageView);
 
+                    Log.i("dutyimage", getActivity().getResources().
+                            getString(R.string.image_downloaded_base_url) +
+                            dutyFree.getImageUrl());
                     setUprestaurentRecyclerView();
 
                 } catch (Exception e) {

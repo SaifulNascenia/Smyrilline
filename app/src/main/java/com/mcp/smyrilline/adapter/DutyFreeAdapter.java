@@ -2,6 +2,8 @@ package com.mcp.smyrilline.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,6 +23,10 @@ import com.mcp.smyrilline.util.AppUtils;
 import com.mcp.smyrilline.util.VolleySingleton;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -96,6 +102,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
             BreakfastItem breakfastItem = (BreakfastItem) dutyFreeChildList.get(position);
 
             holder.productShortDetailsTextview.setText(breakfastItem.getName());
+            holder.productPriceTextView.setText(breakfastItem.getText2());
 
             Picasso.with(mContext)
                     .load(mContext.getResources().
@@ -110,6 +117,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
             LunchItem lunchItem = (LunchItem) dutyFreeChildList.get(position);
 
             holder.productShortDetailsTextview.setText(lunchItem.getName());
+            holder.productPriceTextView.setText(lunchItem.getText2());
 
             Picasso.with(mContext)
                     .load(mContext.getResources().
@@ -118,9 +126,12 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
                     .placeholder(R.mipmap.ic_launcher)
                     .into(holder.productImageView);
         } else {
+
             DinnerItem dinnerItem = (DinnerItem) dutyFreeChildList.get(position);
 
             holder.productShortDetailsTextview.setText(dinnerItem.getName());
+            holder.productPriceTextView.setText(dinnerItem.getText2());
+
 
             Picasso.with(mContext)
                     .load(mContext.getResources().
@@ -177,6 +188,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
                 .into(holder.productImageView);
 
     }
+
 
     private int dpToPx(int dp) {
         Resources r = mContext.getResources();
