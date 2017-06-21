@@ -94,6 +94,8 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
     private static String restaurentId;
     private static String restaurentName;
 
+    private IndividualResturentDetailsFragment thisClassContext = this;
+
 
     @Nullable
     @Override
@@ -108,24 +110,6 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         initView();
 
 
-        retryInternetBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "retry",
-                        Toast.LENGTH_LONG).show();
-                IndividualResturentDetailsFragment individualResturentDetailsFragment = new
-                        IndividualResturentDetailsFragment();
-
-                //FragmentManager fm = getActivity().getSupportFragmentManager();
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .addToBackStack(null)
-                        .detach(individualResturentDetailsFragment)
-                        .attach(individualResturentDetailsFragment)
-                        .commit();
-            }
-        });
-
         fetchRestaurentDetails();
 
         return _rootView;
@@ -139,28 +123,6 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                 retryInternetBtn,
                 "IndividualResturentDetailsFragment");
         */
-
-
-        // Reload current fragment
-        /*Fragment frg = null;
-        frg = getSupportFragmentManager().findFragmentByTag("Your_Fragment_TAG");
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.detach(frg);
-        ft.attach(frg);
-        ft.commit();
-*/
-       /* IndividualResturentDetailsFragment individualResturentDetailsFragment = new
-                IndividualResturentDetailsFragment();
-
-        //FragmentManager fm = getActivity().getSupportFragmentManager();
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .addToBackStack(null)
-                .detach(individualResturentDetailsFragment)
-                .attach(individualResturentDetailsFragment)
-                .commit();*/
-
-
     }
 
     private void fetchRestaurentDetails() {
@@ -226,6 +188,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         mLoadingView = _rootView.findViewById(R.id.restaurantsLoadingView);
         noInternetConnetionView = _rootView.findViewById(R.id.no_internet_layout);
         retryInternetBtn = (Button) _rootView.findViewById(R.id.retry_internet);
+        retryInternetBtn.setOnClickListener(this);
 
         rootViewCoordinatorLayout = (CoordinatorLayout) _rootView.findViewById(R.id.main_content);
         collapsingToolbarLayout = (CollapsingToolbarLayout) _rootView.findViewById(R.id.collapsing_toolbar);
@@ -464,6 +427,11 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                 break;
             case R.id.children_title_textview:
                 setChildrenTitleTextviewAction();
+                break;
+            case R.id.retry_internet:
+                Toast.makeText(getActivity(), "retry", Toast.LENGTH_LONG).show();
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.detach(thisClassContext).attach(thisClassContext).commit();
                 break;
         }
 
