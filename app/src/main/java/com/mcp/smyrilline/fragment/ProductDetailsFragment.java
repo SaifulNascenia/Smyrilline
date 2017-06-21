@@ -81,9 +81,16 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
         toolbar.setTitle("Price and Menu");
         toolbar.setTitleTextColor(getActivity().getResources().getColor(R.color.smalltextColor));
         productNameTextview.setText(getArguments().getString("PRODUCT_NAME"));
-        productPriceNumberTextview.setVisibility(View.GONE);
         productPriceTextView.setText(getArguments().getString("PRODUCT_PRICE"));
         productDetailsTextView.setText(getArguments().getString("PRODUCT_INFO"));
+
+        if (getArguments().getString("USED_CLASS_NAME").equals(AppUtils.fragmentList[3])) {
+
+            productPriceNumberTextview.setText(getArguments().getString("PRODUCT_PRICE_NUMBER"));
+
+        } else {
+            productPriceNumberTextview.setVisibility(View.GONE);
+        }
 
         Picasso.with(getActivity())
                 .load(getActivity().getResources().
