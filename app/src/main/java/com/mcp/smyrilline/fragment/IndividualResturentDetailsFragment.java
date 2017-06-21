@@ -96,6 +96,10 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
     private IndividualResturentDetailsFragment thisClassContext = this;
 
+    public static int startLineCount, endLineCount;
+    public static String firstLineText, secondLineText, thirdLineText;
+    public static String totalThreeLineText;
+
 
     @Nullable
     @Override
@@ -270,24 +274,29 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
             public void run() {
                 //  int lineCount = restaurentDetailsInfoTextView.getLineCount();
 
-                int start, end;
-                String firstLine, secondLine, thirdLine;
 
                 if (restaurentDetailsInfoTextView.getLineCount() == 3) {
+
                     // Use lineCount here
-                    start = restaurentDetailsInfoTextView.getLayout().getLineStart(0);
-                    end = restaurentDetailsInfoTextView.getLayout().getLineEnd(0);
-                    firstLine = restaurentDetailsInfoTextView.getText().toString().substring(start, end);
+                    startLineCount = restaurentDetailsInfoTextView.getLayout().getLineStart(0);
+                    endLineCount = restaurentDetailsInfoTextView.getLayout().getLineEnd(0);
+                    firstLineText = restaurentDetailsInfoTextView.getText().toString().
+                            substring(startLineCount, endLineCount);
 
-                    start = restaurentDetailsInfoTextView.getLayout().getLineStart(1);
-                    end = restaurentDetailsInfoTextView.getLayout().getLineEnd(1);
-                    secondLine = restaurentDetailsInfoTextView.getText().toString().substring(start, end);
+                    startLineCount = restaurentDetailsInfoTextView.getLayout().getLineStart(1);
+                    endLineCount = restaurentDetailsInfoTextView.getLayout().getLineEnd(1);
+                    secondLineText = restaurentDetailsInfoTextView.getText().toString().
+                            substring(startLineCount, endLineCount);
 
-                    start = restaurentDetailsInfoTextView.getLayout().getLineStart(2);
-                    end = restaurentDetailsInfoTextView.getLayout().getLineEnd(2);
-                    thirdLine = restaurentDetailsInfoTextView.getText().toString().substring(start, end);
+                    startLineCount = restaurentDetailsInfoTextView.getLayout().getLineStart(2);
+                    endLineCount = restaurentDetailsInfoTextView.getLayout().getLineEnd(2);
+                    thirdLineText = restaurentDetailsInfoTextView.getText().toString().
+                            substring(startLineCount, endLineCount);
 
-                    String totalThreeLineText = firstLine + secondLine + thirdLine;
+                    totalThreeLineText = firstLineText + secondLineText + thirdLineText;
+
+
+
 
                 /*Log.i("textline", totalThreeLineText);
                 Log.i("textline", totalThreeLineText.length() + " " +

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
+import com.mcp.smyrilline.fragment.IndividualResturentDetailsFragment;
 import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.util.AppUtils;
 
@@ -35,6 +36,7 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
     private TextView productNameTextview;
     private TextView productPriceNumberTextview;
     private TextView productPriceTextView;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,13 +68,75 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity {
         productDetailsTextView.post(new Runnable() {
             @Override
             public void run() {
-                int lineCount = productDetailsTextView.getLineCount();
+
+               /* int lineCount = productDetailsTextView.getLineCount();
                 // Use lineCount here
                 Log.i("textline", productDetailsTextView.getLineCount() + "");
 
                 if (lineCount == 3) {
                     toggleTextView.setVisibility(View.VISIBLE);
+                }*/
+
+
+                if (productDetailsTextView.getLineCount() == 3) {
+
+                    // Use lineCount here
+
+
+                    IndividualResturentDetailsFragment.startLineCount =
+                            productDetailsTextView.getLayout().getLineStart(0);
+
+                    IndividualResturentDetailsFragment.endLineCount =
+                            productDetailsTextView.getLayout().getLineEnd(0);
+
+                    IndividualResturentDetailsFragment.firstLineText =
+                            productDetailsTextView.getText().toString().
+                                    substring(IndividualResturentDetailsFragment.startLineCount,
+                                            IndividualResturentDetailsFragment.endLineCount);
+
+
+                    IndividualResturentDetailsFragment.startLineCount =
+                            productDetailsTextView.getLayout().getLineStart(1);
+
+                    IndividualResturentDetailsFragment.endLineCount =
+                            productDetailsTextView.getLayout().getLineEnd(1);
+
+                    IndividualResturentDetailsFragment.secondLineText =
+                            productDetailsTextView.getText().toString().
+                                    substring(IndividualResturentDetailsFragment.startLineCount,
+                                            IndividualResturentDetailsFragment.endLineCount);
+
+                    IndividualResturentDetailsFragment.startLineCount =
+                            productDetailsTextView.getLayout().getLineStart(2);
+
+                    IndividualResturentDetailsFragment.endLineCount =
+                            productDetailsTextView.getLayout().getLineEnd(2);
+
+                    IndividualResturentDetailsFragment.thirdLineText =
+                            productDetailsTextView.getText().toString().
+                                    substring(IndividualResturentDetailsFragment.startLineCount,
+                                            IndividualResturentDetailsFragment.endLineCount);
+
+                    IndividualResturentDetailsFragment.totalThreeLineText =
+                            IndividualResturentDetailsFragment.firstLineText +
+                                    IndividualResturentDetailsFragment.secondLineText +
+                                    IndividualResturentDetailsFragment.thirdLineText;
+
+
+                /*Log.i("textline", totalThreeLineText);
+                Log.i("textline", totalThreeLineText.length() + " " +
+                        restaurentDetails.getOpenCloseTimeText().length() + "/n" + thirdLine);
+*/
+
+                    if (!(IndividualResturentDetailsFragment.totalThreeLineText.length() ==
+                            dutyFreeItemObj.getText1().length())
+
+                            ) {
+
+                        toggleTextView.setVisibility(View.VISIBLE);
+                    }
                 }
+
 
             }
         });
