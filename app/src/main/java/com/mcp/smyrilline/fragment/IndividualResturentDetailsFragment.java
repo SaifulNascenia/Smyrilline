@@ -1,5 +1,6 @@
 package com.mcp.smyrilline.fragment;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -30,8 +31,15 @@ import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
+import com.mcp.smyrilline.activity.DutyFreeProductDetailsActivity;
 import com.mcp.smyrilline.adapter.DutyFreeAdapter;
 import com.mcp.smyrilline.interfaces.ApiInterfaces;
+import com.mcp.smyrilline.interfaces.ClickListener;
+import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
+import com.mcp.smyrilline.model.dutyfreemodels.Child;
+import com.mcp.smyrilline.model.restaurentsmodel.BreakfastItem;
+import com.mcp.smyrilline.model.restaurentsmodel.DinnerItem;
+import com.mcp.smyrilline.model.restaurentsmodel.LunchItem;
 import com.mcp.smyrilline.model.restaurentsmodel.RestaurentDetails;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.AppUtils;
@@ -91,9 +99,6 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
     private Button retryInternetBtn;
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
-    private static String restaurentId;
-    private static String restaurentName;
-
     private IndividualResturentDetailsFragment thisClassContext = this;
 
     public static int startLineCount, endLineCount;
@@ -112,6 +117,112 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         //add dependency lib
         unbinder = ButterKnife.bind(this, _rootView);
         initView();
+
+        breakfastItemsRecylerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
+                breakfastItemsRecylerView,
+                new ClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+
+                        BreakfastItem breakfastItem = restaurentDetails.getBreakfastItems().get(position);
+
+                        Bundle bundle = new Bundle();
+
+                        bundle.putString("PRODUCT_ID", breakfastItem.getId());
+                        bundle.putString("PRODUCT_NAME", breakfastItem.getName());
+                        bundle.putString("PRODUCT_PRICE", breakfastItem.getText2());
+                        bundle.putString("PRODUCT_INFO", breakfastItem.getText1());
+                        bundle.putString("PRODUCT_IMAGE", breakfastItem.getImageUrl());
+
+                        FoodDetailsFragment foodDetailsFragment = new FoodDetailsFragment();
+                        foodDetailsFragment.setArguments(bundle);
+
+                        //FragmentManager fm = getActivity().getSupportFragmentManager();
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .replace(R.id.content_frame, foodDetailsFragment)
+                                .commit();
+
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                }));
+
+
+        lunchItemsRecylerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
+                lunchItemsRecylerView,
+                new ClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+
+                        LunchItem lunchItem = restaurentDetails.getLunchItems().get(position);
+
+                        Bundle bundle = new Bundle();
+
+                        bundle.putString("PRODUCT_ID", lunchItem.getId());
+                        bundle.putString("PRODUCT_NAME", lunchItem.getName());
+                        bundle.putString("PRODUCT_PRICE", lunchItem.getText2());
+                        bundle.putString("PRODUCT_INFO", lunchItem.getText1());
+                        bundle.putString("PRODUCT_IMAGE", lunchItem.getImageUrl());
+
+                        FoodDetailsFragment foodDetailsFragment = new FoodDetailsFragment();
+                        foodDetailsFragment.setArguments(bundle);
+
+
+                        //FragmentManager fm = getActivity().getSupportFragmentManager();
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .replace(R.id.content_frame, foodDetailsFragment)
+                                .commit();
+
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                }));
+
+
+        dinnerItemsRecylerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
+                dinnerItemsRecylerView,
+                new ClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+
+                        DinnerItem dinnerItem = restaurentDetails.getDinnerItems().get(position);
+
+                        Bundle bundle = new Bundle();
+
+                        bundle.putString("PRODUCT_ID", dinnerItem.getId());
+                        bundle.putString("PRODUCT_NAME", dinnerItem.getName());
+                        bundle.putString("PRODUCT_PRICE", dinnerItem.getText2());
+                        bundle.putString("PRODUCT_INFO", dinnerItem.getText1());
+                        bundle.putString("PRODUCT_IMAGE", dinnerItem.getImageUrl());
+
+                        FoodDetailsFragment foodDetailsFragment = new FoodDetailsFragment();
+                        foodDetailsFragment.setArguments(bundle);
+
+
+                        //FragmentManager fm = getActivity().getSupportFragmentManager();
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .replace(R.id.content_frame, foodDetailsFragment)
+                                .commit();
+
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                }));
 
 
         fetchRestaurentDetails();
@@ -134,8 +245,8 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         Retrofit retrofit = ApiClient.getClient();
         ApiInterfaces apiInterfaces = retrofit.create(ApiInterfaces.class);
         Call<RestaurentDetails> call = apiInterfaces.fetchRestaurentDetails(AppUtils.WP_PARAM_LANGUAGE,
-                //        getArguments().getString("RESTAURENT_ID"));
-                "1");
+                getArguments().getString("RESTAURENT_ID"));
+        // "1");
 
         call.enqueue(new Callback<RestaurentDetails>() {
             @Override
@@ -151,8 +262,8 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
                 toolbar.setBackground(null);
 
-                //toolbar.setTitle(getArguments().getString("RESTAURENT_NAME"));
-                toolbar.setTitle("Norona");
+                toolbar.setTitle(getArguments().getString("RESTAURENT_NAME"));
+                //toolbar.setTitle("Norona");
 
                 ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
                 collapsingToolbarLayout.setTitle(null);
@@ -171,13 +282,15 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
 
                 rootViewCoordinatorLayout.setVisibility(View.GONE);
                 noInternetViewToolbar.setVisibility(View.VISIBLE);
-                //noInternetViewToolbar.setTitle(getArguments().getString("RESTAURENT_NAME"));
-                noInternetViewToolbar.setTitle("Norona");
+                noInternetViewToolbar.setTitle(getArguments().getString("RESTAURENT_NAME"));
+                //noInternetViewToolbar.setTitle("Norona");
+                mLoadingView.setVisibility(View.GONE);
+                noInternetConnetionView.setVisibility(View.VISIBLE);
                 noInternetViewToolbar.setBackgroundColor(
                         getActivity().getResources().getColor(R.color.colorPrimary));
                 ((DrawerActivity) getActivity()).setToolbarAndToggle(noInternetViewToolbar);
 
-                setWithoutInternetView();
+                //setWithoutInternetView();
 
             }
         });
@@ -438,7 +551,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                 setChildrenTitleTextviewAction();
                 break;
             case R.id.retry_internet:
-                Toast.makeText(getActivity(), "retry", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "retry", Toast.LENGTH_LONG).show();
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.detach(thisClassContext).attach(thisClassContext).commit();
                 break;
