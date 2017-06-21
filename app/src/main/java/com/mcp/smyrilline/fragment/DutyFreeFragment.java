@@ -86,14 +86,30 @@ public class DutyFreeFragment extends Fragment {
 
                         bundle.putString("PRODUCT_ID",
                                 dutyFree.getChildren().get(position).getId());
+
                         bundle.putString("PRODUCT_NAME",
                                 dutyFree.getChildren().get(position).getName());
+
                         bundle.putString("PRODUCT_PRICE",
-                                dutyFree.getChildren().get(position).getText2());
+                                "€ " + dutyFree.getChildren().get(position).getText3().
+                                        substring(1,
+                                                dutyFree.getChildren().get(position).getText3()
+                                                        .indexOf(","))
+                        );
+
+                        bundle.putString("PRODUCT_PRICE_NUMBER", dutyFree.getChildren().get(position).getText3().
+                                substring(dutyFree.getChildren().get(position).getText3().indexOf(",") + 1,
+                                        dutyFree.getChildren().get(position).getText3().length())
+                        );
+
+
                         bundle.putString("PRODUCT_INFO",
                                 dutyFree.getChildren().get(position).getText1());
+
                         bundle.putString("PRODUCT_IMAGE",
                                 dutyFree.getChildren().get(position).getImageUrl());
+
+                        bundle.putString("USED_CLASS_NAME", AppUtils.fragmentList[3]);
 
                         ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
                         productDetailsFragment.setArguments(bundle);
