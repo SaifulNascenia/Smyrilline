@@ -1,7 +1,5 @@
 package com.mcp.smyrilline.fragment;
 
-import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -9,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -27,16 +24,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.activity.DutyFreeProductDetailsActivity;
 import com.mcp.smyrilline.adapter.DutyFreeAdapter;
 import com.mcp.smyrilline.interfaces.ApiInterfaces;
 import com.mcp.smyrilline.interfaces.ClickListener;
 import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
-import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.model.restaurentsmodel.BreakfastItem;
 import com.mcp.smyrilline.model.restaurentsmodel.DinnerItem;
 import com.mcp.smyrilline.model.restaurentsmodel.LunchItem;
@@ -44,8 +38,6 @@ import com.mcp.smyrilline.model.restaurentsmodel.RestaurentDetails;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import at.blogc.android.views.ExpandableTextView;
 import butterknife.ButterKnife;
@@ -60,7 +52,7 @@ import retrofit2.Retrofit;
  */
 
 //https://stackoverflow.com/questions/36100187/how-to-start-fragment-from-an-activity
-public class IndividualResturentDetailsFragment extends Fragment implements View.OnClickListener {
+public class ResturentDetailsFragment extends Fragment implements View.OnClickListener {
 
     private View _rootView;
 
@@ -99,7 +91,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
     private Button retryInternetBtn;
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
-    private IndividualResturentDetailsFragment thisClassContext = this;
+    private ResturentDetailsFragment thisClassContext = this;
 
     public static int startLineCount, endLineCount;
     public static String firstLineText, secondLineText, thirdLineText;
@@ -134,14 +126,14 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                         bundle.putString("PRODUCT_INFO", breakfastItem.getText1());
                         bundle.putString("PRODUCT_IMAGE", breakfastItem.getImageUrl());
 
-                        FoodDetailsFragment foodDetailsFragment = new FoodDetailsFragment();
-                        foodDetailsFragment.setArguments(bundle);
+                        ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
+                        productDetailsFragment.setArguments(bundle);
 
                         //FragmentManager fm = getActivity().getSupportFragmentManager();
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .addToBackStack(null)
-                                .replace(R.id.content_frame, foodDetailsFragment)
+                                .replace(R.id.content_frame, productDetailsFragment)
                                 .commit();
 
                     }
@@ -169,15 +161,15 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                         bundle.putString("PRODUCT_INFO", lunchItem.getText1());
                         bundle.putString("PRODUCT_IMAGE", lunchItem.getImageUrl());
 
-                        FoodDetailsFragment foodDetailsFragment = new FoodDetailsFragment();
-                        foodDetailsFragment.setArguments(bundle);
+                        ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
+                        productDetailsFragment.setArguments(bundle);
 
 
                         //FragmentManager fm = getActivity().getSupportFragmentManager();
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .addToBackStack(null)
-                                .replace(R.id.content_frame, foodDetailsFragment)
+                                .replace(R.id.content_frame, productDetailsFragment)
                                 .commit();
 
                     }
@@ -205,15 +197,15 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
                         bundle.putString("PRODUCT_INFO", dinnerItem.getText1());
                         bundle.putString("PRODUCT_IMAGE", dinnerItem.getImageUrl());
 
-                        FoodDetailsFragment foodDetailsFragment = new FoodDetailsFragment();
-                        foodDetailsFragment.setArguments(bundle);
+                        ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
+                        productDetailsFragment.setArguments(bundle);
 
 
                         //FragmentManager fm = getActivity().getSupportFragmentManager();
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .addToBackStack(null)
-                                .replace(R.id.content_frame, foodDetailsFragment)
+                                .replace(R.id.content_frame, productDetailsFragment)
                                 .commit();
 
                     }
@@ -236,7 +228,7 @@ public class IndividualResturentDetailsFragment extends Fragment implements View
         /*AppUtils.withoutInternetConnectionView(getActivity(),
                 getActivity().getIntent(),
                 retryInternetBtn,
-                "IndividualResturentDetailsFragment");
+                "ResturentDetailsFragment");
         */
     }
 

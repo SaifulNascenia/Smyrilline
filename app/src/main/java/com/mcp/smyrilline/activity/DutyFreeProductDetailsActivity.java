@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.fragment.IndividualResturentDetailsFragment;
+import com.mcp.smyrilline.fragment.ResturentDetailsFragment;
 import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
@@ -116,44 +116,44 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity implements
                     // Use lineCount here
 
 
-                    IndividualResturentDetailsFragment.startLineCount =
+                    ResturentDetailsFragment.startLineCount =
                             productDetailsTextView.getLayout().getLineStart(0);
 
-                    IndividualResturentDetailsFragment.endLineCount =
+                    ResturentDetailsFragment.endLineCount =
                             productDetailsTextView.getLayout().getLineEnd(0);
 
-                    IndividualResturentDetailsFragment.firstLineText =
+                    ResturentDetailsFragment.firstLineText =
                             productDetailsTextView.getText().toString().
-                                    substring(IndividualResturentDetailsFragment.startLineCount,
-                                            IndividualResturentDetailsFragment.endLineCount);
+                                    substring(ResturentDetailsFragment.startLineCount,
+                                            ResturentDetailsFragment.endLineCount);
 
 
-                    IndividualResturentDetailsFragment.startLineCount =
+                    ResturentDetailsFragment.startLineCount =
                             productDetailsTextView.getLayout().getLineStart(1);
 
-                    IndividualResturentDetailsFragment.endLineCount =
+                    ResturentDetailsFragment.endLineCount =
                             productDetailsTextView.getLayout().getLineEnd(1);
 
-                    IndividualResturentDetailsFragment.secondLineText =
+                    ResturentDetailsFragment.secondLineText =
                             productDetailsTextView.getText().toString().
-                                    substring(IndividualResturentDetailsFragment.startLineCount,
-                                            IndividualResturentDetailsFragment.endLineCount);
+                                    substring(ResturentDetailsFragment.startLineCount,
+                                            ResturentDetailsFragment.endLineCount);
 
-                    IndividualResturentDetailsFragment.startLineCount =
+                    ResturentDetailsFragment.startLineCount =
                             productDetailsTextView.getLayout().getLineStart(2);
 
-                    IndividualResturentDetailsFragment.endLineCount =
+                    ResturentDetailsFragment.endLineCount =
                             productDetailsTextView.getLayout().getLineEnd(2);
 
-                    IndividualResturentDetailsFragment.thirdLineText =
+                    ResturentDetailsFragment.thirdLineText =
                             productDetailsTextView.getText().toString().
-                                    substring(IndividualResturentDetailsFragment.startLineCount,
-                                            IndividualResturentDetailsFragment.endLineCount);
+                                    substring(ResturentDetailsFragment.startLineCount,
+                                            ResturentDetailsFragment.endLineCount);
 
-                    IndividualResturentDetailsFragment.totalThreeLineText =
-                            IndividualResturentDetailsFragment.firstLineText +
-                                    IndividualResturentDetailsFragment.secondLineText +
-                                    IndividualResturentDetailsFragment.thirdLineText;
+                    ResturentDetailsFragment.totalThreeLineText =
+                            ResturentDetailsFragment.firstLineText +
+                                    ResturentDetailsFragment.secondLineText +
+                                    ResturentDetailsFragment.thirdLineText;
 
 
                 /*Log.i("textline", totalThreeLineText);
@@ -161,7 +161,7 @@ public class DutyFreeProductDetailsActivity extends AppCompatActivity implements
                         restaurentDetails.getOpenCloseTimeText().length() + "/n" + thirdLine);
 */
 
-                    if (!(IndividualResturentDetailsFragment.totalThreeLineText.length() ==
+                    if (!(ResturentDetailsFragment.totalThreeLineText.length() ==
                             dutyFreeItemObj.getText1().length())
 
                             ) {
