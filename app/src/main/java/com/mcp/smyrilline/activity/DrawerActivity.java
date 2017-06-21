@@ -18,7 +18,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -36,12 +35,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mcp.smyrilline.adapter.LanguageSpinnerAdapter;
-import com.mcp.smyrilline.fragment.IndividualResturentDetailsFragment;
 import com.mcp.smyrilline.fragment.InfoFragment;
 import com.mcp.smyrilline.fragment.SettingsFragment;
 import com.mcp.smyrilline.model.DrawerItem;
@@ -209,8 +206,8 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             case ("InfoFragment"):
                 fragment = new InfoFragment();
                 break;
-           /* case ("IndividualResturentDetailsFragment"):
-                fragment = new IndividualResturentDetailsFragment();
+           /* case ("ResturentDetailsFragment"):
+                fragment = new ResturentDetailsFragment();
                 break;*/
         }
 

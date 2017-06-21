@@ -1,6 +1,5 @@
 package com.mcp.smyrilline.fragment;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -24,12 +23,10 @@ import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.activity.DutyFreeProductDetailsActivity;
 import com.mcp.smyrilline.adapter.DutyFreeAdapter;
 import com.mcp.smyrilline.interfaces.ApiInterfaces;
 import com.mcp.smyrilline.interfaces.ClickListener;
 import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
-import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.model.dutyfreemodels.DutyFree;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.AppUtils;
@@ -81,9 +78,34 @@ public class DutyFreeFragment extends Fragment {
                     @Override
                     public void onClick(View view, int position) {
 
-                        Child dutyFreeItemObj = dutyFree.getChildren().get(position);
+                        /*Child dutyFreeItemObj = dutyFree.getChildren().get(position);
                         startActivity(new Intent(getActivity(), DutyFreeProductDetailsActivity.class)
                                 .putExtra("dutyFreeItemObj", dutyFreeItemObj));
+*/
+                        Bundle bundle = new Bundle();
+
+                        bundle.putString("PRODUCT_ID",
+                                dutyFree.getChildren().get(position).getId());
+                        bundle.putString("PRODUCT_NAME",
+                                dutyFree.getChildren().get(position).getName());
+                        bundle.putString("PRODUCT_PRICE",
+                                dutyFree.getChildren().get(position).getText2());
+                        bundle.putString("PRODUCT_INFO",
+                                dutyFree.getChildren().get(position).getText1());
+                        bundle.putString("PRODUCT_IMAGE",
+                                dutyFree.getChildren().get(position).getImageUrl());
+
+                        ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
+                        productDetailsFragment.setArguments(bundle);
+
+                        //FragmentManager fm = getActivity().getSupportFragmentManager();
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .replace(R.id.content_frame, productDetailsFragment)
+                                .commit();
+
+
                     }
 
                     @Override

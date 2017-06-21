@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.model.dutyfreemodels.Child;
 import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -26,7 +25,7 @@ import at.blogc.android.views.ExpandableTextView;
  * Created by saiful on 6/21/17.
  */
 
-public class FoodDetailsFragment extends Fragment implements View.OnClickListener {
+public class ProductDetailsFragment extends Fragment implements View.OnClickListener {
 
     private View _rootView;
 
@@ -47,7 +46,7 @@ public class FoodDetailsFragment extends Fragment implements View.OnClickListene
 
     private ImageView productImageView;
 
-    private FoodDetailsFragment thisClassContext = this;
+    private ProductDetailsFragment thisClassContext = this;
 
     @Nullable
     @Override
@@ -105,47 +104,47 @@ public class FoodDetailsFragment extends Fragment implements View.OnClickListene
                 if (productDetailsTextView.getLineCount() == 3) {
 
                     // Use lineCount here
-                    IndividualResturentDetailsFragment.startLineCount =
+                    ResturentDetailsFragment.startLineCount =
                             productDetailsTextView.getLayout().getLineStart(0);
 
-                    IndividualResturentDetailsFragment.endLineCount =
+                    ResturentDetailsFragment.endLineCount =
                             productDetailsTextView.getLayout().getLineEnd(0);
 
-                    IndividualResturentDetailsFragment.firstLineText =
+                    ResturentDetailsFragment.firstLineText =
                             productDetailsTextView.getText().toString().
-                                    substring(IndividualResturentDetailsFragment.startLineCount,
-                                            IndividualResturentDetailsFragment.endLineCount);
+                                    substring(ResturentDetailsFragment.startLineCount,
+                                            ResturentDetailsFragment.endLineCount);
 
 
-                    IndividualResturentDetailsFragment.startLineCount =
+                    ResturentDetailsFragment.startLineCount =
                             productDetailsTextView.getLayout().getLineStart(1);
 
-                    IndividualResturentDetailsFragment.endLineCount =
+                    ResturentDetailsFragment.endLineCount =
                             productDetailsTextView.getLayout().getLineEnd(1);
 
-                    IndividualResturentDetailsFragment.secondLineText =
+                    ResturentDetailsFragment.secondLineText =
                             productDetailsTextView.getText().toString().
-                                    substring(IndividualResturentDetailsFragment.startLineCount,
-                                            IndividualResturentDetailsFragment.endLineCount);
+                                    substring(ResturentDetailsFragment.startLineCount,
+                                            ResturentDetailsFragment.endLineCount);
 
-                    IndividualResturentDetailsFragment.startLineCount =
+                    ResturentDetailsFragment.startLineCount =
                             productDetailsTextView.getLayout().getLineStart(2);
 
-                    IndividualResturentDetailsFragment.endLineCount =
+                    ResturentDetailsFragment.endLineCount =
                             productDetailsTextView.getLayout().getLineEnd(2);
 
-                    IndividualResturentDetailsFragment.thirdLineText =
+                    ResturentDetailsFragment.thirdLineText =
                             productDetailsTextView.getText().toString().
-                                    substring(IndividualResturentDetailsFragment.startLineCount,
-                                            IndividualResturentDetailsFragment.endLineCount);
+                                    substring(ResturentDetailsFragment.startLineCount,
+                                            ResturentDetailsFragment.endLineCount);
 
-                    IndividualResturentDetailsFragment.totalThreeLineText =
-                            IndividualResturentDetailsFragment.firstLineText +
-                                    IndividualResturentDetailsFragment.secondLineText +
-                                    IndividualResturentDetailsFragment.thirdLineText;
+                    ResturentDetailsFragment.totalThreeLineText =
+                            ResturentDetailsFragment.firstLineText +
+                                    ResturentDetailsFragment.secondLineText +
+                                    ResturentDetailsFragment.thirdLineText;
 
 
-                    if (!(IndividualResturentDetailsFragment.totalThreeLineText.length() ==
+                    if (!(ResturentDetailsFragment.totalThreeLineText.length() ==
                             getArguments().getString("PRODUCT_INFO").length())
 
                             ) {

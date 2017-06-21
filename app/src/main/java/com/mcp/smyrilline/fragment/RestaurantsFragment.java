@@ -1,17 +1,14 @@
 package com.mcp.smyrilline.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,26 +19,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cjj.MaterialRefreshLayout;
-import com.cjj.MaterialRefreshListener;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.activity.DutyFreeProductDetailsActivity;
 import com.mcp.smyrilline.adapter.RestaurantAdapter;
 import com.mcp.smyrilline.interfaces.ApiInterfaces;
 import com.mcp.smyrilline.interfaces.ClickListener;
 import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
-import com.mcp.smyrilline.model.InternalStorage;
 import com.mcp.smyrilline.model.Restaurant;
-import com.mcp.smyrilline.model.parentmodel.ParentModel;
 import com.mcp.smyrilline.model.restaurentsmodel.Child;
 import com.mcp.smyrilline.model.restaurentsmodel.ListOfRestaurent;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.AppUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,24 +90,24 @@ public class RestaurantsFragment extends Fragment {
                     @Override
                     public void onClick(View view, int position) {
 
-                        Toast.makeText(getActivity(), parentModelList.size() + " " +
+                        /*Toast.makeText(getActivity(), parentModelList.size() + " " +
                                         parentModelList.get(0).getChildren().get(position).getName(),
-                                Toast.LENGTH_LONG).show();
+                                Toast.LENGTH_LONG).show();*/
 
                         bundle.putString("RESTAURENT_ID",
                                 parentModelList.get(0).getChildren().get(position).getId());
                         bundle.putString("RESTAURENT_NAME", parentModelList.get(0).getChildren().
                                 get(position).getName());
 
-                        IndividualResturentDetailsFragment individualResturentDetailsFragment = new
-                                IndividualResturentDetailsFragment();
-                        individualResturentDetailsFragment.setArguments(bundle);
+                        ResturentDetailsFragment resturentDetailsFragment = new
+                                ResturentDetailsFragment();
+                        resturentDetailsFragment.setArguments(bundle);
 
                         //FragmentManager fm = getActivity().getSupportFragmentManager();
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .addToBackStack(null)
-                                .replace(R.id.content_frame, individualResturentDetailsFragment)
+                                .replace(R.id.content_frame, resturentDetailsFragment)
                                 .commit();
 
 
