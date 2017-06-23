@@ -23,7 +23,7 @@ public interface ApiInterfaces {
     */
 
     @GET("Restaurants/{language}")
-    Call<List<ListOfRestaurent>> fetchAllRestaurentsAndBarsInfo();
+    Call<List<ListOfRestaurent>> fetchAllRestaurentsAndBarsInfo(@Path("language") String language);
 
     @GET("Restaurants/{language}/{id}")
     Call<RestaurentDetails> fetchRestaurentDetails(@Path("language") String language,
@@ -31,6 +31,9 @@ public interface ApiInterfaces {
 
     @GET("TaxFreeShop/{language}")
     Call<DutyFree> fetchDutyFreeProductsList(@Path("language") String language);
+
+    @GET("Destinations/{language}")
+    Call<List<ListOfRestaurent>> fetchAllDestinationsInfo(@Path("language") String language);
 
 
 }

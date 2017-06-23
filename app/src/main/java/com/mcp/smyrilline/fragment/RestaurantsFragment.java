@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cjj.MaterialRefreshLayout;
 import com.mcp.smyrilline.R;
@@ -71,6 +72,11 @@ public class RestaurantsFragment extends Fragment {
 
     private Bundle bundle;
 
+    private Retrofit retrofit;
+    private ApiInterfaces apiInterfaces;
+    private Call<List<ListOfRestaurent>> call;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -81,9 +87,13 @@ public class RestaurantsFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_restaurents, container, false);
 
+        retrofit = ApiClient.getClient();
+        apiInterfaces = retrofit.create(ApiInterfaces.class);
+
         bundle = new Bundle();
 
         initView();
+
         restaurenstListRecyclerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
                 restaurenstListRecyclerView,
                 new ClickListener() {
@@ -114,11 +124,6 @@ public class RestaurantsFragment extends Fragment {
 
                     }
                 }));
-
-
-        toolbar.setBackground(null);
-        toolbar.setTitle("Restaurants");
-        ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
 
 
         return rootView;
@@ -175,26 +180,57 @@ public class RestaurantsFragment extends Fragment {
         });
 */
 
-        if (AppUtils.isNetworkAvailable(getActivity())) {
+        showListViewFragmentWise();
 
-            initRestaurantList();
+       /* if (AppUtils.isNetworkAvailable(getActivity())) {
 
         } else {
-            /*mLoadingView.setVisibility(View.GONE);
+            *//*mLoadingView.setVisibility(View.GONE);
             tvNothingText.setVisibility(View.VISIBLE);
             AppUtils.showAlertDialog(mContext, AppUtils.ALERT_NO_WIFI);
-*/
+*//*
             setWithoutInternetView();
-        }
-
+        }*/
 
     }
 
-    private void initRestaurantList() {
+    private void showListViewFragmentWise() {
 
-        Retrofit retrofit = ApiClient.getClient();
-        ApiInterfaces apiInterfaces = retrofit.create(ApiInterfaces.class);
-        Call<List<ListOfRestaurent>> call = apiInterfaces.fetchAllRestaurentsAndBarsInfo();
+
+        if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[4])
+                && AppUtils.isNetworkAvailable(getActivity())) {
+
+            setUpToolbar("Restaurants");
+            call = apiInterfaces.fetchAllRestaurentsAndBarsInfo(AppUtils.WP_PARAM_LANGUAGE);
+            fetchApiData();
+
+        } else if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[5])
+                && AppUtils.isNetworkAvailable(getActivity())) {
+
+            setUpToolbar("Destinations");
+            call = apiInterfaces.fetchAllDestinationsInfo(AppUtils.WP_PARAM_LANGUAGE);
+            fetchApiData();
+
+        } else if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[4])
+                && !AppUtils.isNetworkAvailable(getActivity())) {
+
+            setUpToolbar("Restaurants");
+            setWithoutInternetView(getArguments().getString("FRAGMENT_NAME"));
+
+        } else if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[5])
+                && !AppUtils.isNetworkAvailable(getActivity())) {
+
+            setUpToolbar("Destinations");
+            setWithoutInternetView(getArguments().getString("FRAGMENT_NAME"));
+
+        } else {
+            Log.i("fragmentcheck", "no fragment found");
+        }
+
+    }
+
+    private void fetchApiData() {
+
 
         call.enqueue(new Callback<List<ListOfRestaurent>>() {
             @Override
@@ -235,7 +271,63 @@ public class RestaurantsFragment extends Fragment {
             public void onFailure(Call<List<ListOfRestaurent>> call, Throwable t) {
                 Log.d("onResponse", "onFailure " + t.toString());
 
-                setWithoutInternetView();
+                setWithoutInternetView(getArguments().getString("FRAGMENT_NAME"));
+
+
+            }
+        });
+    }
+
+    private void setUpToolbar(String toolbarName) {
+
+        toolbar.setBackground(null);
+        toolbar.setTitle(toolbarName);
+        ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
+    }
+
+    private void initRestaurantList() {
+
+
+        call.enqueue(new Callback<List<ListOfRestaurent>>() {
+            @Override
+            public void onResponse(Call<List<ListOfRestaurent>> call, Response<List<ListOfRestaurent>> response) {
+                try {
+
+                    parentModelList = response.body();
+                    Log.d("onResponse", parentModelList + "");
+
+                    mLoadingView.setVisibility(View.GONE);
+                    //   materialRefreshLayout.finishRefresh();
+                    mRestaurantList.clear();
+
+                    for (int i = 0; i < response.body().get(0).getChildren().size(); i++) {
+
+                        Child restaturent = response.body().get(0).getChildren().get(i);
+                        Restaurant restaurant = new Restaurant(
+                                restaturent.getId(),
+                                restaturent.getName(),
+                                null,
+                                restaturent.getImageUrl(),
+                                null,
+                                false);
+                        mRestaurantList.add(restaurant);
+                        mAdapter.notifyDataSetChanged();
+
+                    }
+
+                    //Toast.makeText(getActivity(), "Dataloading complete " + mRestaurantList.size(), Toast.LENGTH_LONG).show();
+
+                } catch (Exception e) {
+                    Log.d("onResponse", "error");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ListOfRestaurent>> call, Throwable t) {
+                Log.d("onResponse", "onFailure " + t.toString());
+
+                setWithoutInternetView(getArguments().getString("FRAGMENT_NAME"));
 
 
             }
@@ -244,13 +336,13 @@ public class RestaurantsFragment extends Fragment {
 
     }
 
-    private void setWithoutInternetView() {
+    private void setWithoutInternetView(String fragmentName) {
         mLoadingView.setVisibility(View.GONE);
         noInternetConnetionView.setVisibility(View.VISIBLE);
         AppUtils.withoutInternetConnectionView(getActivity(),
                 getActivity().getIntent(),
                 retryInternetBtn,
-                AppUtils.fragmentList[4]);
+                fragmentName);
 
         toolbar.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
     }
