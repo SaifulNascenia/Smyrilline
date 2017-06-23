@@ -37,26 +37,26 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
 
     private Context mContext;
     private List dutyFreeChildList;
-    private String thisAdapterUsedClassName;
+    private String thisAdapterClassCalledClassName;
 
 
     public DutyFreeAdapter(Context mContext, List dutyFreeChildList,
-                           String thisAdapterUsedClassName) {
+                           String thisAdapterClassCalledClassName) {
 
         Log.i("listsize", dutyFreeChildList.size() + "");
         this.mContext = mContext;
-        this.thisAdapterUsedClassName = thisAdapterUsedClassName;
+        this.thisAdapterClassCalledClassName = thisAdapterClassCalledClassName;
         this.dutyFreeChildList = dutyFreeChildList;
 
-       /* if (thisAdapterUsedClassName.equals(AppUtils.fragmentList[4])
+       /* if (thisAdapterClassCalledClassName.equals(AppUtils.fragmentList[4])
                 && restaurentFoodtime.equals("Breakfast")) {
             this.dutyFreeChildList = (List<BreakfastItem>) dutyFreeChildList;
         }
-        if (thisAdapterUsedClassName.equals(AppUtils.fragmentList[4])
+        if (thisAdapterClassCalledClassName.equals(AppUtils.fragmentList[4])
                 && restaurentFoodtime.equals("Lunch")) {
             this.dutyFreeChildList = (List<LunchItem>) dutyFreeChildList;
         }
-        if (thisAdapterUsedClassName.equals(AppUtils.fragmentList[4])
+        if (thisAdapterClassCalledClassName.equals(AppUtils.fragmentList[4])
                 && restaurentFoodtime.equals("Dinner")) {
             this.dutyFreeChildList = (List<DinnerItem>) dutyFreeChildList;
         } else {
@@ -77,7 +77,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
     public void onBindViewHolder(DutyFreeAdapter.DutyFreeViewHolder holder, int position) {
 
 
-        if (thisAdapterUsedClassName.equals(AppUtils.fragmentList[3])) {
+        if (thisAdapterClassCalledClassName.equals(AppUtils.fragmentList[3])) {
 
             setViewOnDutyFreeRecylerView(holder, position);
         } else {
@@ -97,7 +97,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
                 getColor(R.color.textColorSecondary));
         holder.productShortDetailsTextview.setTextSize(16);
 
-        if (thisAdapterUsedClassName.equals("Breakfast")) {
+        if (thisAdapterClassCalledClassName.equals("Breakfast")) {
 
             BreakfastItem breakfastItem = (BreakfastItem) dutyFreeChildList.get(position);
 
@@ -112,7 +112,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
                     .into(holder.productImageView);
 
 
-        } else if (thisAdapterUsedClassName.equals("Lunch")) {
+        } else if (thisAdapterClassCalledClassName.equals("Lunch")) {
 
             LunchItem lunchItem = (LunchItem) dutyFreeChildList.get(position);
 

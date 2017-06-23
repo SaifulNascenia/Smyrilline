@@ -128,7 +128,7 @@ public class ResturentDetailsFragment extends Fragment implements View.OnClickLi
                         bundle.putString("PRODUCT_PRICE", breakfastItem.getText2());
                         bundle.putString("PRODUCT_INFO", breakfastItem.getText1());
                         bundle.putString("PRODUCT_IMAGE", breakfastItem.getImageUrl());
-                        bundle.putString("USED_CLASS_NAME", AppUtils.fragmentList[4]);
+                        bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[4]);
 
                         ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
                         productDetailsFragment.setArguments(bundle);
@@ -164,7 +164,7 @@ public class ResturentDetailsFragment extends Fragment implements View.OnClickLi
                         bundle.putString("PRODUCT_PRICE", lunchItem.getText2());
                         bundle.putString("PRODUCT_INFO", lunchItem.getText1());
                         bundle.putString("PRODUCT_IMAGE", lunchItem.getImageUrl());
-                        bundle.putString("USED_CLASS_NAME", AppUtils.fragmentList[4]);
+                        bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[4]);
 
                         ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
                         productDetailsFragment.setArguments(bundle);
@@ -201,7 +201,7 @@ public class ResturentDetailsFragment extends Fragment implements View.OnClickLi
                         bundle.putString("PRODUCT_PRICE", dinnerItem.getText2());
                         bundle.putString("PRODUCT_INFO", dinnerItem.getText1());
                         bundle.putString("PRODUCT_IMAGE", dinnerItem.getImageUrl());
-                        bundle.putString("USED_CLASS_NAME", AppUtils.fragmentList[4]);
+                        bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[4]);
 
                         ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
                         productDetailsFragment.setArguments(bundle);
