@@ -109,10 +109,13 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     private Context mContext;
     private ArrayList<DrawerItem> mDrawerListItems;
 
+    private Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        bundle = new Bundle();
         mContext = this;
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -193,9 +196,11 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
                 break;
             case ("RestaurantsFragment"):
                 fragment = new RestaurantsFragment();
+                bundle.putString("FRAGMENT_NAME", AppUtils.fragmentList[4]);
                 break;
             case ("DestinationsFragment"):
-                fragment = new DestinationsFragment();
+                fragment = new RestaurantsFragment();
+                bundle.putString("FRAGMENT_NAME", AppUtils.fragmentList[5]);
                 break;
             case ("SettingsFragment"):
                 fragment = new SettingsFragment();
@@ -211,6 +216,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
                 break;*/
         }
 
+        fragment.setArguments(bundle);
         // Only LoginFragment is Parent, others are child
         String fragmentTag = (fragment instanceof LoginFragment) || (fragment instanceof TicketFragment) ? FRAGMENT_PARENT_TAG : FRAGMENT_CHILD_TAG;
 
