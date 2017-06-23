@@ -20,10 +20,13 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -35,6 +38,7 @@ import com.mcp.smyrilline.BuildConfig;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.activity.MainGridActivity;
+import com.mcp.smyrilline.fragment.ResturentDetailsFragment;
 import com.mcp.smyrilline.model.Bulletin;
 import com.onyxbeacon.rest.model.content.Coupon;
 
@@ -714,6 +718,86 @@ public class AppUtils extends MultiDexApplication {
 
         // Update texts used in code
         updateTextTranslations();
+    }
+
+
+    public static String getEllipsisedThreeLineText(FragmentActivity activity,
+                                                    TextView productDetailsTextView
+
+    ) {
+
+
+        if (productDetailsTextView.getLineCount() == 3) {
+
+            // Use lineCount here
+            ResturentDetailsFragment.startLineCount =
+                    productDetailsTextView.getLayout().getLineStart(0);
+
+            ResturentDetailsFragment.endLineCount =
+                    productDetailsTextView.getLayout().getLineEnd(0);
+
+            ResturentDetailsFragment.firstLineText =
+                    productDetailsTextView.getText().toString().
+                            substring(ResturentDetailsFragment.startLineCount,
+                                    ResturentDetailsFragment.endLineCount);
+
+
+            ResturentDetailsFragment.startLineCount =
+                    productDetailsTextView.getLayout().getLineStart(1);
+
+            ResturentDetailsFragment.endLineCount =
+                    productDetailsTextView.getLayout().getLineEnd(1);
+
+            ResturentDetailsFragment.secondLineText =
+                    productDetailsTextView.getText().toString().
+                            substring(ResturentDetailsFragment.startLineCount,
+                                    ResturentDetailsFragment.endLineCount);
+
+            ResturentDetailsFragment.startLineCount =
+                    productDetailsTextView.getLayout().getLineStart(2);
+
+            ResturentDetailsFragment.endLineCount =
+                    productDetailsTextView.getLayout().getLineEnd(2);
+
+            ResturentDetailsFragment.thirdLineText =
+                    (productDetailsTextView.getText().toString().
+                            subSequence(ResturentDetailsFragment.startLineCount,
+                                    ResturentDetailsFragment.endLineCount)).toString();
+
+            ResturentDetailsFragment.totalThreeLineText =
+                    ResturentDetailsFragment.firstLineText +
+                            ResturentDetailsFragment.secondLineText +
+                            ResturentDetailsFragment.thirdLineText;
+
+            return ResturentDetailsFragment.totalThreeLineText;
+
+                 /*   if (getActivity().getResources().getString(R.string.cheese_ipsum).length() >
+                            ResturentDetailsFragment.totalThreeLineText.length()) {
+                        expandTextView.setVisibility(View.VISIBLE);
+                    }*/
+
+        }
+
+        return null;
+    }
+
+
+    public static void setVisibilityOfExpandTextview(TextView productDetailsTextView,
+                                                     TextView expandTextView) {
+
+        Layout layout = productDetailsTextView.getLayout();
+        if (layout != null) {
+            int lines = layout.getLineCount();
+            if (lines > 0) {
+                int ellipsisCount = layout.getEllipsisCount(lines - 1);
+                if (ellipsisCount > 0) {
+                    Log.i("totaltext", "elip\n");
+                    expandTextView.setVisibility(View.VISIBLE);
+                } else {
+                    Log.i("totaltext", "not elip\n");
+                }
+            }
+        }
     }
 
 

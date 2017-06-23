@@ -137,6 +137,8 @@
                     android:background="@drawable/cardbackground"
                     android:padding="@dimen/small_padding">
 
+
+                    <!--   <TextView-->
                     <at.blogc.android.views.ExpandableTextView
                         android:id="@+id/expandable_TextView"
                         style="@style/TextAppearance.AppCompat.Medium"

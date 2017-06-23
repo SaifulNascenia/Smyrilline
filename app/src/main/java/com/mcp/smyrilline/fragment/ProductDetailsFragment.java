@@ -1,5 +1,6 @@
 package com.mcp.smyrilline.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -7,15 +8,19 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
+import com.mcp.smyrilline.interfaces.BindDataWithView;
 import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +30,7 @@ import at.blogc.android.views.ExpandableTextView;
  * Created by saiful on 6/21/17.
  */
 
-public class ProductDetailsFragment extends Fragment implements View.OnClickListener {
+public class ProductDetailsFragment extends Fragment implements View.OnClickListener, BindDataWithView {
 
     private View _rootView;
 
@@ -39,7 +44,6 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
 
     private ExpandableTextView productDetailsTextView;
     private TextView expandTextView;
-
     private TextView productNameTextview;
     private TextView productPriceNumberTextview;
     private TextView productPriceTextView;
@@ -50,7 +54,9 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         _rootView = inflater.inflate(R.layout.duty_free_product_details, container, false);
 
@@ -83,6 +89,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
         productNameTextview.setText(getArguments().getString("PRODUCT_NAME"));
         productPriceTextView.setText(getArguments().getString("PRODUCT_PRICE"));
         productDetailsTextView.setText(getArguments().getString("PRODUCT_INFO"));
+        // productDetailsTextView.setText(getActivity().getResources().getString(R.string.cheese_ipsum));
 
         if (getArguments().getString("USED_CLASS_NAME").equals(AppUtils.fragmentList[3])) {
 
@@ -99,87 +106,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
                 .placeholder(R.mipmap.ic_launcher)
                 .into(productImageView);
 
-        setProductDetailsTextViewExpandListener();
-
-    }
-
-    private void setProductDetailsTextViewExpandListener() {
-        productDetailsTextView.post(new Runnable() {
-            @Override
-            public void run() {
-
-                if (productDetailsTextView.getLineCount() == 3) {
-
-                    // Use lineCount here
-                    ResturentDetailsFragment.startLineCount =
-                            productDetailsTextView.getLayout().getLineStart(0);
-
-                    ResturentDetailsFragment.endLineCount =
-                            productDetailsTextView.getLayout().getLineEnd(0);
-
-                    ResturentDetailsFragment.firstLineText =
-                            productDetailsTextView.getText().toString().
-                                    substring(ResturentDetailsFragment.startLineCount,
-                                            ResturentDetailsFragment.endLineCount);
-
-
-                    ResturentDetailsFragment.startLineCount =
-                            productDetailsTextView.getLayout().getLineStart(1);
-
-                    ResturentDetailsFragment.endLineCount =
-                            productDetailsTextView.getLayout().getLineEnd(1);
-
-                    ResturentDetailsFragment.secondLineText =
-                            productDetailsTextView.getText().toString().
-                                    substring(ResturentDetailsFragment.startLineCount,
-                                            ResturentDetailsFragment.endLineCount);
-
-                    ResturentDetailsFragment.startLineCount =
-                            productDetailsTextView.getLayout().getLineStart(2);
-
-                    ResturentDetailsFragment.endLineCount =
-                            productDetailsTextView.getLayout().getLineEnd(2);
-
-                    ResturentDetailsFragment.thirdLineText =
-                            productDetailsTextView.getText().toString().
-                                    substring(ResturentDetailsFragment.startLineCount,
-                                            ResturentDetailsFragment.endLineCount);
-
-                    ResturentDetailsFragment.totalThreeLineText =
-                            ResturentDetailsFragment.firstLineText +
-                                    ResturentDetailsFragment.secondLineText +
-                                    ResturentDetailsFragment.thirdLineText;
-
-
-                    if (!(ResturentDetailsFragment.totalThreeLineText.length() ==
-                            getArguments().getString("PRODUCT_INFO").length())
-
-                            ) {
-
-                        expandTextView.setVisibility(View.VISIBLE);
-                    }
-                }
-
-
-            }
-        });
-        // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
-        productDetailsTextView.setAnimationDuration(300L);
-        expandTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (productDetailsTextView.isExpanded()) {
-                    productDetailsTextView.collapse();
-                    expandTextView.setText("view more");
-                    Log.i("textline", "onexpand " + productDetailsTextView.getLineCount() + "");
-                } else {
-                    productDetailsTextView.expand();
-                    expandTextView.setText("view less");
-                    Log.i("textline", "oncollapse " + productDetailsTextView.getLineCount() + "");
-                }
-            }
-        });
-
+        setDataOnProductDetailsTextViewWithExpandTextViewListener();
 
     }
 
@@ -193,6 +120,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
         collapsingToolbarLayout = (CollapsingToolbarLayout) _rootView.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
         productDetailsTextView = (ExpandableTextView) _rootView.findViewById(R.id.expandable_TextView);
+        // productDetailsTextView = (TextView) _rootView.findViewById(R.id.expandable_TextView);
         expandTextView = (TextView) _rootView.findViewById(R.id.toggle_TextView);
         productNameTextview = (TextView) _rootView.findViewById(R.id.product_name_textview);
         productPriceNumberTextview = (TextView) _rootView.findViewById(R.id.product_price_number_textview);
@@ -216,6 +144,56 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
                 ft.detach(thisClassContext).attach(thisClassContext).commit();
                 break;
         }
+
+    }
+
+    @Override
+    public void setDataOnProductDetailsTextViewWithExpandTextViewListener() {
+
+
+        ViewTreeObserver vto = productDetailsTextView.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    productDetailsTextView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    //noinspection deprecation
+                    productDetailsTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+
+
+                AppUtils.setVisibilityOfExpandTextview(productDetailsTextView, expandTextView);
+
+
+              /*  if (getActivity().getResources().getString(R.string.cheese_ipsum).length() >
+                        AppUtils.getEllipsisedThreeLineText(getActivity(), productDetailsTextView)
+                                .length()) {
+                    expandTextView.setVisibility(View.VISIBLE);
+                }*/
+
+
+            }
+
+        });
+
+
+        // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
+        productDetailsTextView.setAnimationDuration(300L);
+        expandTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (productDetailsTextView.isExpanded()) {
+                    productDetailsTextView.collapse();
+                    expandTextView.setText("view more");
+                    Log.i("textline", "onexpand " + productDetailsTextView.getLineCount() + "");
+                } else {
+                    productDetailsTextView.expand();
+                    expandTextView.setText("view less");
+                    Log.i("textline", "oncollapse " + productDetailsTextView.getLineCount() + "");
+                }
+            }
+        });
 
     }
 }

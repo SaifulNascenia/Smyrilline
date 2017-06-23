@@ -2,6 +2,7 @@ package com.mcp.smyrilline.fragment;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -19,6 +20,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +31,7 @@ import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.adapter.DutyFreeAdapter;
 import com.mcp.smyrilline.interfaces.ApiInterfaces;
+import com.mcp.smyrilline.interfaces.BindDataWithView;
 import com.mcp.smyrilline.interfaces.ClickListener;
 import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
 import com.mcp.smyrilline.model.restaurentsmodel.BreakfastItem;
@@ -52,7 +55,7 @@ import retrofit2.Retrofit;
  */
 
 //https://stackoverflow.com/questions/36100187/how-to-start-fragment-from-an-activity
-public class ResturentDetailsFragment extends Fragment implements View.OnClickListener {
+public class ResturentDetailsFragment extends Fragment implements View.OnClickListener, BindDataWithView {
 
     private View _rootView;
 
@@ -376,52 +379,9 @@ public class ResturentDetailsFragment extends Fragment implements View.OnClickLi
 
 
         restaurentDetailsInfoTextView.setText(restaurentDetails.getOpenCloseTimeText());
-
-        restaurentDetailsInfoTextView.post(new Runnable() {
-            @Override
-            public void run() {
-                //  int lineCount = restaurentDetailsInfoTextView.getLineCount();
+        setDataOnProductDetailsTextViewWithExpandTextViewListener();
 
 
-                if (restaurentDetailsInfoTextView.getLineCount() == 3) {
-
-                    // Use lineCount here
-                    startLineCount = restaurentDetailsInfoTextView.getLayout().getLineStart(0);
-                    endLineCount = restaurentDetailsInfoTextView.getLayout().getLineEnd(0);
-                    firstLineText = restaurentDetailsInfoTextView.getText().toString().
-                            substring(startLineCount, endLineCount);
-
-                    startLineCount = restaurentDetailsInfoTextView.getLayout().getLineStart(1);
-                    endLineCount = restaurentDetailsInfoTextView.getLayout().getLineEnd(1);
-                    secondLineText = restaurentDetailsInfoTextView.getText().toString().
-                            substring(startLineCount, endLineCount);
-
-                    startLineCount = restaurentDetailsInfoTextView.getLayout().getLineStart(2);
-                    endLineCount = restaurentDetailsInfoTextView.getLayout().getLineEnd(2);
-                    thirdLineText = restaurentDetailsInfoTextView.getText().toString().
-                            substring(startLineCount, endLineCount);
-
-                    totalThreeLineText = firstLineText + secondLineText + thirdLineText;
-
-
-
-
-                /*Log.i("textline", totalThreeLineText);
-                Log.i("textline", totalThreeLineText.length() + " " +
-                        restaurentDetails.getOpenCloseTimeText().length() + "/n" + thirdLine);
-*/
-
-                    if (!(totalThreeLineText.length() ==
-                            restaurentDetails.getOpenCloseTimeText().length())
-                            ) {
-
-                        expandTextView.setVisibility(View.VISIBLE);
-                    }
-                }
-
-
-            }
-        });
         // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
         restaurentDetailsInfoTextView.setAnimationDuration(300L);
         expandTextView.setOnClickListener(new View.OnClickListener() {
@@ -741,6 +701,55 @@ public class ResturentDetailsFragment extends Fragment implements View.OnClickLi
 
     }
 
+    @Override
+    public void setDataOnProductDetailsTextViewWithExpandTextViewListener() {
+
+
+        ViewTreeObserver vto = restaurentDetailsInfoTextView.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    restaurentDetailsInfoTextView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    //noinspection deprecation
+                    restaurentDetailsInfoTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+
+
+                AppUtils.setVisibilityOfExpandTextview(restaurentDetailsInfoTextView, expandTextView);
+
+
+              /*  if (getActivity().getResources().getString(R.string.cheese_ipsum).length() >
+                        AppUtils.getEllipsisedThreeLineText(getActivity(), productDetailsTextView)
+                                .length()) {
+                    expandTextView.setVisibility(View.VISIBLE);
+                }*/
+
+
+            }
+
+        });
+
+
+        // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
+        restaurentDetailsInfoTextView.setAnimationDuration(300L);
+        expandTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (restaurentDetailsInfoTextView.isExpanded()) {
+                    restaurentDetailsInfoTextView.collapse();
+                    expandTextView.setText("view more");
+                    Log.i("textline", "onexpand " + restaurentDetailsInfoTextView.getLineCount() + "");
+                } else {
+                    restaurentDetailsInfoTextView.expand();
+                    expandTextView.setText("view less");
+                    Log.i("textline", "oncollapse " + restaurentDetailsInfoTextView.getLineCount() + "");
+                }
+            }
+        });
+
+    }
 
     /**
      * RecyclerView item decoration - give equal margin around grid item
