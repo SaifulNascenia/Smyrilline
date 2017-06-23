@@ -1,5 +1,7 @@
 package com.mcp.smyrilline.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +9,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
@@ -85,13 +88,14 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
     private void setFoodDataOnView() {
 
         toolbar.setTitle("Price and Menu");
-        toolbar.setTitleTextColor(getActivity().getResources().getColor(R.color.smalltextColor));
+        //toolbar.setTitleTextColor(getActivity().getResources().getColor(R.color.smalltextColor));
+        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.smalltextColor));
         productNameTextview.setText(getArguments().getString("PRODUCT_NAME"));
         productPriceTextView.setText(getArguments().getString("PRODUCT_PRICE"));
         productDetailsTextView.setText(getArguments().getString("PRODUCT_INFO"));
         // productDetailsTextView.setText(getActivity().getResources().getString(R.string.cheese_ipsum));
 
-        if (getArguments().getString("USED_CLASS_NAME").equals(AppUtils.fragmentList[3])) {
+        if (getArguments().getString("CALLED_CLASS_NAME").equals(AppUtils.fragmentList[3])) {
 
             productPriceNumberTextview.setText(getArguments().getString("PRODUCT_PRICE_NUMBER"));
 
@@ -105,6 +109,9 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
                         getArguments().getString("PRODUCT_IMAGE"))
                 .placeholder(R.mipmap.ic_launcher)
                 .into(productImageView);
+
+        Bitmap bitmap = ((BitmapDrawable) productImageView.getDrawable()).getBitmap();
+        Log.i("imagebitmap", bitmap + "");
 
         setDataOnProductDetailsTextViewWithExpandTextViewListener();
 

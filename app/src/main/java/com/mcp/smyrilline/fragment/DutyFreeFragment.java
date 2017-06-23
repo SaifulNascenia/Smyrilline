@@ -109,7 +109,7 @@ public class DutyFreeFragment extends Fragment {
                         bundle.putString("PRODUCT_IMAGE",
                                 dutyFree.getChildren().get(position).getImageUrl());
 
-                        bundle.putString("USED_CLASS_NAME", AppUtils.fragmentList[3]);
+                        bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[3]);
 
                         ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
                         productDetailsFragment.setArguments(bundle);
