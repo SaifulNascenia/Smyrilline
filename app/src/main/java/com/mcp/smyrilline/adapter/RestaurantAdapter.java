@@ -16,13 +16,16 @@ import com.androidquery.AQuery;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 
+import com.mcp.smyrilline.model.DestinationAndShipInfoModel.Info;
 import com.mcp.smyrilline.model.Restaurant;
+import com.mcp.smyrilline.model.DestinationAndShipInfoModel.Child;
 import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter for restaurant list in RestaurantFragment
@@ -30,17 +33,20 @@ import java.util.ArrayList;
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder> {
 
     private final Context context;
-    private ArrayList<Restaurant> restaurantList;
+    //private ArrayList<Restaurant> restaurantList;
+    private List mDataList;
     private TextView tvNothingText;
     private String thisAdapterCalledClassName;
 
     public RestaurantAdapter(Context context,
-                             ArrayList<Restaurant> restaurantList,
+                             //ArrayList<Restaurant> restaurantList,
+                             List mDataList,
                              TextView tvNothingText,
                              String thisAdapterCalledClassName) {
 
         this.context = context;
-        this.restaurantList = restaurantList;
+        //this.restaurantList = restaurantList;
+        this.mDataList = mDataList;
         this.tvNothingText = tvNothingText;
         this.thisAdapterCalledClassName = thisAdapterCalledClassName;
     }
@@ -55,16 +61,35 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Restaurant restaurant = restaurantList.get(position);
-        // Toast.makeText(context, "holder", Toast.LENGTH_LONG).show();
 
-        /*if (thisAdapterCalledClassName.equals(AppUtils.fragmentList[4])) {
+/*
+        final Restaurant restaurant = restaurantList.get(position);
+
+        if (thisAdapterCalledClassName.equals(AppUtils.fragmentList[4])) {
             bindDataonRestaurentView(restaurant, holder);
         } else {
             bindDataonDestinationView(restaurant, holder);
         }
 */
-        bindDataonRestaurentView(restaurant, holder);
+
+        if (thisAdapterCalledClassName.equals("DestinationAndShipInforFragment")) {
+
+            final Child info = (Child) mDataList.get(position);
+            holder.tvRestaurantTitle.setText(info.getName());
+
+            Picasso.with(context)
+                    .load(context.getResources().
+                            getString(R.string.image_downloaded_base_url) +
+                            info.getImageUrl())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .into(holder.imgRestaurant);
+
+        } else {
+
+            final Restaurant restaurant = (Restaurant) mDataList.get(position);
+            bindDataonRestaurentView(restaurant, holder);
+        }
+
 
     }
 
@@ -110,18 +135,22 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return restaurantList.size();
+
+        //return restaurantList.size();
+        return mDataList.size();
     }
 
-    public void setRestaurantList(ArrayList<Restaurant> restaurantList) {
+    /*public void setRestaurantList(ArrayList<Restaurant> restaurantList) {
         this.restaurantList = restaurantList;
     }
+
+    */
 
     /**
      * Calls notifyDataSetChanged and checks empty list
      * Updates the textview if list is empty
      * We update the textview here as adapter is refreshed from multiple places
-     */
+     *//*
     public void refreshList() {
         notifyDataSetChanged();
         if (restaurantList.isEmpty())
@@ -129,7 +158,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         else
             tvNothingText.setVisibility(View.GONE);
     }
-
+*/
     static class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout rlRestaurantListItem;
         public TextView tvRestaurantTitle;

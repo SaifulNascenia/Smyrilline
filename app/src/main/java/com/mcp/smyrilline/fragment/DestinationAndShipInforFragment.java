@@ -1,5 +1,6 @@
 package com.mcp.smyrilline.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -18,8 +19,10 @@ import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
+import com.mcp.smyrilline.adapter.RestaurantAdapter;
 import com.mcp.smyrilline.interfaces.ApiInterfaces;
 import com.mcp.smyrilline.model.DestinationAndShipInfoModel.Info;
+import com.mcp.smyrilline.model.Restaurant;
 import com.mcp.smyrilline.model.restaurentsmodel.ListOfRestaurent;
 import com.mcp.smyrilline.service.ApiClient;
 import com.mcp.smyrilline.util.AppUtils;
@@ -58,6 +61,8 @@ public class DestinationAndShipInforFragment extends Fragment {
     private Call<Info> call;
 
     private Info info;
+
+    private RestaurantAdapter infoRecylerViewAdapter;
 
 
     @Nullable
@@ -116,10 +121,15 @@ public class DestinationAndShipInforFragment extends Fragment {
 
                 info = response.body();
 
+
+                infoRecylerViewAdapter = new RestaurantAdapter(getActivity(), info.getChildren(), null,
+                        "DestinationAndShipInforFragment");
+
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
                 infoRecyclerView.setLayoutManager(mLayoutManager);
                 infoRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, AppUtils.dpToPx(10), true));
                 infoRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                infoRecyclerView.setAdapter(infoRecylerViewAdapter);
 
 
             }
