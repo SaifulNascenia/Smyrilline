@@ -181,7 +181,7 @@ public class RestaurantsFragment extends Fragment {
         // List of items, will be populated in AsyncTask below
         mRestaurantList = new ArrayList<>();
         //mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText, AppUtils.fragmentList[4]);
-        mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText, null);
+        mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText, "");
         restaurenstListRecyclerView.setAdapter(mAdapter);
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
