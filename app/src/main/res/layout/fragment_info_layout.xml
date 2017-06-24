@@ -42,7 +42,7 @@
 
 
                 <ImageView
-                    android:id="@+id/restaurent_image"
+                    android:id="@+id/feature_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
@@ -57,45 +57,20 @@
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/small_margin"
-                    android:paddingLeft="@dimen/tax_free_shop_bottom_layout_margin"
-                    android:paddingRight="@dimen/tax_free_shop_bottom_layout_margin"
-                    app:layout_collapseMode="parallax">
 
-                    <TextView
-                        android:id="@+id/location_textview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerInParent="true"
-                        android:text="Location"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                        android:textColor="#FFFFFF" />
-
-                    <ImageView
-                        android:id="@+id/location_imageView"
-                        android:layout_width="@dimen/tax_free_shop_bottom_image_size"
-                        android:layout_height="@dimen/tax_free_shop_bottom_image_size"
-                        android:layout_toLeftOf="@+id/location_textview"
-                        android:padding="@dimen/small_padding"
-                        android:src="@drawable/location_icon" />
-
-                </RelativeLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nested_scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="?attr/actionBarSize"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
+                android:id="@+id/detils_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -109,14 +84,31 @@
                     android:text="the Ms norrona is build to the highest safety standards"
                     android:textColor="@color/colorPrimary" />
 
-                <TextView
-                    android:id="@+id/details_info_textview"
-                    style="@style/Base.TextAppearance.AppCompat.Medium"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/medium_margin"
-                    android:text="the Ms norrona is build to the highest safety standards"
-                    android:textColor="@color/textColorSecondary" />
+                    android:layout_marginTop="@dimen/medium_margin">
+
+                    <at.blogc.android.views.ExpandableTextView
+                        android:id="@+id/details_info_textview"
+                        style="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="the Ms norrona is build to the highest safety standards"
+                        android:textColor="@color/textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/expand_TextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/details_info_textview"
+                        android:text="view more"
+                        android:textColor="@color/colorPrimary"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/info_recycler_view"
