@@ -100,21 +100,49 @@ public class RestaurantsFragment extends Fragment {
                     @Override
                     public void onClick(View view, int position) {
 
-                        bundle.putString("RESTAURENT_ID",
-                                parentModelList.get(0).getChildren().get(position).getId());
-                        bundle.putString("RESTAURENT_NAME", parentModelList.get(0).getChildren().
-                                get(position).getName());
+                        if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[4])) {
 
-                        ResturentDetailsFragment resturentDetailsFragment = new
-                                ResturentDetailsFragment();
-                        resturentDetailsFragment.setArguments(bundle);
+                            bundle.putString("RESTAURENT_ID",
+                                    parentModelList.get(0).getChildren().get(position).getId());
 
-                        //FragmentManager fm = getActivity().getSupportFragmentManager();
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .addToBackStack(null)
-                                .replace(R.id.content_frame, resturentDetailsFragment)
-                                .commit();
+                            bundle.putString("RESTAURENT_NAME", parentModelList.get(0).getChildren().
+                                    get(position).getName());
+
+                            ResturentDetailsFragment resturentDetailsFragment = new
+                                    ResturentDetailsFragment();
+                            resturentDetailsFragment.setArguments(bundle);
+
+                            //FragmentManager fm = getActivity().getSupportFragmentManager();
+                            getActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .addToBackStack(null)
+                                    .replace(R.id.content_frame, resturentDetailsFragment)
+                                    .commit();
+
+                        } else {
+
+
+                            DestinationAndShipInforFragment destinationFragment = new
+                                    DestinationAndShipInforFragment();
+
+                            bundle.putString("ID",
+                                    parentModelList.get(0).getChildren().get(position).getId());
+
+                            bundle.putString("NAME", parentModelList.get(0).getChildren().
+                                    get(position).getName());
+
+                            bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[5]);
+
+                            destinationFragment.setArguments(bundle);
+
+                            //FragmentManager fm = getActivity().getSupportFragmentManager();
+                            getActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .addToBackStack(null)
+                                    .replace(R.id.content_frame, destinationFragment)
+                                    .commit();
+
+                        }
 
 
                     }
@@ -152,7 +180,8 @@ public class RestaurantsFragment extends Fragment {
 
         // List of items, will be populated in AsyncTask below
         mRestaurantList = new ArrayList<>();
-        mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText, AppUtils.fragmentList[4]);
+        //mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText, AppUtils.fragmentList[4]);
+        mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText, null);
         restaurenstListRecyclerView.setAdapter(mAdapter);
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
