@@ -10,6 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
+import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.interfaces.BindDataWithView;
 import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
@@ -51,7 +53,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
     private TextView productPriceNumberTextview;
     private TextView productPriceTextView;
 
-    private ImageView productImageView;
+    private ImageView productImageView, backImageView;
 
     private ProductDetailsFragment thisClassContext = this;
 
@@ -68,7 +70,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
         if (AppUtils.isNetworkAvailable(getActivity())) {
 
             mLoadingView.setVisibility(View.GONE);
-            setFoodDataOnView();
+            setDataOnView();
 
         } else {
             rootViewCoordinatorLayout.setVisibility(View.GONE);
@@ -85,11 +87,16 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
         return _rootView;
     }
 
-    private void setFoodDataOnView() {
+    private void setDataOnView() {
 
         toolbar.setTitle("Price and Menu");
         //toolbar.setTitleTextColor(getActivity().getResources().getColor(R.color.smalltextColor));
         toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.smalltextColor));
+       /* AppCompatActivity appCompatActivity = (DrawerActivity) getActivity();
+        appCompatActivity.setSupportActionBar(toolbar);
+        ((DrawerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       */
+
         productNameTextview.setText(getArguments().getString("PRODUCT_NAME"));
         productPriceTextView.setText(getArguments().getString("PRODUCT_PRICE"));
         productDetailsTextView.setText(getArguments().getString("PRODUCT_INFO"));
@@ -139,6 +146,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
         noInternetConnetionView = _rootView.findViewById(R.id.no_internet_layout);
         retryInternetBtn = (Button) _rootView.findViewById(R.id.retry_internet);
         retryInternetBtn.setOnClickListener(this);
+
 
     }
 

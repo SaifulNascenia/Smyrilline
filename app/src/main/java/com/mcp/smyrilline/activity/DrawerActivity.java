@@ -35,10 +35,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mcp.smyrilline.adapter.LanguageSpinnerAdapter;
+import com.mcp.smyrilline.fragment.DestinationAndShipInforFragment;
 import com.mcp.smyrilline.fragment.InfoFragment;
 import com.mcp.smyrilline.fragment.SettingsFragment;
 import com.mcp.smyrilline.model.DrawerItem;
@@ -209,7 +211,8 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
                 fragment = new CouponsFragment();
                 break;
             case ("InfoFragment"):
-                fragment = new InfoFragment();
+                fragment = new DestinationAndShipInforFragment();
+                bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[8]);
                 break;
            /* case ("ResturentDetailsFragment"):
                 fragment = new ResturentDetailsFragment();
@@ -720,9 +723,12 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.isDrawerIndicatorEnabled() &&
                 mDrawerToggle.onOptionsItemSelected(item)) {
+
+            Toast.makeText(getBaseContext(), "1", Toast.LENGTH_LONG).show();
             return true;
         } else if (item.getItemId() == android.R.id.home &&
                 getSupportFragmentManager().popBackStackImmediate()) {
+            Toast.makeText(getBaseContext(), "home", Toast.LENGTH_LONG).show();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

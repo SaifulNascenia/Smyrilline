@@ -1,5 +1,6 @@
 package com.mcp.smyrilline.interfaces;
 
+import com.mcp.smyrilline.model.DestinationAndShipInfoModel.Info;
 import com.mcp.smyrilline.model.dutyfreemodels.DutyFree;
 import com.mcp.smyrilline.model.parentmodel.ParentModel;
 import com.mcp.smyrilline.model.restaurentsmodel.ListOfRestaurent;
@@ -34,6 +35,13 @@ public interface ApiInterfaces {
 
     @GET("Destinations/{language}")
     Call<List<ListOfRestaurent>> fetchAllDestinationsInfo(@Path("language") String language);
+
+    @GET("Destinations/{language}/{id}")
+    Call<Info> fetchDestinationDetialsInfo(@Path("language") String language,
+                                           @Path("id") String id);
+
+    @GET("ShipInfo/{language}")
+    Call<Info> fetchShipInfo(@Path("language") String language);
 
 
 }

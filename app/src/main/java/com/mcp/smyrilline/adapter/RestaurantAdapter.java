@@ -32,17 +32,17 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     private final Context context;
     private ArrayList<Restaurant> restaurantList;
     private TextView tvNothingText;
-    private String accessedClassName;
+    private String thisAdapterCalledClassName;
 
     public RestaurantAdapter(Context context,
                              ArrayList<Restaurant> restaurantList,
                              TextView tvNothingText,
-                             String accessedClassName) {
+                             String thisAdapterCalledClassName) {
 
         this.context = context;
         this.restaurantList = restaurantList;
         this.tvNothingText = tvNothingText;
-        this.accessedClassName = accessedClassName;
+        this.thisAdapterCalledClassName = thisAdapterCalledClassName;
     }
 
     @Override
@@ -58,12 +58,13 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         final Restaurant restaurant = restaurantList.get(position);
         // Toast.makeText(context, "holder", Toast.LENGTH_LONG).show();
 
-        if (accessedClassName.equals(AppUtils.fragmentList[4])) {
+        /*if (thisAdapterCalledClassName.equals(AppUtils.fragmentList[4])) {
             bindDataonRestaurentView(restaurant, holder);
         } else {
             bindDataonDestinationView(restaurant, holder);
         }
-
+*/
+        bindDataonRestaurentView(restaurant, holder);
 
     }
 
