@@ -27,9 +27,12 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * Adapter for restaurant list in RestaurantFragment
+ * Adapter for restaurant and destination list in RestaurantFragment
  */
+
+
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder> {
 
     private final Context context;

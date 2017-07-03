@@ -46,6 +46,9 @@ import retrofit2.Retrofit;
  * Created by raqib on 5/11/17.
  */
 
+
+// this class is used for showing restauretn and destination list
+
 public class RestaurantsFragment extends Fragment {
 
     private View rootView;
