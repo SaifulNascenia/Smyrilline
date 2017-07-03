@@ -28,9 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 /**
- * Adapter for restaurant and destination list in RestaurantFragment 
+ * Adapter for restaurant and destination list in RestaurantFragment
  */
 
 
