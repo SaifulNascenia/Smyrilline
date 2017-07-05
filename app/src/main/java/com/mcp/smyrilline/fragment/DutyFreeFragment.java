@@ -83,37 +83,37 @@ public class DutyFreeFragment extends Fragment {
                         startActivity(new Intent(getActivity(), DutyFreeProductDetailsActivity.class)
                                 .putExtra("dutyFreeItemObj", dutyFreeItemObj));
 */
-                        Bundle bundle = new Bundle();
+                       // Bundle bundle = new Bundle();
 
-                        bundle.putString("PRODUCT_ID",
+                        AppUtils.getBundleObj().putString("PRODUCT_ID",
                                 dutyFree.getChildren().get(position).getId());
 
-                        bundle.putString("PRODUCT_NAME",
+                        AppUtils.getBundleObj().putString("PRODUCT_NAME",
                                 dutyFree.getChildren().get(position).getName());
 
-                        bundle.putString("PRODUCT_PRICE",
+                        AppUtils.getBundleObj().putString("PRODUCT_PRICE",
                                 "€ " + dutyFree.getChildren().get(position).getText3().
                                         substring(1,
                                                 dutyFree.getChildren().get(position).getText3()
                                                         .indexOf(","))
                         );
 
-                        bundle.putString("PRODUCT_PRICE_NUMBER", dutyFree.getChildren().get(position).getText3().
+                        AppUtils.getBundleObj().putString("PRODUCT_PRICE_NUMBER", dutyFree.getChildren().get(position).getText3().
                                 substring(dutyFree.getChildren().get(position).getText3().indexOf(",") + 1,
                                         dutyFree.getChildren().get(position).getText3().length())
                         );
 
 
-                        bundle.putString("PRODUCT_INFO",
+                        AppUtils.getBundleObj().putString("PRODUCT_INFO",
                                 dutyFree.getChildren().get(position).getText1());
 
-                        bundle.putString("PRODUCT_IMAGE",
+                        AppUtils.getBundleObj().putString("PRODUCT_IMAGE",
                                 dutyFree.getChildren().get(position).getImageUrl());
 
-                        bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[3]);
+                        AppUtils.getBundleObj().putString("CALLED_CLASS_NAME", AppUtils.fragmentList[3]);
 
                         ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
-                        productDetailsFragment.setArguments(bundle);
+                        productDetailsFragment.setArguments(AppUtils.getBundleObj());
 
                         //FragmentManager fm = getActivity().getSupportFragmentManager();
                         getActivity().getSupportFragmentManager()

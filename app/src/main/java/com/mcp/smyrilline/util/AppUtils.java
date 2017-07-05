@@ -18,6 +18,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
@@ -154,6 +155,8 @@ public class AppUtils extends MultiDexApplication {
             "RestaurantsFragment", "DestinationsFragment", "CouponsFragment", "SettingsFragment", "InfoFragment",
             "HelpFragment",
     };
+
+    private static Bundle bundle = new Bundle();
 
     private static SharedPreferences mSharedPref;
     public static Context mContext;
@@ -809,6 +812,12 @@ public class AppUtils extends MultiDexApplication {
     public static int dpToPx(int dp) {
         Resources r = mContext.getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    public static Bundle getBundleObj() {
+
+        return bundle;
+
     }
 
 }

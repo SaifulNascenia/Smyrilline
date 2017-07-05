@@ -73,7 +73,7 @@ public class RestaurantsFragment extends Fragment {
     private View noInternetConnetionView;
     private Button retryInternetBtn;
 
-    private Bundle bundle;
+   // private Bundle bundle;
 
     private Retrofit retrofit;
     private ApiInterfaces apiInterfaces;
@@ -93,7 +93,7 @@ public class RestaurantsFragment extends Fragment {
         retrofit = ApiClient.getClient();
         apiInterfaces = retrofit.create(ApiInterfaces.class);
 
-        bundle = new Bundle();
+     //   bundle = new Bundle();
 
         initView();
 
@@ -105,15 +105,15 @@ public class RestaurantsFragment extends Fragment {
 
                         if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[4])) {
 
-                            bundle.putString("RESTAURENT_ID",
+                            AppUtils.getBundleObj().putString("RESTAURENT_ID",
                                     parentModelList.get(0).getChildren().get(position).getId());
 
-                            bundle.putString("RESTAURENT_NAME", parentModelList.get(0).getChildren().
+                            AppUtils.getBundleObj().putString("RESTAURENT_NAME", parentModelList.get(0).getChildren().
                                     get(position).getName());
 
                             ResturentDetailsFragment resturentDetailsFragment = new
                                     ResturentDetailsFragment();
-                            resturentDetailsFragment.setArguments(bundle);
+                            resturentDetailsFragment.setArguments(AppUtils.getBundleObj());
 
                             //FragmentManager fm = getActivity().getSupportFragmentManager();
                             getActivity().getSupportFragmentManager()
@@ -128,15 +128,15 @@ public class RestaurantsFragment extends Fragment {
                             DestinationAndShipInforFragment destinationFragment = new
                                     DestinationAndShipInforFragment();
 
-                            bundle.putString("ID",
+                            AppUtils.getBundleObj().putString("ID",
                                     parentModelList.get(0).getChildren().get(position).getId());
 
-                            bundle.putString("NAME", parentModelList.get(0).getChildren().
+                            AppUtils.getBundleObj().putString("NAME", parentModelList.get(0).getChildren().
                                     get(position).getName());
 
-                            bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[5]);
+                            AppUtils.getBundleObj().putString("CALLED_CLASS_NAME", AppUtils.fragmentList[5]);
 
-                            destinationFragment.setArguments(bundle);
+                            destinationFragment.setArguments(AppUtils.getBundleObj());
 
                             //FragmentManager fm = getActivity().getSupportFragmentManager();
                             getActivity().getSupportFragmentManager()
