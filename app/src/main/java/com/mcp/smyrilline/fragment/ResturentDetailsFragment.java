@@ -122,17 +122,17 @@ public class ResturentDetailsFragment extends Fragment implements View.OnClickLi
 
                         BreakfastItem breakfastItem = restaurentDetails.getBreakfastItems().get(position);
 
-                        Bundle bundle = new Bundle();
+                        //Bundle bundle = new Bundle();
 
-                        bundle.putString("PRODUCT_ID", breakfastItem.getId());
-                        bundle.putString("PRODUCT_NAME", breakfastItem.getName());
-                        bundle.putString("PRODUCT_PRICE", breakfastItem.getText2());
-                        bundle.putString("PRODUCT_INFO", breakfastItem.getText1());
-                        bundle.putString("PRODUCT_IMAGE", breakfastItem.getImageUrl());
-                        bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[4]);
+                        AppUtils.getBundleObj().putString("PRODUCT_ID", breakfastItem.getId());
+                        AppUtils.getBundleObj().putString("PRODUCT_NAME", breakfastItem.getName());
+                        AppUtils.getBundleObj().putString("PRODUCT_PRICE", breakfastItem.getText2());
+                        AppUtils.getBundleObj().putString("PRODUCT_INFO", breakfastItem.getText1());
+                        AppUtils.getBundleObj().putString("PRODUCT_IMAGE", breakfastItem.getImageUrl());
+                        AppUtils.getBundleObj().putString("CALLED_CLASS_NAME", AppUtils.fragmentList[4]);
 
                         ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
-                        productDetailsFragment.setArguments(bundle);
+                        productDetailsFragment.setArguments(AppUtils.getBundleObj());
 
                         //FragmentManager fm = getActivity().getSupportFragmentManager();
                         getActivity().getSupportFragmentManager()
@@ -158,17 +158,17 @@ public class ResturentDetailsFragment extends Fragment implements View.OnClickLi
 
                         LunchItem lunchItem = restaurentDetails.getLunchItems().get(position);
 
-                        Bundle bundle = new Bundle();
+                        //Bundle bundle = new Bundle();
 
-                        bundle.putString("PRODUCT_ID", lunchItem.getId());
-                        bundle.putString("PRODUCT_NAME", lunchItem.getName());
-                        bundle.putString("PRODUCT_PRICE", lunchItem.getText2());
-                        bundle.putString("PRODUCT_INFO", lunchItem.getText1());
-                        bundle.putString("PRODUCT_IMAGE", lunchItem.getImageUrl());
-                        bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[4]);
+                        AppUtils.getBundleObj().putString("PRODUCT_ID", lunchItem.getId());
+                        AppUtils.getBundleObj().putString("PRODUCT_NAME", lunchItem.getName());
+                        AppUtils.getBundleObj().putString("PRODUCT_PRICE", lunchItem.getText2());
+                        AppUtils.getBundleObj().putString("PRODUCT_INFO", lunchItem.getText1());
+                        AppUtils.getBundleObj().putString("PRODUCT_IMAGE", lunchItem.getImageUrl());
+                        AppUtils.getBundleObj().putString("CALLED_CLASS_NAME", AppUtils.fragmentList[4]);
 
                         ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
-                        productDetailsFragment.setArguments(bundle);
+                        productDetailsFragment.setArguments(AppUtils.getBundleObj());
 
 
                         //FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -195,17 +195,17 @@ public class ResturentDetailsFragment extends Fragment implements View.OnClickLi
 
                         DinnerItem dinnerItem = restaurentDetails.getDinnerItems().get(position);
 
-                        Bundle bundle = new Bundle();
+                        // Bundle bundle = new Bundle();
 
-                        bundle.putString("PRODUCT_ID", dinnerItem.getId());
-                        bundle.putString("PRODUCT_NAME", dinnerItem.getName());
-                        bundle.putString("PRODUCT_PRICE", dinnerItem.getText2());
-                        bundle.putString("PRODUCT_INFO", dinnerItem.getText1());
-                        bundle.putString("PRODUCT_IMAGE", dinnerItem.getImageUrl());
-                        bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[4]);
+                        AppUtils.getBundleObj().putString("PRODUCT_ID", dinnerItem.getId());
+                        AppUtils.getBundleObj().putString("PRODUCT_NAME", dinnerItem.getName());
+                        AppUtils.getBundleObj().putString("PRODUCT_PRICE", dinnerItem.getText2());
+                        AppUtils.getBundleObj().putString("PRODUCT_INFO", dinnerItem.getText1());
+                        AppUtils.getBundleObj().putString("PRODUCT_IMAGE", dinnerItem.getImageUrl());
+                        AppUtils.getBundleObj().putString("CALLED_CLASS_NAME", AppUtils.fragmentList[4]);
 
                         ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
-                        productDetailsFragment.setArguments(bundle);
+                        productDetailsFragment.setArguments(AppUtils.getBundleObj());
 
 
                         //FragmentManager fm = getActivity().getSupportFragmentManager();
