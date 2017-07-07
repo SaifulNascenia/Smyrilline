@@ -1,7 +1,5 @@
 package com.mcp.smyrilline.fragment;
 
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,8 +9,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +20,11 @@ import android.widget.TextView;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.adapter.DutyFreeAdapter;
-import com.mcp.smyrilline.interfaces.ApiInterfaces;
-import com.mcp.smyrilline.interfaces.ClickListener;
+import com.mcp.smyrilline.listener.RecylerViewItemClickListener;
 import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
-import com.mcp.smyrilline.model.dutyfreemodels.DutyFree;
-import com.mcp.smyrilline.service.ApiClient;
+import com.mcp.smyrilline.model.dutyfree.DutyFree;
+import com.mcp.smyrilline.rest.RetrofitClient;
+import com.mcp.smyrilline.rest.RetrofitInterfaces;
 import com.mcp.smyrilline.util.AppUtils;
 import com.mcp.smyrilline.view.GridSpacingItemDecoration;
 import com.squareup.picasso.Picasso;
@@ -44,10 +40,9 @@ import retrofit2.Retrofit;
 
 public class DutyFreeFragment extends Fragment {
 
-
     private View _rootView;
     private Toolbar toolbar;
-    private Toolbar extraToolbar;
+    private Toolbar noInternetViewToolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
     private RecyclerView dutyFreeRecyclerView;
@@ -69,48 +64,43 @@ public class DutyFreeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
         _rootView = inflater.inflate(R.layout.fragment_duty_free, container, false);
 
         initView();
+
         dutyFreeRecyclerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
                 dutyFreeRecyclerView,
-                new ClickListener() {
+                new RecylerViewItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
 
-                        /*Child dutyFreeItemObj = dutyFree.getChildren().get(position);
-                        startActivity(new Intent(getActivity(), DutyFreeProductDetailsActivity.class)
-                                .putExtra("dutyFreeItemObj", dutyFreeItemObj));
-*/
-                       // Bundle bundle = new Bundle();
-
-                        AppUtils.getBundleObj().putString("PRODUCT_ID",
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_ID,
                                 dutyFree.getChildren().get(position).getId());
 
-                        AppUtils.getBundleObj().putString("PRODUCT_NAME",
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_NAME,
                                 dutyFree.getChildren().get(position).getName());
 
-                        AppUtils.getBundleObj().putString("PRODUCT_PRICE",
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_PRICE,
                                 "€ " + dutyFree.getChildren().get(position).getText3().
                                         substring(1,
                                                 dutyFree.getChildren().get(position).getText3()
                                                         .indexOf(","))
                         );
 
-                        AppUtils.getBundleObj().putString("PRODUCT_PRICE_NUMBER", dutyFree.getChildren().get(position).getText3().
-                                substring(dutyFree.getChildren().get(position).getText3().indexOf(",") + 1,
-                                        dutyFree.getChildren().get(position).getText3().length())
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_PRICE_NUMBER,
+                                dutyFree.getChildren().get(position).getText3().
+                                        substring(dutyFree.getChildren().get(position).getText3().indexOf(",") + 1,
+                                                dutyFree.getChildren().get(position).getText3().length())
                         );
 
 
-                        AppUtils.getBundleObj().putString("PRODUCT_INFO",
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_INFO,
                                 dutyFree.getChildren().get(position).getText1());
 
-                        AppUtils.getBundleObj().putString("PRODUCT_IMAGE",
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_IMAGE,
                                 dutyFree.getChildren().get(position).getImageUrl());
 
-                        AppUtils.getBundleObj().putString("CALLED_CLASS_NAME", AppUtils.fragmentList[3]);
+                        AppUtils.getBundleObj().putString(AppUtils.CALLED_CLASS_NAME, DutyFreeFragment.class.getSimpleName());
 
                         ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
                         productDetailsFragment.setArguments(AppUtils.getBundleObj());
@@ -131,16 +121,14 @@ public class DutyFreeFragment extends Fragment {
                     }
                 }));
 
-
-        loadDutyFreeproductList();
-
+        fetchDutyFreeProductList();
 
         return _rootView;
     }
 
     private void initView() {
 
-        extraToolbar = (Toolbar) _rootView.findViewById(R.id.extra_toolbar);
+        noInternetViewToolbar = (Toolbar) _rootView.findViewById(R.id.extra_toolbar);
         coordinatorLayout = (CoordinatorLayout) _rootView.findViewById(R.id.main_content);
         toolbar = (Toolbar) _rootView.findViewById(R.id.toolbar);
         collapsingToolbarLayout = (CollapsingToolbarLayout) _rootView.findViewById(R.id.collapsing_toolbar);
@@ -153,20 +141,18 @@ public class DutyFreeFragment extends Fragment {
         shopImageView = (ImageView) _rootView.findViewById(R.id.shop_image);
     }
 
-    private void loadDutyFreeproductList() {
-        Retrofit retrofit = ApiClient.getClient();
-        ApiInterfaces apiInterfaces = retrofit.create(ApiInterfaces.class);
-        Call<DutyFree> call = apiInterfaces.fetchDutyFreeProductsList(AppUtils.WP_PARAM_LANGUAGE);
+    private void fetchDutyFreeProductList() {
+        Retrofit retrofit = RetrofitClient.getClient();
+        RetrofitInterfaces retrofitInterfaces = retrofit.create(RetrofitInterfaces.class);
+        Call<DutyFree> call = retrofitInterfaces.fetchDutyFreeProductsList(AppUtils.WP_PARAM_LANGUAGE);
 
         call.enqueue(new Callback<DutyFree>() {
             @Override
             public void onResponse(Call<DutyFree> call, Response<DutyFree> response) {
                 try {
-                    //  Toast.makeText(getActivity(), "onT" , Toast.LENGTH_LONG).show();
 
                     dutyFree = response.body();
-                    //  Log.i("dutydata", dutyFree.toString());
-                    toolbar.setTitle("Tax Free Shop");
+                    toolbar.setTitle(getActivity().getResources().getString(R.string.tax_free_shop_title));
                     ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
                     collapsingToolbarLayout.setTitleEnabled(false);
 
@@ -183,10 +169,7 @@ public class DutyFreeFragment extends Fragment {
                             .placeholder(R.mipmap.ic_launcher)
                             .into(shopImageView);
 
-                    Log.i("dutyimage", getActivity().getResources().
-                            getString(R.string.image_downloaded_base_url) +
-                            dutyFree.getImageUrl());
-                    setUprestaurentRecyclerView();
+                    prepareDutyFreeRecyclerViewAttributes();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -196,18 +179,16 @@ public class DutyFreeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<DutyFree> call, Throwable t) {
-                //Log.d("onResponse", "onFailure " + t.toString());
-                // Toast.makeText(getActivity(), "onfailure " + t.toString(), Toast.LENGTH_LONG).show();
 
                 dutyFreeLoadingProgressBar.setVisibility(View.GONE);
-                extraToolbar.setVisibility(View.VISIBLE);
-                extraToolbar.setTitle("Tax Free Shop");
-                ((DrawerActivity) getActivity()).setToolbarAndToggle(extraToolbar);
+                noInternetViewToolbar.setVisibility(View.VISIBLE);
+                noInternetViewToolbar.setTitle(getActivity().getResources().getString(R.string.tax_free_shop_title));
+                ((DrawerActivity) getActivity()).setToolbarAndToggle(noInternetViewToolbar);
                 noInternetConnetionView.setVisibility(View.VISIBLE);
                 AppUtils.withoutInternetConnectionView(getActivity(),
                         getActivity().getIntent(),
                         retryInternetBtn,
-                        AppUtils.fragmentList[3]);
+                        DutyFreeFragment.class.getSimpleName());
                 rootLayout.setBackgroundColor(getActivity().getResources().getColor(R.color.windowBackground));
             }
         });
@@ -216,26 +197,19 @@ public class DutyFreeFragment extends Fragment {
     }
 
 
-    private void setUprestaurentRecyclerView() {
+    private void prepareDutyFreeRecyclerViewAttributes() {
 
 
-        dutyFreeAdapter = new DutyFreeAdapter(getActivity(), dutyFree.getChildren(), AppUtils.fragmentList[3]);
+        dutyFreeAdapter = new DutyFreeAdapter(getActivity(), dutyFree.getChildren(),
+                DutyFreeFragment.class.getSimpleName());
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
         dutyFreeRecyclerView.setLayoutManager(mLayoutManager);
-        dutyFreeRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        dutyFreeRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, AppUtils.dpToPx(10), true));
         dutyFreeRecyclerView.setItemAnimator(new DefaultItemAnimator());
         dutyFreeRecyclerView.setAdapter(dutyFreeAdapter);
 
     }
 
-
-    /**
-     * Converting dp to pixel
-     */
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
 
 }

@@ -110,7 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dip"
                     android:layout_gravity="bottom"
-                    android:background="#ececec"
+                    android:background="@color/light_grey_bkg"
                     android:orientation="horizontal"
                     app:layout_collapseMode="parallax" />
 
@@ -283,7 +283,7 @@
                         <LinearLayout
                             android:layout_width="2dp"
                             android:layout_height="match_parent"
-                            android:background="#ececec"
+                            android:background="@color/light_grey_bkg"
                             android:orientation="vertical" />
 
                         <LinearLayout
@@ -338,7 +338,7 @@
                     android:background="@color/colorPrimary"
                     android:text="Location"
                     android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/windowBackground"
                     android:textStyle="bold"
                     android:visibility="visible" />
 

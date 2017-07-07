@@ -114,6 +114,24 @@
     <string name="no_internet_message">
         No internet connection.Make sure Wi-Fi or Cellular data is turned on,then try again</string>
 
+    <string name="nav_restaurants">Restaurants and bars</string>
+    <string name="nav_destinations">Destinations</string>
+
+    <string name="tax_free_shop_title">Tax Free Shop</string>
+    <string name="price_and_menu">Price and Menu</string>
+    <string name="textview_text_at_expanded_time">view more</string>
+    <string name="textview_text_at_collapse_time">view less</string>
+
+    <string name="ship_info">Ship Info</string>
+
+    <string name="pre_book_price_text">Prebook: </string>
+    <string name="onboard_price_text">Onboard price: </string>
+    <string name="save_text">Save: </string>
+
+    <string name="times_text">Times</string>
+    <string name="seatings_text">Seatings: </string>
+
+
     <string name="cheese_ipsum">Jarlsberg lancashire edam. Dolcelatte hard cheese brie st. agur blue
     cheese caerphilly bavarian bergkase cheese and biscuits mascarpone. Cheeseburger swiss bavarian
     bergkase cream cheese fromage frais cheesy feet port-salut airedale. St. agur blue cheese rubber
