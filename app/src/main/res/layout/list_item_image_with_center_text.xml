@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rlRestaurantListItem"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="@android:color/white">
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/imgRestaurant"
+        android:id="@+id/content_imageview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/parent_feature_image"
@@ -14,7 +13,8 @@
 
 
     <TextView
-        android:id="@+id/tvRestaurantTitle"
+        android:id="@+id/title_textview"
+        style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bkg_60_percent_opaque_black"
@@ -23,7 +23,6 @@
         android:maxLines="2"
         android:text=""
         android:textColor="@android:color/white"
-        android:textSize="20sp"
         android:textStyle="bold" />
 
     <View

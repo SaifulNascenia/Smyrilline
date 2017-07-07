@@ -39,25 +39,24 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mcp.smyrilline.adapter.LanguageSpinnerAdapter;
-import com.mcp.smyrilline.fragment.DestinationAndShipInforFragment;
-import com.mcp.smyrilline.fragment.InfoFragment;
-import com.mcp.smyrilline.fragment.SettingsFragment;
-import com.mcp.smyrilline.model.DrawerItem;
 import com.mcp.smyrilline.R;
+import com.mcp.smyrilline.adapter.LanguageSpinnerAdapter;
 import com.mcp.smyrilline.adapter.NavDrawerAdapter;
-import com.mcp.smyrilline.fragment.TicketFragment;
 import com.mcp.smyrilline.fragment.CouponsFragment;
 import com.mcp.smyrilline.fragment.DestinationsFragment;
 import com.mcp.smyrilline.fragment.DutyFreeFragment;
 import com.mcp.smyrilline.fragment.InboxFragment;
+import com.mcp.smyrilline.fragment.InfoFragment;
 import com.mcp.smyrilline.fragment.LoginFragment;
 import com.mcp.smyrilline.fragment.RestaurantsFragment;
+import com.mcp.smyrilline.fragment.SettingsFragment;
 import com.mcp.smyrilline.fragment.ShipTrackerFragment;
+import com.mcp.smyrilline.fragment.TicketFragment;
 import com.mcp.smyrilline.listener.BleStateListener;
 import com.mcp.smyrilline.listener.BulletinListener;
 import com.mcp.smyrilline.listener.DrawerCouponsCountListener;
 import com.mcp.smyrilline.model.Bulletin;
+import com.mcp.smyrilline.model.DrawerItem;
 import com.mcp.smyrilline.receiver.BleStateReceiver;
 import com.mcp.smyrilline.receiver.ContentReceiver;
 import com.mcp.smyrilline.signalr.SignalRService;
@@ -76,21 +75,18 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     public static final String FRAGMENT_PARENT_TAG = "parent_fragment";
     public static final String FRAGMENT_CHILD_TAG = "child_fragment";
     private static final int REQUEST_ENABLE_BT = 1;
+    private static final String TAG = "smyrilline MainActivity";
+    private static final int REQUEST_FINE_LOCATION = 0;
     public static BulletinListener mListener;
     private ArrayList<Long> mUsedCouponList;
     private TextView tvDrawerInboxCount;
     private TextView tvDrawerCouponsCount;
-
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private ActionBarDrawerToggle mDrawerToggle;
     private Spinner mLanguageSpinner;
-
     private CharSequence mTitle;
     private String[] mPlanetTitles;
-
-    private static final String TAG = "smyrilline MainActivity";
-    private static final int REQUEST_FINE_LOCATION = 0;
     private OnyxBeaconManager mManager;
     private String CONTENT_INTENT_FILTER;
     private String BLE_INTENT_FILTER;
@@ -198,11 +194,9 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
                 break;
             case ("RestaurantsFragment"):
                 fragment = new RestaurantsFragment();
-                bundle.putString("FRAGMENT_NAME", AppUtils.fragmentList[4]);
                 break;
             case ("DestinationsFragment"):
-                fragment = new RestaurantsFragment();
-                bundle.putString("FRAGMENT_NAME", AppUtils.fragmentList[5]);
+                fragment = new DestinationsFragment();
                 break;
             case ("SettingsFragment"):
                 fragment = new SettingsFragment();
@@ -211,12 +205,8 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
                 fragment = new CouponsFragment();
                 break;
             case ("InfoFragment"):
-                fragment = new DestinationAndShipInforFragment();
-                bundle.putString("CALLED_CLASS_NAME", AppUtils.fragmentList[8]);
+                fragment = new InfoFragment();
                 break;
-           /* case ("ResturentDetailsFragment"):
-                fragment = new ResturentDetailsFragment();
-                break;*/
         }
 
         fragment.setArguments(bundle);
@@ -553,14 +543,6 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         }
     }
 
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            showFragment(AppUtils.fragmentList[0]);
-        }
-    }
-
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
@@ -791,6 +773,14 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     protected void closeNavDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    /* The click listner for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            showFragment(AppUtils.fragmentList[0]);
         }
     }
 

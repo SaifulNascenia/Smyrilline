@@ -2,36 +2,28 @@ package com.mcp.smyrilline.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.cjj.MaterialRefreshLayout;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.adapter.RestaurantAdapter;
-import com.mcp.smyrilline.interfaces.ApiInterfaces;
-import com.mcp.smyrilline.interfaces.ClickListener;
+import com.mcp.smyrilline.listener.RecylerViewItemClickListener;
 import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
-import com.mcp.smyrilline.model.Restaurant;
-import com.mcp.smyrilline.model.restaurentsmodel.Child;
-import com.mcp.smyrilline.model.restaurentsmodel.ListOfRestaurent;
-import com.mcp.smyrilline.service.ApiClient;
+import com.mcp.smyrilline.model.restaurant.Child;
+import com.mcp.smyrilline.model.restaurant.ListOfRestaurants;
+import com.mcp.smyrilline.rest.RetrofitClient;
+import com.mcp.smyrilline.rest.RetrofitInterfaces;
 import com.mcp.smyrilline.util.AppUtils;
 
 import java.util.ArrayList;
@@ -43,42 +35,29 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
- * Created by raqib on 5/11/17.
+ * Created by saiful on 7/6/17.
  */
-
-
-// this class is used for showing restauretn and destination list
 
 public class RestaurantsFragment extends Fragment {
 
     private View rootView;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
+
     private RecyclerView restaurenstListRecyclerView;
-    /*private List<DemoRestaurent> demoRestaurentList = new ArrayList<>();
-    private AppCompatActivity actionBar;
-    private DemoRestaurentAdapter restaurentRecyclerViewAdapter;
-    */private Toolbar toolbar;
+    private Toolbar toolbar;
 
-
-    private static final String RESTAURANT_LIST = "restaurantList";
-    private MaterialRefreshLayout materialRefreshLayout;
     private RestaurantAdapter mAdapter;
-    private ArrayList<Restaurant> mRestaurantList;
+    private ArrayList<Child> mRestaurantList;
     private Context mContext;
     private SharedPreferences mSharedPref;
-    private TextView tvNothingText;
-    private List<ListOfRestaurent> parentModelList;
+    private List<ListOfRestaurants> listOfRestaurants;
 
     private View mLoadingView;
     private View noInternetConnetionView;
     private Button retryInternetBtn;
 
-   // private Bundle bundle;
-
     private Retrofit retrofit;
-    private ApiInterfaces apiInterfaces;
-    private Call<List<ListOfRestaurent>> call;
-
+    private RetrofitInterfaces retrofitInterfaces;
+    private Call<List<ListOfRestaurants>> call;
 
     @Nullable
     @Override
@@ -88,66 +67,34 @@ public class RestaurantsFragment extends Fragment {
 
         mContext = getActivity();
 
-        rootView = inflater.inflate(R.layout.fragment_restaurents, container, false);
+        rootView = inflater.inflate(R.layout.fragment_restaurants, container, false);
 
-        retrofit = ApiClient.getClient();
-        apiInterfaces = retrofit.create(ApiInterfaces.class);
-
-     //   bundle = new Bundle();
+        retrofit = RetrofitClient.getClient();
+        retrofitInterfaces = retrofit.create(RetrofitInterfaces.class);
 
         initView();
 
         restaurenstListRecyclerView.addOnItemTouchListener(new RecylerViewTouchEventListener(getActivity(),
                 restaurenstListRecyclerView,
-                new ClickListener() {
+                new RecylerViewItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
 
-                        if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[4])) {
+                        AppUtils.getBundleObj().putString(AppUtils.RESTAUREANT_ID,
+                                listOfRestaurants.get(0).getChildren().get(position).getId());
 
-                            AppUtils.getBundleObj().putString("RESTAURENT_ID",
-                                    parentModelList.get(0).getChildren().get(position).getId());
+                        AppUtils.getBundleObj().putString(AppUtils.RESTAUREANT_NAME,
+                                listOfRestaurants.get(0).getChildren().get(position).getName());
 
-                            AppUtils.getBundleObj().putString("RESTAURENT_NAME", parentModelList.get(0).getChildren().
-                                    get(position).getName());
+                        ResturantDetailsFragment resturentDetailsFragment = new
+                                ResturantDetailsFragment();
+                        resturentDetailsFragment.setArguments(AppUtils.getBundleObj());
 
-                            ResturentDetailsFragment resturentDetailsFragment = new
-                                    ResturentDetailsFragment();
-                            resturentDetailsFragment.setArguments(AppUtils.getBundleObj());
-
-                            //FragmentManager fm = getActivity().getSupportFragmentManager();
-                            getActivity().getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .addToBackStack(null)
-                                    .replace(R.id.content_frame, resturentDetailsFragment)
-                                    .commit();
-
-                        } else {
-
-
-                            DestinationAndShipInforFragment destinationFragment = new
-                                    DestinationAndShipInforFragment();
-
-                            AppUtils.getBundleObj().putString("ID",
-                                    parentModelList.get(0).getChildren().get(position).getId());
-
-                            AppUtils.getBundleObj().putString("NAME", parentModelList.get(0).getChildren().
-                                    get(position).getName());
-
-                            AppUtils.getBundleObj().putString("CALLED_CLASS_NAME", AppUtils.fragmentList[5]);
-
-                            destinationFragment.setArguments(AppUtils.getBundleObj());
-
-                            //FragmentManager fm = getActivity().getSupportFragmentManager();
-                            getActivity().getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .addToBackStack(null)
-                                    .replace(R.id.content_frame, destinationFragment)
-                                    .commit();
-
-                        }
-
-
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .replace(R.id.content_frame, resturentDetailsFragment)
+                                .commit();
                     }
 
                     @Override
@@ -160,16 +107,15 @@ public class RestaurantsFragment extends Fragment {
         return rootView;
     }
 
+    // Init UI
     private void initView() {
 
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         mLoadingView = rootView.findViewById(R.id.restaurantsLoadingView);
         noInternetConnetionView = rootView.findViewById(R.id.no_internet_layout);
         retryInternetBtn = (Button) rootView.findViewById(R.id.retry_internet);
-        // Init UI
-        tvNothingText = (TextView) rootView.findViewById(R.id.tvRestaurantsNothingText);
-        tvNothingText.setVisibility(View.GONE);
-        restaurenstListRecyclerView = (RecyclerView) rootView.findViewById(R.id.restaurents_list_recycler_view);
+
+        restaurenstListRecyclerView = (RecyclerView) rootView.findViewById(R.id.restaurants_list_recycler_view);
         restaurenstListRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
     }
@@ -181,117 +127,49 @@ public class RestaurantsFragment extends Fragment {
         // Refresh toolbar options
         getActivity().invalidateOptionsMenu();
 
-        // List of items, will be populated in AsyncTask below
         mRestaurantList = new ArrayList<>();
-        //mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText, AppUtils.fragmentList[4]);
-        mAdapter = new RestaurantAdapter(mContext, mRestaurantList, tvNothingText, "");
+        mAdapter = new RestaurantAdapter(mContext, mRestaurantList);
         restaurenstListRecyclerView.setAdapter(mAdapter);
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
-
-       /* materialRefreshLayout = (MaterialRefreshLayout) rootView.findViewById(R.id.refreshRestaurants);
-        materialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
-            @Override
-            public void onfinish() {
-                super.onfinish();
-            }
-
-            @Override
-            public void onRefresh(final MaterialRefreshLayout materialRefreshLayout) {
-                // refreshing...
-                if (AppUtils.isNetworkAvailable(mContext))
-                    initRestaurantList();
-                else {
-                    mLoadingView.setVisibility(View.GONE);
-                    tvNothingText.setVisibility(View.VISIBLE);
-                    materialRefreshLayout.finishRefresh();
-                    AppUtils.showAlertDialog(mContext, AppUtils.ALERT_NO_WIFI);
-                }
-            }
-        });
-*/
-
-        showListViewFragmentWise();
-
-       /* if (AppUtils.isNetworkAvailable(getActivity())) {
-
-        } else {
-            *//*mLoadingView.setVisibility(View.GONE);
-            tvNothingText.setVisibility(View.VISIBLE);
-            AppUtils.showAlertDialog(mContext, AppUtils.ALERT_NO_WIFI);
-*//*
-            setWithoutInternetView();
-        }*/
-
     }
 
-    private void showListViewFragmentWise() {
+    @Override
+    public void onStart() {
+        super.onStart();
 
+        if (AppUtils.isNetworkAvailable(getActivity())) {
 
-        if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[4])
-                && AppUtils.isNetworkAvailable(getActivity())) {
-
-            setUpToolbar("Restaurants");
-            call = apiInterfaces.fetchAllRestaurentsAndBarsInfo(AppUtils.WP_PARAM_LANGUAGE);
-            fetchApiData();
-
-        } else if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[5])
-                && AppUtils.isNetworkAvailable(getActivity())) {
-
-            setUpToolbar("Destinations");
-            call = apiInterfaces.fetchAllDestinationsInfo(AppUtils.WP_PARAM_LANGUAGE);
-            fetchApiData();
-
-        } else if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[4])
-                && !AppUtils.isNetworkAvailable(getActivity())) {
-
-            setUpToolbar("Restaurants");
-            setWithoutInternetView(getArguments().getString("FRAGMENT_NAME"));
-
-        } else if (getArguments().getString("FRAGMENT_NAME").equals(AppUtils.fragmentList[5])
-                && !AppUtils.isNetworkAvailable(getActivity())) {
-
-            setUpToolbar("Destinations");
-            setWithoutInternetView(getArguments().getString("FRAGMENT_NAME"));
+            setUpToolbar(getActivity().getResources().getString(R.string.nav_restaurants));
+            call = retrofitInterfaces.fetchAllRestaurantsAndBarsInfo(AppUtils.WP_PARAM_LANGUAGE);
+            fetchRestaurantsApiData();
 
         } else {
-            Log.i("fragmentcheck", "no fragment found");
+
+            setUpToolbar(getActivity().getResources().getString(R.string.nav_restaurants));
+            setWithoutInternetView(RestaurantsFragment.class.getSimpleName());
         }
 
     }
 
-    private void fetchApiData() {
+    private void fetchRestaurantsApiData() {
 
-
-        call.enqueue(new Callback<List<ListOfRestaurent>>() {
+        call.enqueue(new Callback<List<ListOfRestaurants>>() {
             @Override
-            public void onResponse(Call<List<ListOfRestaurent>> call, Response<List<ListOfRestaurent>> response) {
+            public void onResponse(Call<List<ListOfRestaurants>> call, Response<List<ListOfRestaurants>> response) {
                 try {
 
-                    parentModelList = response.body();
-                    Log.d("onResponse", parentModelList + "");
+                    listOfRestaurants = response.body();
 
                     mLoadingView.setVisibility(View.GONE);
-                    //   materialRefreshLayout.finishRefresh();
                     mRestaurantList.clear();
 
                     for (int i = 0; i < response.body().get(0).getChildren().size(); i++) {
 
-                        Child restaturent = response.body().get(0).getChildren().get(i);
-                        Restaurant restaurant = new Restaurant(
-                                restaturent.getId(),
-                                restaturent.getName(),
-                                null,
-                                restaturent.getImageUrl(),
-                                null,
-                                false);
-                        mRestaurantList.add(restaurant);
+                        mRestaurantList.add(response.body().get(0).getChildren().get(i));
                         mAdapter.notifyDataSetChanged();
-
                     }
-
-                    //Toast.makeText(getActivity(), "Dataloading complete " + mRestaurantList.size(), Toast.LENGTH_LONG).show();
 
                 } catch (Exception e) {
                     Log.d("onResponse", "error");
@@ -300,10 +178,10 @@ public class RestaurantsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<ListOfRestaurent>> call, Throwable t) {
+            public void onFailure(Call<List<ListOfRestaurants>> call, Throwable t) {
                 Log.d("onResponse", "onFailure " + t.toString());
 
-                setWithoutInternetView(getArguments().getString("FRAGMENT_NAME"));
+                setWithoutInternetView(getArguments().getString(AppUtils.CALLED_CLASS_NAME));
 
 
             }
@@ -315,57 +193,6 @@ public class RestaurantsFragment extends Fragment {
         toolbar.setBackground(null);
         toolbar.setTitle(toolbarName);
         ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
-    }
-
-    private void initRestaurantList() {
-
-
-        call.enqueue(new Callback<List<ListOfRestaurent>>() {
-            @Override
-            public void onResponse(Call<List<ListOfRestaurent>> call, Response<List<ListOfRestaurent>> response) {
-                try {
-
-                    parentModelList = response.body();
-                    Log.d("onResponse", parentModelList + "");
-
-                    mLoadingView.setVisibility(View.GONE);
-                    //   materialRefreshLayout.finishRefresh();
-                    mRestaurantList.clear();
-
-                    for (int i = 0; i < response.body().get(0).getChildren().size(); i++) {
-
-                        Child restaturent = response.body().get(0).getChildren().get(i);
-                        Restaurant restaurant = new Restaurant(
-                                restaturent.getId(),
-                                restaturent.getName(),
-                                null,
-                                restaturent.getImageUrl(),
-                                null,
-                                false);
-                        mRestaurantList.add(restaurant);
-                        mAdapter.notifyDataSetChanged();
-
-                    }
-
-                    //Toast.makeText(getActivity(), "Dataloading complete " + mRestaurantList.size(), Toast.LENGTH_LONG).show();
-
-                } catch (Exception e) {
-                    Log.d("onResponse", "error");
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<ListOfRestaurent>> call, Throwable t) {
-                Log.d("onResponse", "onFailure " + t.toString());
-
-                setWithoutInternetView(getArguments().getString("FRAGMENT_NAME"));
-
-
-            }
-        });
-
-
     }
 
     private void setWithoutInternetView(String fragmentName) {

@@ -1,10 +1,7 @@
 package com.mcp.smyrilline.listener;
 
-import android.support.v7.widget.RecyclerView;
-
-import com.mcp.smyrilline.interfaces.ClickListener;
-
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,10 +12,10 @@ import android.view.View;
 
 public class RecylerViewTouchEventListener implements RecyclerView.OnItemTouchListener {
 
-    private ClickListener clicklistener;
+    private RecylerViewItemClickListener clicklistener;
     private GestureDetector gestureDetector;
 
-    public RecylerViewTouchEventListener(Context context, final RecyclerView recycleView, final ClickListener clicklistener) {
+    public RecylerViewTouchEventListener(Context context, final RecyclerView recycleView, final RecylerViewItemClickListener clicklistener) {
 
         this.clicklistener = clicklistener;
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {

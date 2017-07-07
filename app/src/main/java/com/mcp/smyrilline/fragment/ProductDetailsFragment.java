@@ -10,9 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +19,9 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.interfaces.BindDataWithView;
+import com.mcp.smyrilline.interfaces.ViewDataBinder;
 import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -35,7 +31,7 @@ import at.blogc.android.views.ExpandableTextView;
  * Created by saiful on 6/21/17.
  */
 
-public class ProductDetailsFragment extends Fragment implements View.OnClickListener, BindDataWithView {
+public class ProductDetailsFragment extends Fragment implements View.OnClickListener, ViewDataBinder {
 
     private View _rootView;
 
@@ -53,7 +49,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
     private TextView productPriceNumberTextview;
     private TextView productPriceTextView;
 
-    private ImageView productImageView, backImageView;
+    private ImageView productImageView;
 
     private ProductDetailsFragment thisClassContext = this;
 
@@ -75,7 +71,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
         } else {
             rootViewCoordinatorLayout.setVisibility(View.GONE);
             noInternetViewToolbar.setVisibility(View.VISIBLE);
-            noInternetViewToolbar.setTitle("Price and Menu");
+            noInternetViewToolbar.setTitle(getActivity().getResources().getString(R.string.price_and_menu));
             mLoadingView.setVisibility(View.GONE);
             noInternetConnetionView.setVisibility(View.VISIBLE);
             noInternetViewToolbar.setBackgroundColor(
@@ -89,7 +85,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
 
     private void setDataOnView() {
 
-        toolbar.setTitle("Price and Menu");
+        toolbar.setTitle(getActivity().getResources().getString(R.string.price_and_menu));
         //toolbar.setTitleTextColor(getActivity().getResources().getColor(R.color.smalltextColor));
         toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.smalltextColor));
        /* AppCompatActivity appCompatActivity = (DrawerActivity) getActivity();
@@ -97,14 +93,14 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
         ((DrawerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
        */
 
-        productNameTextview.setText(getArguments().getString("PRODUCT_NAME"));
-        productPriceTextView.setText(getArguments().getString("PRODUCT_PRICE"));
-        productDetailsTextView.setText(getArguments().getString("PRODUCT_INFO"));
+        productNameTextview.setText(getArguments().getString(AppUtils.PRODUCT_NAME));
+        productPriceTextView.setText(getArguments().getString(AppUtils.PRODUCT_PRICE));
+        productDetailsTextView.setText(getArguments().getString(AppUtils.PRODUCT_INFO));
         // productDetailsTextView.setText(getActivity().getResources().getString(R.string.cheese_ipsum));
 
-        if (getArguments().getString("CALLED_CLASS_NAME").equals(AppUtils.fragmentList[3])) {
+        if (getArguments().getString(AppUtils.CALLED_CLASS_NAME).equals(DutyFreeFragment.class.getSimpleName())) {
 
-            productPriceNumberTextview.setText(getArguments().getString("PRODUCT_PRICE_NUMBER"));
+            productPriceNumberTextview.setText(getArguments().getString(AppUtils.PRODUCT_PRICE_NUMBER));
 
         } else {
             productPriceNumberTextview.setVisibility(View.GONE);
@@ -113,14 +109,14 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
         Picasso.with(getActivity())
                 .load(getActivity().getResources().
                         getString(R.string.image_downloaded_base_url) +
-                        getArguments().getString("PRODUCT_IMAGE"))
+                        getArguments().getString(AppUtils.PRODUCT_IMAGE))
                 .placeholder(R.mipmap.ic_launcher)
                 .into(productImageView);
 
         Bitmap bitmap = ((BitmapDrawable) productImageView.getDrawable()).getBitmap();
         Log.i("imagebitmap", bitmap + "");
 
-        setDataOnProductDetailsTextViewWithExpandTextViewListener();
+        handleExpandableTextViewListener();
 
     }
 
@@ -163,7 +159,7 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public void setDataOnProductDetailsTextViewWithExpandTextViewListener() {
+    public void handleExpandableTextViewListener() {
 
 
         ViewTreeObserver vto = productDetailsTextView.getViewTreeObserver();
@@ -200,11 +196,11 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
             public void onClick(View v) {
                 if (productDetailsTextView.isExpanded()) {
                     productDetailsTextView.collapse();
-                    expandTextView.setText("view more");
+                    expandTextView.setText(getActivity().getResources().getString(R.string.textview_text_at_expanded_time));
                     Log.i("textline", "onexpand " + productDetailsTextView.getLineCount() + "");
                 } else {
                     productDetailsTextView.expand();
-                    expandTextView.setText("view less");
+                    expandTextView.setText(getActivity().getResources().getString(R.string.textview_text_at_collapse_time));
                     Log.i("textline", "oncollapse " + productDetailsTextView.getLineCount() + "");
                 }
             }

@@ -22,8 +22,8 @@ import com.mcp.smyrilline.fragment.InboxFragment;
 import com.mcp.smyrilline.fragment.SettingsFragment;
 import com.mcp.smyrilline.listener.BulletinListener;
 import com.mcp.smyrilline.model.Bulletin;
+import com.mcp.smyrilline.rest.VolleySingleton;
 import com.mcp.smyrilline.util.AppUtils;
-import com.mcp.smyrilline.util.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;

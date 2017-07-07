@@ -23,10 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.adapter.ShipInfoAdapter;
+import com.mcp.smyrilline.adapter.DestinationDetailsAdapter;
 import com.mcp.smyrilline.interfaces.ViewDataBinder;
-import com.mcp.smyrilline.model.shipinfo.Info;
+import com.mcp.smyrilline.model.destination.DestinationDetailsInfo;
 import com.mcp.smyrilline.rest.RetrofitClient;
 import com.mcp.smyrilline.rest.RetrofitInterfaces;
 import com.mcp.smyrilline.util.AppUtils;
@@ -40,10 +39,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
- * Created by raqib on 5/11/17.
+ * Created by saiful on 6/24/17.
  */
 
-public class InfoFragment extends Fragment implements View.OnClickListener, ViewDataBinder {
+public class DestinationDetailsfragment extends Fragment implements View.OnClickListener, ViewDataBinder {
 
     private View _rootView;
 
@@ -68,13 +67,13 @@ public class InfoFragment extends Fragment implements View.OnClickListener, View
 
     private Retrofit retrofit;
     private RetrofitInterfaces retrofitInterfaces;
-    private Call<Info> call;
+    private Call<DestinationDetailsInfo> call;
 
-    private Info info;
+    private DestinationDetailsInfo info;
 
-    private ShipInfoAdapter infoRecylerViewAdapter;
+    private DestinationDetailsAdapter infoRecylerViewAdapter;
 
-    private InfoFragment thisClassContext = this;
+    private DestinationDetailsfragment thisClassContext = this;
 
     private LinearLayout detilsInfoLayout;
 
@@ -95,6 +94,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener, View
         return _rootView;
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -102,36 +102,38 @@ public class InfoFragment extends Fragment implements View.OnClickListener, View
         if (AppUtils.isNetworkAvailable(getActivity())) {
 
             setUpToolbar(toolbar);
-            call = retrofitInterfaces.fetchShipInfo(AppUtils.WP_PARAM_LANGUAGE);
+
+            call = retrofitInterfaces.fetchDestinationDetialsInfo(AppUtils.WP_PARAM_LANGUAGE,
+                    getArguments().getString(AppUtils.DESTINATION_ID));
             fetchApiData();
 
-        } else {
+        } else
+            setWithoutInternetView();
+    }
 
-            coordinatorLayout.setVisibility(View.GONE);
-            mLoadingView.setVisibility(View.GONE);
-            noInternetConnetionView.setVisibility(View.VISIBLE);
-            noInternetViewToolbar.setVisibility(View.VISIBLE);
+    private void setWithoutInternetView() {
 
-            setUpToolbar(noInternetViewToolbar);
+        coordinatorLayout.setVisibility(View.GONE);
 
-        }
+        mLoadingView.setVisibility(View.GONE);
+        noInternetConnetionView.setVisibility(View.VISIBLE);
+        noInternetViewToolbar.setVisibility(View.VISIBLE);
+
+        setUpToolbar(noInternetViewToolbar);
     }
 
     private void fetchApiData() {
 
 
-        call.enqueue(new Callback<Info>() {
+        call.enqueue(new Callback<DestinationDetailsInfo>() {
             @Override
-            public void onResponse(Call<Info> call, Response<Info> response) {
+            public void onResponse(Call<DestinationDetailsInfo> call, Response<DestinationDetailsInfo> response) {
 
                 info = response.body();
 
                 mLoadingView.setVisibility(View.GONE);
-/*
-                infoRecylerViewAdapter = new RestaurantAdapter(getActivity(), info.getChildren(), null,
-                        DestinationAndShipInfoFragment.class.getSimpleName());*/
 
-                infoRecylerViewAdapter = new ShipInfoAdapter(getActivity(), info.getChildren());
+                infoRecylerViewAdapter = new DestinationDetailsAdapter(getActivity(), info.getChildren());
 
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
                 infoRecyclerView.setLayoutManager(mLayoutManager);
@@ -143,8 +145,8 @@ public class InfoFragment extends Fragment implements View.OnClickListener, View
             }
 
             @Override
-            public void onFailure(Call<Info> call, Throwable t) {
-
+            public void onFailure(Call<DestinationDetailsInfo> call, Throwable t) {
+                setWithoutInternetView();
             }
         });
 
@@ -165,8 +167,10 @@ public class InfoFragment extends Fragment implements View.OnClickListener, View
 
     private void setUpToolbar(Toolbar toolbar) {
 
-        toolbar.setTitle(getActivity().getResources().getString(R.string.ship_info));
-        ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
+
+        toolbar.setTitle(getArguments().getString(AppUtils.DESTINATION_NAME));
+
+
     }
 
     private void initView() {

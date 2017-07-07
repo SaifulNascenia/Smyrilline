@@ -121,4 +121,5 @@
     <string name="please_select_age_gender">Venligst vælg alder og køn.</string>
     <string name="no_internet_message">
         Ingen internetforbindelse. Sørg for, at Wi-Fi eller Cellular data er tændt, og prøv igen</string>
+
 </resources>

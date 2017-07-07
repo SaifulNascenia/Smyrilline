@@ -27,9 +27,7 @@ import android.support.v4.app.NotificationCompat;
 import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -40,8 +38,7 @@ import com.google.gson.Gson;
 import com.mcp.smyrilline.BuildConfig;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.activity.MainGridActivity;
-import com.mcp.smyrilline.fragment.ResturentDetailsFragment;
+import com.mcp.smyrilline.fragment.ResturantDetailsFragment;
 import com.mcp.smyrilline.model.Bulletin;
 import com.onyxbeacon.rest.model.content.Coupon;
 
@@ -136,6 +133,21 @@ public class AppUtils extends MultiDexApplication {
     private static final String MOBILE_PLATFORM = "Android";
     private static final int CONNECTION_TIMEOUT_MS = 10000;
     private static final int MAX_RETRIES = 5;
+
+    //bundle key names
+    public static String PRODUCT_ID = "PRODUCT_ID";
+    public static String PRODUCT_NAME = "PRODUCT_NAME";
+    public static String PRODUCT_PRICE = "PRODUCT_PRICE";
+    public static String PRODUCT_PRICE_NUMBER = "PRODUCT_PRICE_NUMBER";
+    public static String PRODUCT_INFO = "PRODUCT_INFO";
+    public static String PRODUCT_IMAGE = "PRODUCT_IMAGE";
+    public static String CALLED_CLASS_NAME = "CALLED_CLASS_NAME";
+    public static String DESTINATION_ID = "DESTINATION_ID";
+    public static String DESTINATION_NAME = "DESTINATION_NAME";
+    public static String RESTAUREANT_ID = "RESTAURENT_ID";
+    public static String RESTAUREANT_NAME = "RESTAURENT_NAME";
+
+
     // Wordpress language param
     public static String WP_PARAM_LANGUAGE;
     // Translatable texts
@@ -150,16 +162,15 @@ public class AppUtils extends MultiDexApplication {
     public static String ALERT_NO_PDF_READER;
     public static String ALERT_TURN_ON_BLUETOOTH;
     public static String LABEL_NEW;
-    private Locale locale = null;
     public static String[] fragmentList = {"LoginFragment", "ShipTrackerFragment", "InboxFragment", "DutyFreeFragment",
             "RestaurantsFragment", "DestinationsFragment", "CouponsFragment", "SettingsFragment", "InfoFragment",
             "HelpFragment",
     };
-
+    public static Context mContext;
     private static Bundle bundle = new Bundle();
 
     private static SharedPreferences mSharedPref;
-    public static Context mContext;
+    private Locale locale = null;
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
@@ -636,6 +647,117 @@ public class AppUtils extends MultiDexApplication {
     }
 
     /**
+     * Method to hide the soft input keyboard
+     *
+     * @param activity
+     */
+    public static void hideKeyboard(Activity activity) {
+        if (null == activity) {
+            return;
+        }
+
+        View view = activity.getCurrentFocus();
+        if (null == view) {
+            return;
+        }
+
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static String getEllipsisedThreeLineText(FragmentActivity activity,
+                                                    TextView productDetailsTextView
+
+    ) {
+
+
+        if (productDetailsTextView.getLineCount() == 3) {
+
+            // Use lineCount here
+            ResturantDetailsFragment.startLineCount =
+                    productDetailsTextView.getLayout().getLineStart(0);
+
+            ResturantDetailsFragment.endLineCount =
+                    productDetailsTextView.getLayout().getLineEnd(0);
+
+            ResturantDetailsFragment.firstLineText =
+                    productDetailsTextView.getText().toString().
+                            substring(ResturantDetailsFragment.startLineCount,
+                                    ResturantDetailsFragment.endLineCount);
+
+
+            ResturantDetailsFragment.startLineCount =
+                    productDetailsTextView.getLayout().getLineStart(1);
+
+            ResturantDetailsFragment.endLineCount =
+                    productDetailsTextView.getLayout().getLineEnd(1);
+
+            ResturantDetailsFragment.secondLineText =
+                    productDetailsTextView.getText().toString().
+                            substring(ResturantDetailsFragment.startLineCount,
+                                    ResturantDetailsFragment.endLineCount);
+
+            ResturantDetailsFragment.startLineCount =
+                    productDetailsTextView.getLayout().getLineStart(2);
+
+            ResturantDetailsFragment.endLineCount =
+                    productDetailsTextView.getLayout().getLineEnd(2);
+
+            ResturantDetailsFragment.thirdLineText =
+                    (productDetailsTextView.getText().toString().
+                            subSequence(ResturantDetailsFragment.startLineCount,
+                                    ResturantDetailsFragment.endLineCount)).toString();
+
+            ResturantDetailsFragment.totalThreeLineText =
+                    ResturantDetailsFragment.firstLineText +
+                            ResturantDetailsFragment.secondLineText +
+                            ResturantDetailsFragment.thirdLineText;
+
+            return ResturantDetailsFragment.totalThreeLineText;
+
+                 /*   if (getActivity().getResources().getString(R.string.cheese_ipsum).length() >
+                            ResturantDetailsFragment.totalThreeLineText.length()) {
+                        expandTextView.setVisibility(View.VISIBLE);
+                    }*/
+
+        }
+
+        return null;
+    }
+
+    public static void setVisibilityOfExpandTextview(TextView productDetailsTextView,
+                                                     TextView expandTextView) {
+
+        Layout layout = productDetailsTextView.getLayout();
+        if (layout != null) {
+            int lines = layout.getLineCount();
+            if (lines > 0) {
+                int ellipsisCount = layout.getEllipsisCount(lines - 1);
+                if (ellipsisCount > 0) {
+                    Log.i("totaltext", "elip\n");
+                    expandTextView.setVisibility(View.VISIBLE);
+                } else {
+                    Log.i("totaltext", "not elip\n");
+                }
+            }
+        }
+    }
+
+    /**
+     * Converting dp to pixel
+     */
+    public static int dpToPx(int dp) {
+        Resources r = mContext.getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    public static Bundle getBundleObj() {
+
+        return bundle;
+
+    }
+
+    /**
      * Method to clear the shared preference if the version code is <= 4
      * because there are some Gson implementation changes for saved values
      */
@@ -658,26 +780,6 @@ public class AppUtils extends MultiDexApplication {
             // update failed, or cancelled
         }
     }
-
-    /**
-     * Method to hide the soft input keyboard
-     *
-     * @param activity
-     */
-    public static void hideKeyboard(Activity activity) {
-        if (null == activity) {
-            return;
-        }
-
-        View view = activity.getCurrentFocus();
-        if (null == view) {
-            return;
-        }
-
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
 
     @Override
     public void onCreate() {
@@ -723,101 +825,6 @@ public class AppUtils extends MultiDexApplication {
 
         // Update texts used in code
         updateTextTranslations();
-    }
-
-
-    public static String getEllipsisedThreeLineText(FragmentActivity activity,
-                                                    TextView productDetailsTextView
-
-    ) {
-
-
-        if (productDetailsTextView.getLineCount() == 3) {
-
-            // Use lineCount here
-            ResturentDetailsFragment.startLineCount =
-                    productDetailsTextView.getLayout().getLineStart(0);
-
-            ResturentDetailsFragment.endLineCount =
-                    productDetailsTextView.getLayout().getLineEnd(0);
-
-            ResturentDetailsFragment.firstLineText =
-                    productDetailsTextView.getText().toString().
-                            substring(ResturentDetailsFragment.startLineCount,
-                                    ResturentDetailsFragment.endLineCount);
-
-
-            ResturentDetailsFragment.startLineCount =
-                    productDetailsTextView.getLayout().getLineStart(1);
-
-            ResturentDetailsFragment.endLineCount =
-                    productDetailsTextView.getLayout().getLineEnd(1);
-
-            ResturentDetailsFragment.secondLineText =
-                    productDetailsTextView.getText().toString().
-                            substring(ResturentDetailsFragment.startLineCount,
-                                    ResturentDetailsFragment.endLineCount);
-
-            ResturentDetailsFragment.startLineCount =
-                    productDetailsTextView.getLayout().getLineStart(2);
-
-            ResturentDetailsFragment.endLineCount =
-                    productDetailsTextView.getLayout().getLineEnd(2);
-
-            ResturentDetailsFragment.thirdLineText =
-                    (productDetailsTextView.getText().toString().
-                            subSequence(ResturentDetailsFragment.startLineCount,
-                                    ResturentDetailsFragment.endLineCount)).toString();
-
-            ResturentDetailsFragment.totalThreeLineText =
-                    ResturentDetailsFragment.firstLineText +
-                            ResturentDetailsFragment.secondLineText +
-                            ResturentDetailsFragment.thirdLineText;
-
-            return ResturentDetailsFragment.totalThreeLineText;
-
-                 /*   if (getActivity().getResources().getString(R.string.cheese_ipsum).length() >
-                            ResturentDetailsFragment.totalThreeLineText.length()) {
-                        expandTextView.setVisibility(View.VISIBLE);
-                    }*/
-
-        }
-
-        return null;
-    }
-
-
-    public static void setVisibilityOfExpandTextview(TextView productDetailsTextView,
-                                                     TextView expandTextView) {
-
-        Layout layout = productDetailsTextView.getLayout();
-        if (layout != null) {
-            int lines = layout.getLineCount();
-            if (lines > 0) {
-                int ellipsisCount = layout.getEllipsisCount(lines - 1);
-                if (ellipsisCount > 0) {
-                    Log.i("totaltext", "elip\n");
-                    expandTextView.setVisibility(View.VISIBLE);
-                } else {
-                    Log.i("totaltext", "not elip\n");
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Converting dp to pixel
-     */
-    public static int dpToPx(int dp) {
-        Resources r = mContext.getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
-    public static Bundle getBundleObj() {
-
-        return bundle;
-
     }
 
 }
