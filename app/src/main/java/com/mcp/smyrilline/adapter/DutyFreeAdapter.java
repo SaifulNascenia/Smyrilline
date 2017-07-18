@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcp.smyrilline.R;
+import com.mcp.smyrilline.fragment.DutyFreeFragment;
 import com.mcp.smyrilline.model.dutyfree.Child;
 import com.mcp.smyrilline.model.restaurant.BreakfastItem;
 import com.mcp.smyrilline.model.restaurant.DinnerItem;
@@ -51,7 +52,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
     @Override
     public void onBindViewHolder(DutyFreeAdapter.DutyFreeViewHolder holder, int position) {
 
-        if (thisAdapterClassCalledClassName.equals(AppUtils.fragmentList[3])) {
+        if (thisAdapterClassCalledClassName.equals(DutyFreeFragment.class.getSimpleName())) {
 
             setViewOnDutyFreeRecylerView(holder, position);
         } else {
@@ -66,7 +67,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
         holder.rootCardView.getLayoutParams().height = AppUtils.dpToPx(160);
 
         holder.productNameTextView.setVisibility(View.GONE);
-        holder.productQuantityTextView.setVisibility(View.GONE);
+        holder.pennyValueOfProducPriceTextview.setVisibility(View.GONE);
         holder.productShortDetailsTextview.setTextColor(mContext.getResources().
                 getColor(R.color.textColorSecondary));
         holder.productShortDetailsTextview.setTextSize(16);
@@ -76,7 +77,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
             BreakfastItem breakfastItem = (BreakfastItem) dutyFreeChildList.get(position);
 
             holder.productShortDetailsTextview.setText(breakfastItem.getName());
-            holder.productPriceTextView.setText(breakfastItem.getText2());
+            holder.euroValueOfProducPriceTextview.setText(breakfastItem.getSubheader());
 
             Picasso.with(mContext)
                     .load(mContext.getResources().
@@ -91,7 +92,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
             LunchItem lunchItem = (LunchItem) dutyFreeChildList.get(position);
 
             holder.productShortDetailsTextview.setText(lunchItem.getName());
-            holder.productPriceTextView.setText(lunchItem.getText2());
+            holder.euroValueOfProducPriceTextview.setText(lunchItem.getSubheader());
 
             Picasso.with(mContext)
                     .load(mContext.getResources().
@@ -104,7 +105,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
             DinnerItem dinnerItem = (DinnerItem) dutyFreeChildList.get(position);
 
             holder.productShortDetailsTextview.setText(dinnerItem.getName());
-            holder.productPriceTextView.setText(dinnerItem.getText2());
+            holder.euroValueOfProducPriceTextview.setText(dinnerItem.getSubheader());
 
 
             Picasso.with(mContext)
@@ -123,14 +124,14 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
 
         holder.productNameTextView.setText(dutyFreeItemChild.getName());
 
-        holder.productShortDetailsTextview.setText(dutyFreeItemChild.getText2());
+        holder.productShortDetailsTextview.setText(dutyFreeItemChild.getHeader());
 
-        holder.productPriceTextView.setText("€ " + dutyFreeItemChild.getText3().
-                substring(1, dutyFreeItemChild.getText3().indexOf(",")));
+        holder.euroValueOfProducPriceTextview.setText("€ " + dutyFreeItemChild.getPrice().
+                substring(1, dutyFreeItemChild.getPrice().indexOf(",")));
 
-        holder.productQuantityTextView.setText(dutyFreeItemChild.getText3().
-                substring(dutyFreeItemChild.getText3().indexOf(",") + 1,
-                        dutyFreeItemChild.getText3().length()));
+        holder.pennyValueOfProducPriceTextview.setText(dutyFreeItemChild.getPrice().
+                substring(dutyFreeItemChild.getPrice().indexOf(",") + 1,
+                        dutyFreeItemChild.getPrice().length()));
 
         Picasso.with(mContext)
                 .load(mContext.getResources().
@@ -153,8 +154,8 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
         public TextView productNameTextView;
         public TextView productShortDetailsTextview;
         public ImageView productImageView;
-        public TextView productPriceTextView;
-        public TextView productQuantityTextView;
+        public TextView euroValueOfProducPriceTextview;
+        public TextView pennyValueOfProducPriceTextview;
 
         public DutyFreeViewHolder(View view) {
             super(view);
@@ -163,8 +164,8 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
             productNameTextView = (TextView) view.findViewById(R.id.product_name_textview);
             productShortDetailsTextview = (TextView) view.findViewById(R.id.product_short_details_textview);
             productImageView = (ImageView) view.findViewById(R.id.product_imageview);
-            productPriceTextView = (TextView) view.findViewById(R.id.quantity_product_price);
-            productQuantityTextView = (TextView) view.findViewById(R.id.quantity_product_price_number_textview);
+            euroValueOfProducPriceTextview = (TextView) view.findViewById(R.id.euro_value_of_product_price_textview);
+            pennyValueOfProducPriceTextview = (TextView) view.findViewById(R.id.penny_value_of_product_price_textview);
         }
     }
 }

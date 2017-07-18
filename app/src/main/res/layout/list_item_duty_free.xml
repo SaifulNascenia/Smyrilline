@@ -63,19 +63,19 @@
                 android:layout_alignParentLeft="true">
 
                 <TextView
-                    android:id="@+id/quantity_product_price_number_textview"
+                    android:id="@+id/penny_value_of_product_price_textview"
                     style="@android:style/TextAppearance.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/quantity_product_price"
+                    android:layout_toRightOf="@+id/euro_value_of_product_price_textview"
                     android:text="78"
                     android:textColor="@color/colorPrimary"
                     android:textStyle="normal" />
 
 
                 <TextView
-                    android:id="@+id/quantity_product_price"
+                    android:id="@+id/euro_value_of_product_price_textview"
                     style="@android:style/TextAppearance.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

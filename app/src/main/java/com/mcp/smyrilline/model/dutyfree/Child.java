@@ -11,29 +11,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class Child implements Parcelable {
 
-    public final static Creator<Child> CREATOR = new Creator<Child>() {
-
-
-        @SuppressWarnings({
-                "unchecked"
-        })
-        public Child createFromParcel(Parcel in) {
-            Child instance = new Child();
-            instance.id = ((String) in.readValue((String.class.getClassLoader())));
-            instance.name = ((String) in.readValue((String.class.getClassLoader())));
-            instance.imageUrl = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text1 = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text2 = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text3 = ((String) in.readValue((String.class.getClassLoader())));
-            instance.children = in.readValue((Object.class.getClassLoader()));
-            return instance;
-        }
-
-        public Child[] newArray(int size) {
-            return (new Child[size]);
-        }
-
-    };
     @SerializedName("id")
     @Expose
     private String id;
@@ -43,18 +20,43 @@ public class Child implements Parcelable {
     @SerializedName("imageUrl")
     @Expose
     private String imageUrl;
-    @SerializedName("text1")
+    @SerializedName("description")
     @Expose
-    private String text1;
-    @SerializedName("text2")
+    private String description;
+    @SerializedName("header")
     @Expose
-    private String text2;
-    @SerializedName("text3")
+    private String header;
+    @SerializedName("price")
     @Expose
-    private String text3;
+    private String price;
     @SerializedName("children")
     @Expose
     private Object children;
+
+
+    public final static Creator<Child> CREATOR = new Creator<Child>() {
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Child createFromParcel(Parcel in) {
+            Child instance = new Child();
+            instance.id = ((String) in.readValue((String.class.getClassLoader())));
+            instance.name = ((String) in.readValue((String.class.getClassLoader())));
+            instance.imageUrl = ((String) in.readValue((String.class.getClassLoader())));
+            instance.description = ((String) in.readValue((String.class.getClassLoader())));
+            instance.header = ((String) in.readValue((String.class.getClassLoader())));
+            instance.price = ((String) in.readValue((String.class.getClassLoader())));
+            instance.children = in.readValue((Object.class.getClassLoader()));
+            return instance;
+        }
+
+        public Child[] newArray(int size) {
+            return (new Child[size]);
+        }
+
+    };
+
 
     public String getId() {
         return id;
@@ -80,28 +82,28 @@ public class Child implements Parcelable {
         this.imageUrl = imageUrl;
     }
 
-    public String getText1() {
-        return text1;
+    public String getDescription() {
+        return description;
     }
 
-    public void setText1(String text1) {
-        this.text1 = text1;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getText2() {
-        return text2;
+    public String getHeader() {
+        return header;
     }
 
-    public void setText2(String text2) {
-        this.text2 = text2;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
-    public String getText3() {
-        return text3;
+    public String getPrice() {
+        return price;
     }
 
-    public void setText3(String text3) {
-        this.text3 = text3;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public Object getChildren() {
@@ -121,9 +123,9 @@ public class Child implements Parcelable {
         dest.writeValue(id);
         dest.writeValue(name);
         dest.writeValue(imageUrl);
-        dest.writeValue(text1);
-        dest.writeValue(text2);
-        dest.writeValue(text3);
+        dest.writeValue(description);
+        dest.writeValue(header);
+        dest.writeValue(price);
         dest.writeValue(children);
     }
 

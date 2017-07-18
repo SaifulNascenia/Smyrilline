@@ -81,21 +81,21 @@ public class DutyFreeFragment extends Fragment {
                                 dutyFree.getChildren().get(position).getName());
 
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_PRICE,
-                                "€ " + dutyFree.getChildren().get(position).getText3().
+                                "€ " + dutyFree.getChildren().get(position).getPrice().
                                         substring(1,
-                                                dutyFree.getChildren().get(position).getText3()
+                                                dutyFree.getChildren().get(position).getPrice()
                                                         .indexOf(","))
                         );
 
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_PRICE_NUMBER,
-                                dutyFree.getChildren().get(position).getText3().
-                                        substring(dutyFree.getChildren().get(position).getText3().indexOf(",") + 1,
-                                                dutyFree.getChildren().get(position).getText3().length())
+                                dutyFree.getChildren().get(position).getPrice().
+                                        substring(dutyFree.getChildren().get(position).getPrice().indexOf(",") + 1,
+                                                dutyFree.getChildren().get(position).getPrice().length())
                         );
 
 
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_INFO,
-                                dutyFree.getChildren().get(position).getText1());
+                                dutyFree.getChildren().get(position).getDescription());
 
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_IMAGE,
                                 dutyFree.getChildren().get(position).getImageUrl());
@@ -159,7 +159,7 @@ public class DutyFreeFragment extends Fragment {
                     dutyFreeLoadingProgressBar.setVisibility(View.GONE);
                     coordinatorLayout.setVisibility(View.VISIBLE);
 
-                    timeTextview.setText(dutyFree.getText1());
+                    timeTextview.setText(dutyFree.getHeader());
 
 
                     Picasso.with(getActivity())

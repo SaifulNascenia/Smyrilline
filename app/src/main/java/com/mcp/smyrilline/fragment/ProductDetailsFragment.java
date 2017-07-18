@@ -46,8 +46,8 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
     private ExpandableTextView productDetailsTextView;
     private TextView expandTextView;
     private TextView productNameTextview;
-    private TextView productPriceNumberTextview;
-    private TextView productPriceTextView;
+    private TextView pennyValueOfProductPriceTextview;
+    private TextView euroValueOfProductPriceTextview;
 
     private ImageView productImageView;
 
@@ -94,16 +94,16 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
        */
 
         productNameTextview.setText(getArguments().getString(AppUtils.PRODUCT_NAME));
-        productPriceTextView.setText(getArguments().getString(AppUtils.PRODUCT_PRICE));
+        euroValueOfProductPriceTextview.setText(getArguments().getString(AppUtils.PRODUCT_PRICE));
         productDetailsTextView.setText(getArguments().getString(AppUtils.PRODUCT_INFO));
         // productDetailsTextView.setText(getActivity().getResources().getString(R.string.cheese_ipsum));
 
         if (getArguments().getString(AppUtils.CALLED_CLASS_NAME).equals(DutyFreeFragment.class.getSimpleName())) {
 
-            productPriceNumberTextview.setText(getArguments().getString(AppUtils.PRODUCT_PRICE_NUMBER));
+            pennyValueOfProductPriceTextview.setText(getArguments().getString(AppUtils.PRODUCT_PRICE_NUMBER));
 
         } else {
-            productPriceNumberTextview.setVisibility(View.GONE);
+            pennyValueOfProductPriceTextview.setVisibility(View.GONE);
         }
 
         Picasso.with(getActivity())
@@ -133,8 +133,8 @@ public class ProductDetailsFragment extends Fragment implements View.OnClickList
         // productDetailsTextView = (TextView) _rootView.findViewById(R.id.expandable_TextView);
         expandTextView = (TextView) _rootView.findViewById(R.id.toggle_TextView);
         productNameTextview = (TextView) _rootView.findViewById(R.id.product_name_textview);
-        productPriceNumberTextview = (TextView) _rootView.findViewById(R.id.product_price_number_textview);
-        productPriceTextView = (TextView) _rootView.findViewById(R.id.product_price);
+        pennyValueOfProductPriceTextview = (TextView) _rootView.findViewById(R.id.penny_value_of_product_price_textview);
+        euroValueOfProductPriceTextview = (TextView) _rootView.findViewById(R.id.euro_value_of_product_price_textview);
         productImageView = (ImageView) _rootView.findViewById(R.id.product_imageview);
         noInternetViewToolbar = (Toolbar) _rootView.findViewById(R.id.extra_toolbar);
 

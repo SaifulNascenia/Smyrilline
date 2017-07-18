@@ -25,7 +25,7 @@ public class DutyFree implements Parcelable
             instance.id = in.readValue((Object.class.getClassLoader()));
             instance.name = ((String) in.readValue((String.class.getClassLoader())));
             instance.imageUrl = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text1 = ((String) in.readValue((String.class.getClassLoader())));
+            instance.header = ((String) in.readValue((String.class.getClassLoader())));
             instance.text2 = ((String) in.readValue((String.class.getClassLoader())));
             instance.text3 = in.readValue((Object.class.getClassLoader()));
             in.readList(instance.children, (Child.class.getClassLoader()));
@@ -47,9 +47,9 @@ public class DutyFree implements Parcelable
     @SerializedName("imageUrl")
     @Expose
     private String imageUrl;
-    @SerializedName("text1")
+    @SerializedName("header")
     @Expose
-    private String text1;
+    private String header;
     @SerializedName("text2")
     @Expose
     private String text2;
@@ -84,12 +84,12 @@ public class DutyFree implements Parcelable
         this.imageUrl = imageUrl;
     }
 
-    public String getText1() {
-        return text1;
+    public String getHeader() {
+        return header;
     }
 
-    public void setText1(String text1) {
-        this.text1 = text1;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
     public String getText2() {
@@ -125,7 +125,7 @@ public class DutyFree implements Parcelable
         dest.writeValue(id);
         dest.writeValue(name);
         dest.writeValue(imageUrl);
-        dest.writeValue(text1);
+        dest.writeValue(header);
         dest.writeValue(text2);
         dest.writeValue(text3);
         dest.writeList(children);

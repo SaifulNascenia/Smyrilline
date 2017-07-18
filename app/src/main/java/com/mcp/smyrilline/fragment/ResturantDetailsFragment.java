@@ -107,8 +107,8 @@ public class ResturantDetailsFragment extends Fragment implements View.OnClickLi
 
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_ID, breakfastItem.getId());
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_NAME, breakfastItem.getName());
-                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_PRICE, breakfastItem.getText2());
-                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_INFO, breakfastItem.getText1());
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_PRICE, breakfastItem.getSubheader());
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_INFO, breakfastItem.getHeader());
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_IMAGE, breakfastItem.getImageUrl());
                         AppUtils.getBundleObj().putString(AppUtils.CALLED_CLASS_NAME, RestaurantsFragment.class.getSimpleName());
 
@@ -141,8 +141,8 @@ public class ResturantDetailsFragment extends Fragment implements View.OnClickLi
 
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_ID, lunchItem.getId());
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_NAME, lunchItem.getName());
-                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_PRICE, lunchItem.getText2());
-                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_INFO, lunchItem.getText1());
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_PRICE, lunchItem.getSubheader());
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_INFO, lunchItem.getHeader());
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_IMAGE, lunchItem.getImageUrl());
                         AppUtils.getBundleObj().putString(AppUtils.CALLED_CLASS_NAME, RestaurantsFragment.class.getSimpleName());
 
@@ -174,8 +174,8 @@ public class ResturantDetailsFragment extends Fragment implements View.OnClickLi
 
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_ID, dinnerItem.getId());
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_NAME, dinnerItem.getName());
-                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_PRICE, dinnerItem.getText2());
-                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_INFO, dinnerItem.getText1());
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_PRICE, dinnerItem.getSubheader());
+                        AppUtils.getBundleObj().putString(AppUtils.PRODUCT_INFO, dinnerItem.getHeader());
                         AppUtils.getBundleObj().putString(AppUtils.PRODUCT_IMAGE, dinnerItem.getImageUrl());
                         AppUtils.getBundleObj().putString(AppUtils.CALLED_CLASS_NAME, RestaurantsFragment.class.getSimpleName());
 

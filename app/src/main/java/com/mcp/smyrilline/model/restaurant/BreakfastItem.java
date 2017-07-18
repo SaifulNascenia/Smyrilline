@@ -23,8 +23,8 @@ public class BreakfastItem implements Parcelable
             instance.id = ((String) in.readValue((String.class.getClassLoader())));
             instance.name = ((String) in.readValue((String.class.getClassLoader())));
             instance.imageUrl = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text1 = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text2 = ((String) in.readValue((String.class.getClassLoader())));
+            instance.header = ((String) in.readValue((String.class.getClassLoader())));
+            instance.subheader = ((String) in.readValue((String.class.getClassLoader())));
             instance.text3 = in.readValue((Object.class.getClassLoader()));
             instance.children = in.readValue((Object.class.getClassLoader()));
             return instance;
@@ -45,12 +45,12 @@ public class BreakfastItem implements Parcelable
     @SerializedName("imageUrl")
     @Expose
     private String imageUrl;
-    @SerializedName("text1")
+    @SerializedName("header")
     @Expose
-    private String text1;
-    @SerializedName("text2")
+    private String header;
+    @SerializedName("subheader")
     @Expose
-    private String text2;
+    private String subheader;
     @SerializedName("text3")
     @Expose
     private Object text3;
@@ -82,20 +82,20 @@ public class BreakfastItem implements Parcelable
         this.imageUrl = imageUrl;
     }
 
-    public String getText1() {
-        return text1;
+    public String getHeader() {
+        return header;
     }
 
-    public void setText1(String text1) {
-        this.text1 = text1;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
-    public String getText2() {
-        return text2;
+    public String getSubheader() {
+        return subheader;
     }
 
-    public void setText2(String text2) {
-        this.text2 = text2;
+    public void setSubheader(String subheader) {
+        this.subheader = subheader;
     }
 
     public Object getText3() {
@@ -123,8 +123,8 @@ public class BreakfastItem implements Parcelable
         dest.writeValue(id);
         dest.writeValue(name);
         dest.writeValue(imageUrl);
-        dest.writeValue(text1);
-        dest.writeValue(text2);
+        dest.writeValue(header);
+        dest.writeValue(subheader);
         dest.writeValue(text3);
         dest.writeValue(children);
     }
