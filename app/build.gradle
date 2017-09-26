@@ -1,7 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
+apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'Smyril line'
+            keyPassword 'nascenia123'
+            storeFile file('/home/raqib/Android/nascenia_mcpdev_release_keystore.jks')
+            storePassword 'nascenia123'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -10,6 +19,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -24,31 +34,35 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+    maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases' }
 }
 
 dependencies {
     compile files('libs/signalr-client-sdk.jar')
-    compile files('libs/library-1.0.11.jar')
     compile(name: 'signalr-client-sdk-android-release', ext: 'aar')
+    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:0.7.4@aar') {
+        transitive = true
+    }
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
-    compile 'com.google.android.gms:play-services-location:7.8.0'
+    compile 'com.google.android.gms:play-services-location:9.6.1'
+    compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.onyxbeacon:OnyxBeaconLibrary-release:2.5.1@aar'
+    compile 'com.onyxbeacon:OnyxBeaconLibrary-release:2.5.2@aar'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    testCompile 'junit:junit:4.12'
     compile 'com.android.support:gridlayout-v7:25.3.1'
-    compile 'com.google.code.gson:gson:2.8.0'
     compile 'org.jsoup:jsoup:1.7.3'
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.zxing:core:3.2.0'
     compile 'com.viewpagerindicator:library:2.4.1@aar'
@@ -56,16 +70,27 @@ dependencies {
     compile 'com.googlecode.android-query:android-query:0.25.9'
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile 'com.cjj.materialrefeshlayout:library:1.3.0'
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
-
+    compile 'com.hudomju:swipe-to-dismiss-undo:1.0'
+    compile 'org.apache.commons:commons-lang3:3.0'
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'at.blogc:expandabletextview:1.0.3'
-
     compile 'javax.annotation:javax.annotation-api:1.2'
-
     compile 'com.jakewharton:butterknife:8.6.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
-
-    provided 'javax.annotation:jsr250-api:1.0'
+    compile 'com.andraskindler.parallaxviewpager:parallaxviewpager:0.2.0'
+    // Required -- JUnit 4 framework
+    testCompile 'junit:junit:4.12'
+    // Optional -- Mockito framework
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    // roboelectric
+    testCompile "org.robolectric:robolectric:3.4.2"
+    // Set this dependency if you want to use Hamcrest matching
+    androidTestCompile 'com.android.support:support-annotations:25.3.1'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    // Optional -- Hamcrest library
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
+    // Optional -- UI testing with Espresso
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    // Optional -- UI testing with UI Automator
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }

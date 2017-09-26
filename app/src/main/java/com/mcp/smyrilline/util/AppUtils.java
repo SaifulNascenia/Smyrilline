@@ -22,40 +22,43 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import at.blogc.android.views.ExpandableTextView;
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.mcp.smyrilline.BuildConfig;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.fragment.ResturantDetailsFragment;
 import com.mcp.smyrilline.model.Bulletin;
 import com.onyxbeacon.rest.model.content.Coupon;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import io.fabric.sdk.android.Fabric;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by raqib on 5/11/17.
@@ -95,6 +98,7 @@ public class AppUtils extends MultiDexApplication {
     public static final String PREF_HELP_INFO = "helpInfo";
     public static final String PREF_NO_ENTRY = "noEntry";
     public static final String PREF_CSS_HELP = "css_help";
+    public static final String PREF_SHIP_INFO = "ship_info";
     // Ticket information
     public static final String PREF_BOOKING_NAME = "bookingName";
     public static final String PREF_BOOKING_NUMBER = "bookingNumber";
@@ -124,28 +128,30 @@ public class AppUtils extends MultiDexApplication {
     public static final String WP_PARAM_ESSENTIALS = "&filter[orderby]=menu_order&filter[order]=asc&per_page=100";
     // Util constants
     public static final String FIRST_RUN = "first_run";
-    public static final int GUIDE_SCREEN_PAGE_COUNT = 6;
     public static final String POSITION_COUPON_REMOVED = "coupon_removed_position";
     public static final String ZERO = "0";
     public static final String WP_CUSTOM_FIELDS = "custom_fields";
     public static final String WP_CUSTOM_FIELD_NO_CSS = "no_css";
+    public static final String ITEM_ID = "item_id";
+    public static final String ITEM_NAME = "item_name";
+    public static final String ITEM_HEADER = "item_header";
+    public static final String ITEM_SUBHEADER = "item_subheader";
+    public static final String ITEM_DESCRIPTION = "item_description";
+    public static final String ITEM_IMAGE = "item_image";
     private static final String PREF_ANDROID_ID = "androidID";
     private static final String MOBILE_PLATFORM = "Android";
     private static final int CONNECTION_TIMEOUT_MS = 10000;
     private static final int MAX_RETRIES = 5;
-
     //bundle key names
-    public static String PRODUCT_ID = "PRODUCT_ID";
-    public static String PRODUCT_NAME = "PRODUCT_NAME";
-    public static String PRODUCT_PRICE = "PRODUCT_PRICE";
-    public static String PRODUCT_PRICE_NUMBER = "PRODUCT_PRICE_NUMBER";
-    public static String PRODUCT_INFO = "PRODUCT_INFO";
-    public static String PRODUCT_IMAGE = "PRODUCT_IMAGE";
+    public static String PRODUCT_ID = "product_id";
+    public static String PRODUCT_NAME = "product_name";
+    public static String PRODUCT_PRICE = "product_price";
+    public static String PRODUCT_PRICE_NUMBER = "product_price_number";
+    public static String PRODUCT_INFO = "product_info";
+    public static String PRODUCT_IMAGE = "product_image";
     public static String CALLED_CLASS_NAME = "CALLED_CLASS_NAME";
-    public static String DESTINATION_ID = "DESTINATION_ID";
-    public static String DESTINATION_NAME = "DESTINATION_NAME";
-    public static String RESTAUREANT_ID = "RESTAURENT_ID";
-    public static String RESTAUREANT_NAME = "RESTAURENT_NAME";
+    public static String DESTINATION_ID = "destination_id";
+    public static String DESTINATION_NAME = "destination_name";
 
 
     // Wordpress language param
@@ -162,14 +168,15 @@ public class AppUtils extends MultiDexApplication {
     public static String ALERT_NO_PDF_READER;
     public static String ALERT_TURN_ON_BLUETOOTH;
     public static String LABEL_NEW;
-    public static String[] fragmentList = {"LoginFragment", "ShipTrackerFragment", "InboxFragment", "DutyFreeFragment",
-            "RestaurantsFragment", "DestinationsFragment", "CouponsFragment", "SettingsFragment", "InfoFragment",
+    public static String[] fragmentList = {"LoginFragment", "ShipTrackerFragment", "InboxFragment",
+            "DutyFreeFragment",
+            "RestaurantFragment", "DestinationFragment", "CouponsFragment", "SettingsFragment",
+            "ShipInfoFragment",
             "HelpFragment",
     };
     public static Context mContext;
-    private static Bundle bundle = new Bundle();
-
     private static SharedPreferences mSharedPref;
+    private static Bundle bundle = new Bundle();
     private Locale locale = null;
 
     public static boolean isNetworkAvailable(Context context) {
@@ -179,47 +186,10 @@ public class AppUtils extends MultiDexApplication {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-
-    public static void withoutInternetConnectionView(final Context context,
-                                                     final Intent intent,
-                                                     Button retryBtn,
-                                                     final String reloadedFragmentName) {
-
-
-        final Activity activity = (Activity) context;
-        retryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                try {
-                    Log.i("fragmenterror", "ontry");
-                    //getFragmentManager().beginTransaction().detach(duty).attach(duty).commit();
-
-                    // Intent intent = getActivity().getIntent();
-                    activity.overridePendingTransition(0, 0);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    activity.finish();
-                    activity.overridePendingTransition(0, 0);
-                    intent.putExtra(AppUtils.START_DRAWER_FRAGMENT, reloadedFragmentName);
-                    activity.startActivity(intent);
-
-
-                } catch (Exception e) {
-
-                    Log.i("fragmenterror", e.getMessage().toString());
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-
-    }
-
     /**
      * Check Http connection for a given url
      *
-     * @param context   The context of the alert
+     * @param context The context of the alert
      * @param domainURL The url to check
      * @return The status message
      */
@@ -320,8 +290,6 @@ public class AppUtils extends MultiDexApplication {
     /**
      * Removing bottom space inside webview for jelly bean or below
      * http://stackoverflow.com/questions/12930987
-     *
-     * @param webView
      */
     public static void removeBottomSpaceFromWebView(WebView webView) {
         if (android.os.Build.VERSION.SDK_INT < 19) {
@@ -337,12 +305,14 @@ public class AppUtils extends MultiDexApplication {
      */
     public static void updateTextTranslations() {
         WP_PARAM_LANGUAGE = mContext.getResources().getString(R.string.wp_language_param);
-        ALERT_TURN_ON_BLUETOOTH = mContext.getResources().getString(R.string.alert_turn_on_bluetooth);
+        ALERT_TURN_ON_BLUETOOTH = mContext.getResources()
+                .getString(R.string.alert_turn_on_bluetooth);
         ALERT_NO_WIFI = mContext.getResources().getString(R.string.alert_no_wifi);
         ALERT_SERVER_DOWN = mContext.getResources().getString(R.string.alert_server_down);
         ALERT_SERVER_TIMEOUT = mContext.getResources().getString(R.string.alert_server_timeout);
         ALERT_DOWNLOADING = mContext.getResources().getString(R.string.alert_downloading);
-        ALERT_DOWNLOAD_CANCELLED = mContext.getResources().getString(R.string.alert_download_cancelled);
+        ALERT_DOWNLOAD_CANCELLED = mContext.getResources()
+                .getString(R.string.alert_download_cancelled);
         ALERT_FILE_SAVED_TO = mContext.getResources().getString(R.string.alert_file_saved_to);
         ALERT_NO_PDF_READER = mContext.getResources().getString(R.string.alert_no_pdf_reader);
         ALERT_DOWNLOAD_FAILED = mContext.getResources().getString(R.string.alert_download_failed);
@@ -350,7 +320,8 @@ public class AppUtils extends MultiDexApplication {
         LABEL_NEW = mContext.getResources().getString(R.string.new_label);
     }
 
-    public static String convertDateFormat(String givenString, String givenFormat, String requiredFormat) {
+    public static String convertDateFormat(String givenString, String givenFormat,
+            String requiredFormat) {
         SimpleDateFormat givenDateFormat = new SimpleDateFormat(givenFormat);
         SimpleDateFormat ourDateFormat = new SimpleDateFormat(requiredFormat);
 
@@ -359,7 +330,7 @@ public class AppUtils extends MultiDexApplication {
             Date date = givenDateFormat.parse(givenString);
             convertedString = ourDateFormat.format(date);
 
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return convertedString;
@@ -368,13 +339,14 @@ public class AppUtils extends MultiDexApplication {
     /**
      * Generates a notification in the notification tray
      *
-     * @param context       the context
-     * @param title         the title of notification
-     * @param text          the text of notification
-     * @param iconID        the drawable ID of the notification icon
+     * @param context the context
+     * @param title the title of notification
+     * @param text the text of notification
+     * @param iconID the drawable ID of the notification icon
      * @param startFragment the fragment to start when pressed on the notification
      */
-    public static void generateNotification(Context context, String title, String text, int iconID, String startFragment) {
+    public static void generateNotification(Context context, String title, String text, int iconID,
+            String startFragment) {
 
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         long[] vibratePattern = {500, 500, 500, 500};
@@ -404,7 +376,8 @@ public class AppUtils extends MultiDexApplication {
         // Sets an ID for the notification
         int notificationId = 1;
         // Gets an instance of the NotificationManager service
-        NotificationManager notifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notifyMgr = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         notifyMgr.notify(notificationId, builder.build());
     }
@@ -413,7 +386,7 @@ public class AppUtils extends MultiDexApplication {
      * Store list in shared preference
      *
      * @param list The list to store
-     * @param key  The key for shared pref
+     * @param key The key for shared pref
      */
     public static synchronized void saveListInSharedPref(ArrayList list, String key) {
         Gson gson = new Gson();
@@ -432,7 +405,10 @@ public class AppUtils extends MultiDexApplication {
 
     public static synchronized void printBulletinList(ArrayList<Bulletin> list) {
         for (int i = 0; i < list.size(); i++)
-            Log.i(TAG, "list (" + i + ") -> " + String.valueOf(list.get(i).getTitle()) + ", seen: " + list.get(i).isSeen());
+            Log.i(TAG,
+                    "list (" + i + ") -> " + String.valueOf(list.get(i).getTitle()) + ", seen: "
+                            + list
+                            .get(i).isSeen());
     }
 
     public static String getAppVersion() {
@@ -460,18 +436,23 @@ public class AppUtils extends MultiDexApplication {
         String deviceName;
 
         if (model.startsWith(manufacturer)) {
-            deviceName = capitalize(model);
+            deviceName = capitalizeFirstChar(model);
         } else {
-            deviceName = capitalize(manufacturer) + " " + model;
+            deviceName = capitalizeFirstChar(manufacturer) + " " + model;
         }
 
         return MOBILE_PLATFORM + " (" + deviceName + ")";
     }
 
-    private static String capitalize(String string) {
-        if (string == null || string.length() == 0) {
+    /**
+     * Capitalize a given string
+     */
+    public static String capitalizeFirstChar(String string) {
+        if (string == null)
+            return null;
+
+        if (string.isEmpty())
             return "";
-        }
 
         char first = string.charAt(0);
 
@@ -484,7 +465,8 @@ public class AppUtils extends MultiDexApplication {
 
     public static boolean isBluetoothAvailable() {
         if (mContext.getPackageManager().hasSystemFeature("android.hardware.bluetooth_le")) {
-            BluetoothManager e = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
+            BluetoothManager e = (BluetoothManager) mContext
+                    .getSystemService(Context.BLUETOOTH_SERVICE);
             BluetoothAdapter mBluetoothAdapter = e.getAdapter();
             return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled();
         } else {
@@ -501,8 +483,6 @@ public class AppUtils extends MultiDexApplication {
     /**
      * Return the saved message filter from shared preference
      *
-     * @param sharedPrefKey
-     * @param defaultVal
      * @return saved filter value
      */
     public static String getSavedMessageFilter(String sharedPrefKey, String defaultVal) {
@@ -513,11 +493,20 @@ public class AppUtils extends MultiDexApplication {
         return filterGroup;
     }
 
-    public static String getStringFromJsonObject(JSONObject jsonObject, String key) throws JSONException {
-        if (jsonObject.isNull(key) || jsonObject.getString(key).isEmpty())
+    /**
+     * Return value of given key from a json object, null otherwise
+     */
+    public static String getStringFromJsonObject(JSONObject jsonObject, String key) {
+        try {
+            if (jsonObject.length() == 0 || jsonObject.isNull(key) || jsonObject.getString(key)
+                    .isEmpty())
+                return null;
+            else
+                return jsonObject.getString(key);
+        } catch (JSONException e) {
+            e.printStackTrace();
             return null;
-        else
-            return jsonObject.getString(key);
+        }
     }
 
     public static String getCurrentAppLanguage() {
@@ -527,7 +516,6 @@ public class AppUtils extends MultiDexApplication {
     /**
      * Returns the current system time in give format
      *
-     * @param requiredDateFormat
      * @return date string
      */
     public static String getCurrentDateAsString(String requiredDateFormat) {
@@ -537,9 +525,6 @@ public class AppUtils extends MultiDexApplication {
 
     /**
      * Returns current system time in GMT
-     *
-     * @param requiredTimeFormat
-     * @return
      */
     public static String getCurrentTimeInGmt(String requiredTimeFormat) {
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat(requiredTimeFormat);
@@ -565,9 +550,7 @@ public class AppUtils extends MultiDexApplication {
      * <p>
      * 'file_<lang>' will take precedence, otherwise check 'file_all'
      *
-     * @param rootJson
      * @return the pdf url
-     * @throws JSONException
      */
     public static String getPdfLink(JSONObject rootJson) throws JSONException {
 
@@ -612,8 +595,6 @@ public class AppUtils extends MultiDexApplication {
      * By default css will be applied to all pages
      *
      * @param rootJson to parse for "no_css" custom field
-     * @return
-     * @throws JSONException
      */
     public static boolean isNoCss(JSONObject rootJson) throws JSONException {
         // if there's no custom field, keep default i.e. return false
@@ -630,12 +611,11 @@ public class AppUtils extends MultiDexApplication {
     /**
      * Method will load the content in a webview
      *
-     * @param webView
-     * @param body     the content to load
+     * @param body the content to load
      * @param applyCss if custom css from wordpress will be applied
      */
     public static void showContentInWebview(WebView webView, String body,
-                                            boolean applyCss) {
+            boolean applyCss) {
         // remove bottom space
         removeBottomSpaceFromWebView(webView);
         body = CSS_FIT_IMAGE_IN_WEBVIEW + body;
@@ -648,8 +628,6 @@ public class AppUtils extends MultiDexApplication {
 
     /**
      * Method to hide the soft input keyboard
-     *
-     * @param activity
      */
     public static void hideKeyboard(Activity activity) {
         if (null == activity) {
@@ -661,86 +639,9 @@ public class AppUtils extends MultiDexApplication {
             return;
         }
 
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) activity
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    public static String getEllipsisedThreeLineText(FragmentActivity activity,
-                                                    TextView productDetailsTextView
-
-    ) {
-
-
-        if (productDetailsTextView.getLineCount() == 3) {
-
-            // Use lineCount here
-            ResturantDetailsFragment.startLineCount =
-                    productDetailsTextView.getLayout().getLineStart(0);
-
-            ResturantDetailsFragment.endLineCount =
-                    productDetailsTextView.getLayout().getLineEnd(0);
-
-            ResturantDetailsFragment.firstLineText =
-                    productDetailsTextView.getText().toString().
-                            substring(ResturantDetailsFragment.startLineCount,
-                                    ResturantDetailsFragment.endLineCount);
-
-
-            ResturantDetailsFragment.startLineCount =
-                    productDetailsTextView.getLayout().getLineStart(1);
-
-            ResturantDetailsFragment.endLineCount =
-                    productDetailsTextView.getLayout().getLineEnd(1);
-
-            ResturantDetailsFragment.secondLineText =
-                    productDetailsTextView.getText().toString().
-                            substring(ResturantDetailsFragment.startLineCount,
-                                    ResturantDetailsFragment.endLineCount);
-
-            ResturantDetailsFragment.startLineCount =
-                    productDetailsTextView.getLayout().getLineStart(2);
-
-            ResturantDetailsFragment.endLineCount =
-                    productDetailsTextView.getLayout().getLineEnd(2);
-
-            ResturantDetailsFragment.thirdLineText =
-                    (productDetailsTextView.getText().toString().
-                            subSequence(ResturantDetailsFragment.startLineCount,
-                                    ResturantDetailsFragment.endLineCount)).toString();
-
-            ResturantDetailsFragment.totalThreeLineText =
-                    ResturantDetailsFragment.firstLineText +
-                            ResturantDetailsFragment.secondLineText +
-                            ResturantDetailsFragment.thirdLineText;
-
-            return ResturantDetailsFragment.totalThreeLineText;
-
-                 /*   if (getActivity().getResources().getString(R.string.cheese_ipsum).length() >
-                            ResturantDetailsFragment.totalThreeLineText.length()) {
-                        expandTextView.setVisibility(View.VISIBLE);
-                    }*/
-
-        }
-
-        return null;
-    }
-
-    public static void setVisibilityOfExpandTextview(TextView productDetailsTextView,
-                                                     TextView expandTextView) {
-
-        Layout layout = productDetailsTextView.getLayout();
-        if (layout != null) {
-            int lines = layout.getLineCount();
-            if (lines > 0) {
-                int ellipsisCount = layout.getEllipsisCount(lines - 1);
-                if (ellipsisCount > 0) {
-                    Log.i("totaltext", "elip\n");
-                    expandTextView.setVisibility(View.VISIBLE);
-                } else {
-                    Log.i("totaltext", "not elip\n");
-                }
-            }
-        }
     }
 
     /**
@@ -748,13 +649,128 @@ public class AppUtils extends MultiDexApplication {
      */
     public static int dpToPx(int dp) {
         Resources r = mContext.getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+        return Math
+                .round(
+                        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                                r.getDisplayMetrics()));
     }
 
     public static Bundle getBundleObj() {
-
         return bundle;
+    }
 
+    public static SharedPreferences getSharedPreference() {
+        if (mSharedPref == null)
+            mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return mSharedPref;
+    }
+
+    public static void handleExpandableTextView(final ExpandableTextView tvExpandableDescription,
+            final TextView tvDescriptionMore) {
+        ViewTreeObserver vto = tvExpandableDescription.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    tvExpandableDescription.getViewTreeObserver()
+                            .removeOnGlobalLayoutListener(this);
+                } else {
+                    //noinspection deprecation
+                    tvExpandableDescription.getViewTreeObserver()
+                            .removeGlobalOnLayoutListener(this);
+                }
+
+                Layout layout = tvExpandableDescription.getLayout();
+                if (layout != null) {
+                    int lines = layout.getLineCount();
+                    if (lines > 0) {
+                        int ellipsisCount = layout.getEllipsisCount(lines - 1);
+                        if (ellipsisCount > 0) {
+                            Log.i("totaltext", "elip\n");
+                            tvDescriptionMore.setVisibility(View.VISIBLE);
+                        } else {
+                            Log.i("totaltext", "not elip\n");
+                        }
+                    }
+                }
+            }
+        });
+
+        tvExpandableDescription.setAnimationDuration(500L);
+        tvExpandableDescription.setInterpolator(new OvershootInterpolator());
+
+        tvDescriptionMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tvExpandableDescription.isExpanded()) {
+                    tvExpandableDescription.collapse();
+                    tvDescriptionMore.setText(R.string.more);
+                } else {
+                    tvExpandableDescription.expand();
+                    tvDescriptionMore.setText(R.string.less);
+                }
+            }
+        });
+    }
+
+    public static void setText(TextView textView, String text) {
+        if (text != null && !text.isEmpty()) {
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(text);
+        } else
+            textView.setVisibility(View.GONE);
+    }
+
+    public static void showNoConnectionView(final Activity rootActivity, final Fragment fragment,
+            View loadingProgressView, View noConnectionView, Toolbar toolbar) {
+        loadingProgressView.setVisibility(View.GONE);
+        noConnectionView.setVisibility(View.VISIBLE);
+        toolbar.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
+        Button retryBtn = (Button) noConnectionView.findViewById(R.id.retry_connect);
+        retryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // restart fragment
+                FragmentTransaction ft = ((DrawerActivity) rootActivity).getSupportFragmentManager()
+                        .beginTransaction();
+                ft.detach(fragment).attach(fragment).commit();
+            }
+        });
+    }
+
+    public static void showNoConnectionViewWithExtraToolbar(final Activity rootActivity,
+            final Fragment fragment, View loadingProgressView, View coordinatorLayout,
+            View noConnectionView, Toolbar noConnectionToolbar,
+            String toolbarTitle) {
+        loadingProgressView.setVisibility(View.GONE);
+        coordinatorLayout.setVisibility(View.GONE);
+        noConnectionView.setVisibility(View.VISIBLE);
+        noConnectionToolbar.setVisibility(View.VISIBLE);
+        noConnectionToolbar.setTitle(toolbarTitle);
+        noConnectionToolbar.setBackgroundColor(
+                ContextCompat.getColor(rootActivity, R.color.transparent));
+        ((DrawerActivity) rootActivity).setToolbarAndToggle(noConnectionToolbar);
+        Button retryBtn = (Button) noConnectionView.findViewById(R.id.retry_connect);
+        retryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // restart fragment
+                FragmentTransaction ft = ((DrawerActivity) rootActivity).getSupportFragmentManager()
+                        .beginTransaction();
+                ft.detach(fragment).attach(fragment).commit();
+            }
+        });
+    }
+
+    public static void hideNoConnectionView(View loadingProgressView, View noConnectionView) {
+        loadingProgressView.setVisibility(View.GONE);
+        noConnectionView.setVisibility(View.GONE);
+    }
+
+    public static void restartFragment(Activity rootActivity, Fragment fragment) {
+        FragmentTransaction ft = ((DrawerActivity) rootActivity).getSupportFragmentManager()
+                .beginTransaction();
+        ft.detach(fragment).attach(fragment).commit();
     }
 
     /**
@@ -765,7 +781,8 @@ public class AppUtils extends MultiDexApplication {
         int versionCode = 0;
         try {
             // Get the current version code
-            versionCode = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
+            versionCode = mContext.getPackageManager()
+                    .getPackageInfo(mContext.getPackageName(), 0).versionCode;
             SharedPreferences.Editor editor = mSharedPref.edit();
             if (mSharedPref.getInt("lastUpdate", 0) != versionCode) {
                 // Clear everything
@@ -784,7 +801,7 @@ public class AppUtils extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i("AppUtils", "onCreate()");
+        Fabric.with(this, new Crashlytics());
         mContext = getApplicationContext();
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         clearSharedPrefIfNecessary();
@@ -798,7 +815,9 @@ public class AppUtils extends MultiDexApplication {
             locale = new Locale(lang);
             Locale.setDefault(locale);
             config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+            getBaseContext().getResources()
+                    .updateConfiguration(config,
+                            getBaseContext().getResources().getDisplayMetrics());
         }
 
         // Update code strings
@@ -826,5 +845,4 @@ public class AppUtils extends MultiDexApplication {
         // Update texts used in code
         updateTextTranslations();
     }
-
 }
