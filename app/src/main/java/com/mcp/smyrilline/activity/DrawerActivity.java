@@ -27,7 +27,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,20 +35,20 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mcp.smyrilline.R;
+import com.mcp.smyrilline.adapter.DrawerMenuAdapter;
 import com.mcp.smyrilline.adapter.LanguageSpinnerAdapter;
-import com.mcp.smyrilline.adapter.NavDrawerAdapter;
 import com.mcp.smyrilline.fragment.CouponsFragment;
-import com.mcp.smyrilline.fragment.DestinationsFragment;
+import com.mcp.smyrilline.fragment.DestinationFragment;
 import com.mcp.smyrilline.fragment.DutyFreeFragment;
+import com.mcp.smyrilline.fragment.HelpFragment;
 import com.mcp.smyrilline.fragment.InboxFragment;
-import com.mcp.smyrilline.fragment.InfoFragment;
 import com.mcp.smyrilline.fragment.LoginFragment;
-import com.mcp.smyrilline.fragment.RestaurantsFragment;
+import com.mcp.smyrilline.fragment.RestaurantFragment;
 import com.mcp.smyrilline.fragment.SettingsFragment;
+import com.mcp.smyrilline.fragment.ShipInfoFragment;
 import com.mcp.smyrilline.fragment.ShipTrackerFragment;
 import com.mcp.smyrilline.fragment.TicketFragment;
 import com.mcp.smyrilline.listener.BleStateListener;
@@ -66,7 +65,6 @@ import com.onyxbeacon.OnyxBeaconManager;
 import com.onyxbeacon.rest.auth.util.AuthData;
 import com.onyxbeacon.rest.auth.util.AuthenticationMode;
 import com.onyxbeacon.service.logging.LoggingStrategy;
-
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -78,6 +76,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     private static final String TAG = "smyrilline MainActivity";
     private static final int REQUEST_FINE_LOCATION = 0;
     public static BulletinListener mListener;
+    private static boolean languageChangeRestart = false;
     private ArrayList<Long> mUsedCouponList;
     private TextView tvDrawerInboxCount;
     private TextView tvDrawerCouponsCount;
@@ -94,19 +93,16 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     private BleStateReceiver mBleReceiver;
     private boolean receiverRegistered = false;
     private boolean bleStateRegistered = false;
-
     // Bulletins
     private SignalRService mSignalRService;
     private ServiceConnection mServiceConnection;
     private BulletinListener mBulletinListener;
     private boolean mIsBound = false;
     private Snackbar mBluetoothSnackbar;
-
     private SharedPreferences mSharedPreferences;
     private Gson gson = new Gson();
     private Context mContext;
     private ArrayList<DrawerItem> mDrawerListItems;
-
     private Bundle bundle;
 
     @Override
@@ -131,11 +127,12 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         setupNavigationDrawer();
 
         // show fragment
-        Bundle bundle = getIntent().getExtras();
-        String fragmentName = bundle.getString(AppUtils.START_DRAWER_FRAGMENT);
-        if (fragmentName != null) {
+        // if it is restart from language switch, must start the last shown fragment
+        String fragmentName = languageChangeRestart ? LoginFragment.class.getSimpleName() :
+                getIntent().getExtras().getString(AppUtils.START_DRAWER_FRAGMENT);
+        if (fragmentName != null)
             showFragment(fragmentName);
-        }
+        languageChangeRestart = false;
 
         // onyx beacon  (for Coupons)
 //        initOnyxBeacon();
@@ -157,10 +154,8 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         mDrawerListItems.add(new DrawerItem(getString(R.string.coupons), R.drawable.ic_grid_coupons_white));
         mDrawerListItems.add(new DrawerItem(getString(R.string.settings), R.drawable.ic_grid_settings_white));
         mDrawerListItems.add(new DrawerItem(getString(R.string.info), R.drawable.ic_grid_info_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.help), R.drawable.ic_grid_info_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.logout), R.drawable.ic_grid_info_white));
-
-
+        mDrawerListItems
+                .add(new DrawerItem(getString(R.string.help), R.drawable.ic_grid_help_white));
     }
 
     private void showFragment(String fragmentName) {
@@ -179,10 +174,6 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
                 else
                     fragment = new LoginFragment();
                 break;
-
-            /*case ("TicketFragment"):
-                fragment = new TicketFragment();
-                break;*/
             case ("ShipTrackerFragment"):
                 fragment = new ShipTrackerFragment();
                 break;
@@ -192,11 +183,11 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             case ("DutyFreeFragment"):
                 fragment = new DutyFreeFragment();
                 break;
-            case ("RestaurantsFragment"):
-                fragment = new RestaurantsFragment();
+            case ("RestaurantFragment"):
+                fragment = new RestaurantFragment();
                 break;
-            case ("DestinationsFragment"):
-                fragment = new DestinationsFragment();
+            case ("DestinationFragment"):
+                fragment = new DestinationFragment();
                 break;
             case ("SettingsFragment"):
                 fragment = new SettingsFragment();
@@ -204,8 +195,11 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             case ("CouponsFragment"):
                 fragment = new CouponsFragment();
                 break;
-            case ("InfoFragment"):
-                fragment = new InfoFragment();
+            case ("ShipInfoFragment"):
+                fragment = new ShipInfoFragment();
+                break;
+            case ("HelpFragment"):
+                fragment = new HelpFragment();
                 break;
         }
 
@@ -264,49 +258,14 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
         mDrawerListView = (ListView) findViewById(R.id.drawer_listview);
-        mDrawerListView.setAdapter(new NavDrawerAdapter(this, R.layout.list_item_drawer, mDrawerListItems, mDrawerListView));
+        mDrawerListView.setAdapter(
+                new DrawerMenuAdapter(this, R.layout.list_item_drawer, mDrawerListItems));
         mDrawerListView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               /* if (position == 0) {      // show grid activity
-                    startActivity(new Intent(DrawerActivity.this, MainGridActivity.class));
-                    finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), AppUtils.fragmentList[position - 1] + "", Toast.LENGTH_LONG).show();
-                    showFragment(AppUtils.fragmentList[position - 1]);
-                }*/
-
                 showFragment(AppUtils.fragmentList[position]);
-                //Toast.makeText(getBaseContext(), AppUtils.fragmentList[position], Toast.LENGTH_LONG).show();
-
-                // Toast.makeText(getApplicationContext(), AppUtils.fragmentList[position] + "", Toast.LENGTH_LONG).show();
             }
         });
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        /*
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  *//* host Activity *//*
-                mDrawerLayout,         *//* DrawerLayout object *//*
-//                R.drawable.ic_drawer,  *//* nav drawer image to replace 'Up' caret *//*
-                R.string.drawer_open,  *//* "open drawer" description for accessibility *//*
-                R.string.drawer_close  *//* "close drawer" description for accessibility *//*
-        ) {
-            public void onDrawerClosed(View view) {
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        */
     }
 
     private void initOnyxBeacon() {
@@ -343,8 +302,6 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         mManager.setLocationTrackingEnabled(true);
         AuthData authData = new AuthData();
         authData.setAuthenticationMode(AuthenticationMode.CLIENT_SECRET_BASED);
-        authData.setClientId(getString(R.string.onyx_client_id));
-        authData.setSecret(getString(R.string.onyx_secret));
         mManager.setAuthData(authData);
     }
 
@@ -371,7 +328,6 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
                     })
                     .show();
         } else {
-
             // Location permission has not been granted yet. Request it directly.
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_FINE_LOCATION);
@@ -442,10 +398,6 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             }
         }
 */
-
-//        if (push != null) {
-//            if (notificationListener != null) push.listen(notificationListener);
-//        }
     }
 
     public void onPause() {
@@ -475,7 +427,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     }
 
     @Override
-    public void onNewCouponReceived() {
+    public void onNewCouponReceived(int count) {
         // update drawer counter
 //        updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_COUPONS, +1);
     }
@@ -578,88 +530,9 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             //actionBar.setDisplayShowHomeEnabled(true);
             //actionBar.setDisplayHomeAsUpEnabled(true);
 
-            // Populate flag icon id list
-            final Integer[] flagIcons = {
-                    R.drawable.img_flag_english
-                    , R.drawable.img_flag_german
-                    , R.drawable.img_flag_faroese
-                    , R.drawable.img_flag_danish};
-            mLanguageSpinner = new Spinner(actionBar.getThemedContext());
-            // Adapter for spinner
-            LanguageSpinnerAdapter langSpinnerAdapter = new LanguageSpinnerAdapter(mContext,
-                    R.layout.list_item_language_spinner, flagIcons);
-            mLanguageSpinner.setAdapter(langSpinnerAdapter);
-
-            // Set the initial spinner item
-            // according to the current app language
-            String currentLanguage = getResources().getConfiguration().locale.getLanguage();
-
-
-            switch (currentLanguage) {
-                case "en":
-                    mLanguageSpinner.setSelection(0);
-                    break;
-                case "de":
-                    mLanguageSpinner.setSelection(1);
-                    break;
-                case "fo":
-                    mLanguageSpinner.setSelection(2);
-                    break;
-                case "da":
-                    mLanguageSpinner.setSelection(3);
-                    break;
-                default:
-                    mLanguageSpinner.setSelection(0);
-            }
-
-            mLanguageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                /**
-                 * A known issue when itemSelected is called first time erronously
-                 * without user selection
-                 * <p/>
-                 * Using a counter to check first instance
-                 * http://stackoverflow.com/a/10102356
-                 */
-                int isLoaded = 0;
-
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view,
-                                           int position, long arg3) {
-
-                    if (isLoaded >= 1) {
-                        // Check the selected position in the icon array
-                        switch (flagIcons[position]) {
-                            case R.drawable.img_flag_english:
-                                updateAppLocale("en");
-                                break;
-                            case R.drawable.img_flag_german:
-                                updateAppLocale("de");
-                                break;
-                            case R.drawable.img_flag_faroese:
-                                updateAppLocale("fo");
-                                break;
-                            case R.drawable.img_flag_danish:
-                                updateAppLocale("da");
-                                break;
-                        }
-                    }
-                    isLoaded++;
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> arg0) {
-                    // TODO Auto-generated method stub
-                }
-            });
-
-
-            // Add the spinner to the right of Toolbar
-            Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
-            layoutParams.gravity = Gravity.RIGHT;
-            toolbar.addView(mLanguageSpinner, layoutParams);
+            if (getCurrentFragment() instanceof LoginFragment
+                    || getCurrentFragment() instanceof TicketFragment)
+                initLanguageSwitcher(toolbar);
 
             mDrawerLayout = (DrawerLayout) appCompatActivity.findViewById(R.id.drawer_layout);
             mDrawerToggle = new ActionBarDrawerToggle(
@@ -671,34 +544,89 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         }
     }
 
-    private Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentById(R.id.content_frame);
-    }
+    private void initLanguageSwitcher(Toolbar toolbar) {
+        // Populate flag icon id list
+        final Integer[] flagIcons = {
+                R.drawable.img_flag_english
+                , R.drawable.img_flag_deutsch
+                , R.drawable.img_flag_faroese
+                , R.drawable.img_flag_danish};
+        mLanguageSpinner = new Spinner(getSupportActionBar().getThemedContext());
+        // Adapter for spinner
+        LanguageSpinnerAdapter langSpinnerAdapter = new LanguageSpinnerAdapter(mContext,
+                R.layout.list_item_language_spinner, flagIcons);
+        mLanguageSpinner.setAdapter(langSpinnerAdapter);
 
-    /**
-     * We add the spinner for WelcomeFragment only
-     * To call this, use 'invalidateOptionsMenu()' inside fragments
-     * which are accessed from drawer
-     *
-     * @param menu
-     * @return
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+        // Set the initial spinner item
+        // according to the current app language
+        String currentLanguage = getResources().getConfiguration().locale.getLanguage();
 
-        String currentFragmentName = getCurrentFragment().getClass().getSimpleName();
-
-        switch (currentFragmentName) {
-            case ("LoginFragment"):
-                mLanguageSpinner.setVisibility(View.VISIBLE);
+        switch (currentLanguage) {
+            case "en":
+                mLanguageSpinner.setSelection(0);
                 break;
-            case ("TicketFragment"):
-                mLanguageSpinner.setVisibility(View.VISIBLE);
+            case "de":
+                mLanguageSpinner.setSelection(1);
+                break;
+            case "fo":
+                mLanguageSpinner.setSelection(2);
+                break;
+            case "da":
+                mLanguageSpinner.setSelection(3);
                 break;
             default:
-                mLanguageSpinner.setVisibility(View.GONE);
+                mLanguageSpinner.setSelection(0);
         }
-        return true;
+
+        mLanguageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            /**
+             * A known issue when itemSelected is called first time erroneously
+             * without user selection
+             * <p/>
+             * Using a counter to check first instance
+             * http://stackoverflow.com/a/10102356
+             */
+            int isLoaded = 0;
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                    int position, long arg3) {
+                if (isLoaded >= 1) {
+                    // Check the selected position in the icon array
+                    switch (flagIcons[position]) {
+                        case R.drawable.img_flag_english:
+                            updateAppLocale("en");
+                            break;
+                        case R.drawable.img_flag_deutsch:
+                            updateAppLocale("de");
+                            break;
+                        case R.drawable.img_flag_faroese:
+                            updateAppLocale("fo");
+                            break;
+                        case R.drawable.img_flag_danish:
+                            updateAppLocale("da");
+                            break;
+                    }
+                }
+                isLoaded++;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        // Add the spinner to the right of Toolbar
+        Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.RIGHT;
+        toolbar.addView(mLanguageSpinner, layoutParams);
+    }
+
+    private Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentById(R.id.content_frame);
     }
 
     @Override
@@ -737,6 +665,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
 
         // Restart activity for effects to take place
         this.recreate();
+        languageChangeRestart = true;
     }
 
     @Override
@@ -783,6 +712,4 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             showFragment(AppUtils.fragmentList[0]);
         }
     }
-
-
 }
