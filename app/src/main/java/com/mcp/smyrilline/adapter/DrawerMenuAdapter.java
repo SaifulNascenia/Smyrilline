@@ -1,9 +1,6 @@
 package com.mcp.smyrilline.adapter;
 
 import android.content.Context;
-import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -12,39 +9,30 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
-
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.model.DrawerItem;
 import com.mcp.smyrilline.activity.DrawerActivity;
-
-import java.util.ArrayList;
+import com.mcp.smyrilline.model.DrawerItem;
 import java.util.List;
 
 /**
  * Created by raqib on 5/19/17.
  */
 
-public class NavDrawerAdapter extends ArrayAdapter<DrawerItem> {
+public class DrawerMenuAdapter extends ArrayAdapter<DrawerItem> {
 
     private Context context;
     private int layoutResId;
     private List<DrawerItem> list;
-    private ListView parentListView;
 
-    public NavDrawerAdapter(@NonNull Context context,
-                            @LayoutRes int layoutResId,
-                            @NonNull List<DrawerItem> list,
-                            ListView parentListView) {
+    public DrawerMenuAdapter(@NonNull Context context,
+            @LayoutRes int layoutResId,
+            @NonNull List<DrawerItem> list) {
         super(context, layoutResId, list);
 
         this.context = context;
         this.layoutResId = layoutResId;
         this.list = list;
-        this.parentListView = parentListView;
-
     }
 
     @Override
@@ -97,7 +85,6 @@ public class NavDrawerAdapter extends ArrayAdapter<DrawerItem> {
             tvDrawerItemTitle = (TextView) itemView.findViewById(R.id.tvDrawerItemTitle);
             imgDrawerItemIcon = (ImageView) itemView.findViewById(R.id.imgDrawerItemIcon);
             dividerLayout = (LinearLayout) itemView.findViewById(R.id.divider_layout);
-
         }
     }
 }
