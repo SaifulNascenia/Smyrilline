@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- <color name="colorPrimary">#00a8ff</color>-->
+    <color name="transparent">#00000000</color>
     <color name="colorPrimary">#0a95dc</color>
     <color name="colorPrimaryDark">#0086CC</color>
     <color name="colorAccent">#00a8ff</color>
     <color name="textColorPrimary">#212121</color>
     <color name="textColorSecondary">#727272</color>
-
-
     <color name="grey_black_textcolor">#424242</color>
-    <color name="windowBackground">#FFFFFF</color>
+    <color name="windowBackground">@color/white</color>
+    <color name="white_75_opaque">#BFFFFFFF</color>
+    <color name="white_80_opaque">#CCFFFFFF</color>
+    <color name="white_70_opaque">#B3FFFFFF</color>
     <color name="white_65_opaque">#A6FFFFFF</color>
+    <color name="white_55_opaque">#8CFFFFFF</color>
     <color name="bkg_coupon_image">#D6F0FA</color>
     <color name="bkg_duty_free_image">#F1E9DB</color>
     <color name="bkg_restaurant_image">#F1E9DB</color>
-    <color name="bkg_light_grey">#ebebeb</color>
     <color name="ship_trajectory">#2c7af8</color>
     <color name="bkg_deep_grey">#999999</color>
     <color name="bkg_fragment_bulletin">#d9d9d9</color>
@@ -23,11 +25,18 @@
     <color name="bkg_cancel_button">#ff0000</color>
     <color name="bkg_ok_button">#009900</color>
     <color name="bkg_settings_msg_filters">#00a8ff</color>
-    <color name="bkg_60_percent_opaque_black">#99000000</color>
-    <color name="bkg_40_percent_opaque_black">#4D000000</color>
-
+    <color name="black_65_opaque">#A6000000</color>
+    <color name="black_60_opaque">#99000000</color>
+    <color name="black_50_opaque">#80000000</color>
+    <color name="black_45_opaque">#73000000</color>
+    <color name="black_40_opaque">#66000000</color>
     <color name="smalltextColor">#767576</color>
     <color name="largetextColor">#434343</color>
-    <color name="light_grey_bkg">#ececec</color>
-
+    <color name="bkg_light_grey">#ececec</color>
+    <color name="bkg_fragment_root">@color/transparent</color>
+    <color name="bkg_semi_white_content">@color/white_80_opaque</color>
+    <color name="bkg_light_grey_content">#f2f2f2</color>
+    <color name="bkg_no_data_text">@color/white</color>
+    <color name="sky_blue">#87ceeb</color>
+    <color name="color_primary_45_opaque">#730a95dc</color>
 </resources>

@@ -1,8 +1,7 @@
 package com.mcp.smyrilline.util;
 
-import com.mcp.smyrilline.model.GridNavItem;
 import com.mcp.smyrilline.R;
-
+import com.mcp.smyrilline.model.GridNavItem;
 import java.util.ArrayList;
 
 /**

@@ -12,4 +12,5 @@
     <string name="url_custom_css" translatable="false">http://smy-wp.mcp.com/wordpress/?display_custom_css=css</string>
     <string name="onyx_client_id" translatable="false">2a5118396e16d6a1c3ec491d5a52d15461275cbf</string>
     <string name="onyx_secret" translatable="false">3817d3211ac880e62906f41ee62bc8bd32aa61a5</string>
+    <string name="api_base_url">http://stage-smy-wp.mcp.com:82/api/smyrilline/</string>
 </resources>

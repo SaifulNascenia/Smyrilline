@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Smyrilline</string>
+    <string name="app_name">Smart Ship</string>
     <string-array name="planets_array">
         <item>Mercury</item>
         <item>Venus</item>
@@ -17,20 +17,30 @@
     <string name="action_settings">Settings</string>
     <string name="home">Home</string>
     <string name="view_booking">View Booking</string>
-    <string name="ship_tracker">Ship tracker</string>
+    <string name="ship_tracker">Ship Tracker</string>
     <string name="inbox">Inbox</string>
-    <string name="duty_free">Duty free</string>
-    <string name="restaurants">Restaurants</string>
+    <string name="duty_free">Tax Free</string>
+    <string name="restaurants"><![CDATA[Restaurants & Bars]]></string>
     <string name="destinations">Destinations</string>
+    <string name="price_and_menu">Price and Menu</string>
     <string name="coupons">Coupons</string>
     <string name="settings">Settings</string>
     <string name="info">Ship Info</string>
     <string name="logout">Log out</string>
-    <string name="help">Help</string>
+    <string name="tax_free_item">Tax Free item</string>
+    <string name="show_coupon">Show this coupon to the staff</string>
+    <string name="offer_ends">Offer ends:</string>
+    <string name="use_coupon">Use Coupon</string>
+    <string name="ends">Ends:</string>
+    <string name="next_port">NEXT PORT</string>
+    <string name="previous_port">PREVIOUS PORT</string>
+    <string name="speed">SPEED</string>
+    <string name="tax_free_header_1">Duty free shopping aboard the MS Norrona</string>
+    <string name="tax_free_header_2">On deck 5 you will find our tax free shop - Explorer Shop</string>
     <string name="message_filters">Message filters</string>
     <string name="please_choose_message_category">Please choose your desired message category(s).</string>
     <string name="age_group">Age group</string>
-    <string name="adult">Adult\n(from 15 yr)</string>
+    <string name="adult">Adult\nfrom 15 yr</string>
     <string name="child11">Child\n3 - 11 yr</string>
     <string name="child15">Child\n12 - 15 yr</string>
     <string name="all">All</string>
@@ -52,9 +62,6 @@
     <string name="danish">Danish</string>
     <string name="deutsch">Deutsch</string>
     <string name="faroese">Faroese</string>
-    <string name="ends">Ends</string>
-    <string name="show_coupon">Show this to the staff</string>
-    <string name="use_coupon">Use coupon</string>
     <string name="no_coupons">No coupons</string>
     <string name="no_results">No results</string>
     <string name="are_you_sure">Are you sure?</string>
@@ -63,7 +70,7 @@
     <string name="use_coupon_warning">The coupon will be used and removed.</string>
     <string name="used">USED</string>
     <string name="alert_no_wifi">Data is not available.. please turn on Wi-Fi.</string>
-    <string name="alert_server_down">Cannot load data.. server is down.</string>
+    <string name="alert_server_down">Cannot load data.. connection lost.</string>
     <string name="alert_server_timeout">Server request timed out.. please try again later.</string>
     <string name="alert_downloading">Downloading file.. please wait.</string>
     <string name="alert_download_cancelled">Download cancelled!</string>
@@ -85,7 +92,7 @@
     <string name="car">CAR</string>
     <string name="name">NAME</string>
     <string name="meals">Meals</string>
-    <string name="nav_help">Help</string>
+    <string name="help">Help</string>
     <string name="expired">Expired</string>
     <string name="adults">Adults</string>
     <string name="cabin">CABIN</string>
@@ -104,38 +111,59 @@
     <string name="elipsis" translatable="false">...</string>
     <string name="children12">Children (5-12 yr)</string>
     <string name="children15">Children (12-15 yr)</string>
-    <string name="my_smyrilline">My Smiril Line</string>
+    <string name="my_smyrilline">My Smyril Line</string>
     <string name="booking">Booking</string>
-    <string name="hint_lastname">Lastname</string>
-    <string name="hint_booking">Booking</string>
+    <string name="hint_lastname"><b>Last name</b></string>
+    <string name="hint_booking"><b>Booking number</b></string>
     <string name="connecting">Connecting...</string>
     <string name="alert_server_error">The server responded with an error.</string>
     <string name="new_label">new</string>
-    <string name="no_internet_message">
-        No internet connection.Make sure Wi-Fi or Cellular data is turned on,then try again</string>
-
-    <string name="nav_restaurants">Restaurants and bars</string>
-    <string name="nav_destinations">Destinations</string>
-
-    <string name="tax_free_shop_title">Tax Free Shop</string>
-    <string name="price_and_menu">Price and Menu</string>
-    <string name="textview_text_at_expanded_time">view more</string>
-    <string name="textview_text_at_collapse_time">view less</string>
-
+    <string name="noConnectionView">
+        Could not connect\nMake sure Wi-Fi is turned on</string>
+    <string name="more"><b>More</b></string>
+    <string name="less"><b>Less</b></string>
     <string name="ship_info">Ship Info</string>
-
     <string name="pre_book_price_text">Prebook: </string>
     <string name="onboard_price_text">Onboard price: </string>
     <string name="save_text">Save: </string>
-
     <string name="times_text">Times</string>
     <string name="seatings_text">Seatings: </string>
-
-
     <string name="cheese_ipsum">Jarlsberg lancashire edam. Dolcelatte hard cheese brie st. agur blue
     cheese caerphilly bavarian bergkase cheese and biscuits mascarpone. Cheeseburger swiss bavarian
     bergkase cream cheese fromage frais cheesy feet port-salut airedale. St. agur blue cheese rubber
     cheese caerphilly cheddar cheesecake cream cheese manchego lancashire. Roquefort squirty cheese
     the big cheese.</string>
-
+    <string name="logout_success">You have been successfully logged out.</string>
+    <string name="new_coupon">New coupon!</string>
+    <string name="new_coupons_available">coupons available</string>
+    <string name="please_check_app_for_details">Please check App for details</string>
+    <string name="guide_text_header_nav">Stay Connected</string>
+    <string name="guide_text_subheader_nav"><![CDATA[Please turn on bluetooth &\nconnect to \'Smyril Line App\' WiFi\n(free for our app)]]></string>
+    <string name="guide_text_header_shiptracker">Track Yourself</string>
+    <string name="guide_text_subheader_shiptracker">Use Ship Tracker to track\nwhere you are</string>
+    <string name="guide_text_header_2">Get Offers</string>
+    <string name="guide_text_subheader_2">Browse coupons and enjoy\nvarious offers</string>
+    <string name="guide_text_header_destinations">Know the Voyage</string>
+    <string name="guide_text_subheader_destinations">Learn more about your cruise\nand destinations</string>
+    <string name="guide_text_header_restaurants">Meet, Eat</string>
+    <string name="guide_text_subheader_restaurants">Wine, Dine and Hangout at the coolest restaurants</string>
+    <string name="guide_text_header_taxfree">Enjoy Tax Free</string>
+    <string name="guide_text_subheader_taxfree">See the list of Tax Free items\nready to be picked up</string>
+    <string name="app_version">App version:</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="client_id">Client Id:</string>
+    <string name="download_catalogue">Download catalogue</string>
+    <string name="hint_search">Search</string>
+    <string name="no_bulletins">No bulletins</string>
+    <string name="no_item">No items</string>
+    <string name="no_records">No records found</string>
+    <string name="notification">Notification</string>
+    <string name="refresh_map">Refresh</string>
+    <string name="about">About</string>
+    <string name="alert_pdf_not_available">Pdf file not available yet..</string>
+    <string name="retry">Retry</string>
+    <string name="no_data_loaded">No data loaded</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="location">Location</string>
+    <string name="place_order">Place the order</string>
 </resources>
