@@ -3,7 +3,6 @@ package com.mcp.smyrilline.model.shipinfo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -21,9 +20,9 @@ public class Child implements Parcelable
             instance.id = ((String) in.readValue((String.class.getClassLoader())));
             instance.name = ((String) in.readValue((String.class.getClassLoader())));
             instance.imageUrl = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text1 = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text2 = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text3 = in.readValue((Object.class.getClassLoader()));
+            instance.header = ((String) in.readValue((String.class.getClassLoader())));
+            instance.subheader = ((String) in.readValue((String.class.getClassLoader())));
+            instance.description = ((String) in.readValue((String.class.getClassLoader())));
             instance.children = in.readValue((Object.class.getClassLoader()));
             return instance;
         }
@@ -43,15 +42,15 @@ public class Child implements Parcelable
     @SerializedName("imageUrl")
     @Expose
     private String imageUrl;
-    @SerializedName("text1")
+    @SerializedName("header")
     @Expose
-    private String text1;
-    @SerializedName("text2")
+    private String header;
+    @SerializedName("subheader")
     @Expose
-    private String text2;
-    @SerializedName("text3")
+    private String subheader;
+    @SerializedName("description")
     @Expose
-    private Object text3;
+    private String description;
     @SerializedName("children")
     @Expose
     private Object children;
@@ -80,28 +79,28 @@ public class Child implements Parcelable
         this.imageUrl = imageUrl;
     }
 
-    public String getText1() {
-        return text1;
+    public String getHeader() {
+        return header;
     }
 
-    public void setText1(String text1) {
-        this.text1 = text1;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
-    public String getText2() {
-        return text2;
+    public String getSubheader() {
+        return subheader;
     }
 
-    public void setText2(String text2) {
-        this.text2 = text2;
+    public void setSubheader(String subheader) {
+        this.subheader = subheader;
     }
 
-    public Object getText3() {
-        return text3;
+    public String getDescription() {
+        return description;
     }
 
-    public void setText3(Object text3) {
-        this.text3 = text3;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Object getChildren() {
@@ -116,9 +115,9 @@ public class Child implements Parcelable
         dest.writeValue(id);
         dest.writeValue(name);
         dest.writeValue(imageUrl);
-        dest.writeValue(text1);
-        dest.writeValue(text2);
-        dest.writeValue(text3);
+        dest.writeValue(header);
+        dest.writeValue(subheader);
+        dest.writeValue(description);
         dest.writeValue(children);
     }
 
