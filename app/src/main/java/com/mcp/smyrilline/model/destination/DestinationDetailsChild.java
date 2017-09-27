@@ -3,9 +3,9 @@ package com.mcp.smyrilline.model.destination;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class DestinationDetailsChild implements Parcelable {
 
@@ -22,8 +22,10 @@ public class DestinationDetailsChild implements Parcelable {
             instance.imageUrl = ((String) in.readValue((String.class.getClassLoader())));
             instance.text1 = ((String) in.readValue((String.class.getClassLoader())));
             instance.text2 = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text3 = in.readValue((Object.class.getClassLoader()));
-            instance.children = in.readValue((Object.class.getClassLoader()));
+            instance.text3 = ((String) in.readValue((String.class.getClassLoader())));
+            in.readList(instance.children,
+                    (com.mcp.smyrilline.model.destination.DestinationDetailsChild.class
+                            .getClassLoader()));
             return instance;
         }
 
@@ -49,10 +51,22 @@ public class DestinationDetailsChild implements Parcelable {
     private String text2;
     @SerializedName("text3")
     @Expose
-    private Object text3;
+    private String text3;
     @SerializedName("children")
     @Expose
-    private Object children;
+    private List<DestinationDetailsChild> children;
+
+    public DestinationDetailsChild(String name, String imageUrl, String text1, String text2,
+            String text3) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.text1 = text1;
+        this.text2 = text2;
+        this.text3 = text3;
+    }
+
+    public DestinationDetailsChild() {
+    }
 
     public String getId() {
         return id;
@@ -94,19 +108,19 @@ public class DestinationDetailsChild implements Parcelable {
         this.text2 = text2;
     }
 
-    public Object getText3() {
+    public String getText3() {
         return text3;
     }
 
-    public void setText3(Object text3) {
+    public void setText3(String text3) {
         this.text3 = text3;
     }
 
-    public Object getChildren() {
+    public List<DestinationDetailsChild> getChildren() {
         return children;
     }
 
-    public void setChildren(Object children) {
+    public void setChildren(List<DestinationDetailsChild> children) {
         this.children = children;
     }
 

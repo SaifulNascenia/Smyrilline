@@ -1,36 +1,37 @@
-
 package com.mcp.smyrilline.model.destination;
+
+/**
+ * Created by saiful on 7/7/17.
+ */
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class DestinationDetailsInfo implements Parcelable {
+public class Destinations implements Parcelable {
 
-    public final static Creator<DestinationDetailsInfo> CREATOR = new Creator<DestinationDetailsInfo>() {
+    public final static Creator<Destinations> CREATOR = new Creator<Destinations>() {
 
 
         @SuppressWarnings({
                 "unchecked"
         })
-        public DestinationDetailsInfo createFromParcel(Parcel in) {
-            DestinationDetailsInfo instance = new DestinationDetailsInfo();
+        public Destinations createFromParcel(Parcel in) {
+            Destinations instance = new Destinations();
             instance.id = in.readValue((Object.class.getClassLoader()));
             instance.name = ((String) in.readValue((String.class.getClassLoader())));
-            instance.imageUrl = ((String) in.readValue((String.class.getClassLoader())));
-            instance.text1 = ((String) in.readValue((String.class.getClassLoader())));
+            instance.imageUrl = in.readValue((Object.class.getClassLoader()));
+            instance.text1 = in.readValue((Object.class.getClassLoader()));
             instance.text2 = in.readValue((Object.class.getClassLoader()));
-            instance.text3 = in.readValue((Object.class.getClassLoader()));
-            in.readList(instance.children, (com.mcp.smyrilline.model.shipinfo.Child.class.getClassLoader()));
+            in.readList(instance.children, (com.mcp.smyrilline.model.restaurant.Child.class.getClassLoader()));
             return instance;
         }
 
-        public DestinationDetailsInfo[] newArray(int size) {
-            return (new DestinationDetailsInfo[size]);
+        public Destinations[] newArray(int size) {
+            return (new Destinations[size]);
         }
 
     };
@@ -42,19 +43,16 @@ public class DestinationDetailsInfo implements Parcelable {
     private String name;
     @SerializedName("imageUrl")
     @Expose
-    private String imageUrl;
+    private Object imageUrl;
     @SerializedName("text1")
     @Expose
-    private String text1;
+    private Object text1;
     @SerializedName("text2")
     @Expose
     private Object text2;
-    @SerializedName("text3")
-    @Expose
-    private Object text3;
     @SerializedName("children")
     @Expose
-    private List<DestinationDetailsChild> children = null;
+    private List<DestinationsChild> children = null;
 
     public Object getId() {
         return id;
@@ -72,19 +70,19 @@ public class DestinationDetailsInfo implements Parcelable {
         this.name = name;
     }
 
-    public String getImageUrl() {
+    public Object getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(Object imageUrl) {
         this.imageUrl = imageUrl;
     }
 
-    public String getText1() {
+    public Object getText1() {
         return text1;
     }
 
-    public void setText1(String text1) {
+    public void setText1(Object text1) {
         this.text1 = text1;
     }
 
@@ -96,20 +94,17 @@ public class DestinationDetailsInfo implements Parcelable {
         this.text2 = text2;
     }
 
-    public Object getText3() {
-        return text3;
-    }
-
-    public void setText3(Object text3) {
-        this.text3 = text3;
-    }
-
-    public List<DestinationDetailsChild> getChildren() {
+    public List<DestinationsChild> getChildren() {
         return children;
     }
 
-    public void setChildren(List<DestinationDetailsChild> children) {
+    public void setChildren(List<DestinationsChild> children) {
         this.children = children;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -118,7 +113,6 @@ public class DestinationDetailsInfo implements Parcelable {
         dest.writeValue(imageUrl);
         dest.writeValue(text1);
         dest.writeValue(text2);
-        dest.writeValue(text3);
         dest.writeList(children);
     }
 

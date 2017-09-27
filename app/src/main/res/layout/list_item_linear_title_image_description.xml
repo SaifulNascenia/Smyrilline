@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+    android:background="@color/bkg_semi_white_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/list_item_linear_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="With your own Camper"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorPrimary"/>
+
+    <ImageView
+        android:id="@+id/list_item_linear_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_smyrilline_header"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <at.blogc.android.views.ExpandableTextView
+            android:id="@+id/list_item_linear_expandable_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="This is detail text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/list_item_linear_expand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/list_item_linear_expandable_description"
+            android:text="@string/more"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone"/>
+    </RelativeLayout>
+</LinearLayout>

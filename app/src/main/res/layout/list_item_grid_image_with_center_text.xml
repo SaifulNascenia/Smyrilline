@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="180dp">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageGridListItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:riv_corner_radius="@dimen/grid_item_corner_radius"/>
+
+    <TextView
+        android:id="@+id/titleGridListItem"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/medium_padding"
+        android:paddingEnd="@dimen/medium_padding"
+        android:background="@drawable/bkg_40_black_3dp_corner"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:text=""
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white"/>
+</RelativeLayout>

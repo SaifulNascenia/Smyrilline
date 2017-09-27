@@ -11,11 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.model.destination.Child;
+import com.mcp.smyrilline.model.destination.DestinationsChild;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.ViewHolder> {
@@ -33,7 +31,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.list_item_image_with_center_text, parent, false);
+                inflate(R.layout.list_item_linear_image_with_center_text, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
 
@@ -42,15 +40,14 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-
-        final Child info = (Child) mDestinationsList.get(position);
+        final DestinationsChild info = (DestinationsChild) mDestinationsList.get(position);
         holder.tvDesinationTitleTitle.setText(info.getName());
 
         Picasso.with(context)
                 .load(context.getResources().
                         getString(R.string.image_downloaded_base_url) +
                         info.getImageUrl())
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.img_placeholder_thumb)
                 .into(holder.destinationImage);
 
 
@@ -70,8 +67,8 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
         public ViewHolder(View itemView) {
             super(itemView);
 
-            tvDesinationTitleTitle = (TextView) itemView.findViewById(R.id.title_textview);
-            destinationImage = (ImageView) itemView.findViewById(R.id.content_imageview);
+            tvDesinationTitleTitle = (TextView) itemView.findViewById(R.id.titleLinearListItem);
+            destinationImage = (ImageView) itemView.findViewById(R.id.imageLinearListItem);
         }
     }
 }

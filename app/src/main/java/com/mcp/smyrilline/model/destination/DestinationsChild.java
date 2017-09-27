@@ -6,47 +6,43 @@ package com.mcp.smyrilline.model.destination;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.List;
+public class DestinationsChild implements Parcelable {
 
-public class ListOfDestinations implements Parcelable {
-
-    public final static Creator<ListOfDestinations> CREATOR = new Creator<ListOfDestinations>() {
+    public final static Creator<DestinationsChild> CREATOR = new Creator<DestinationsChild>() {
 
 
         @SuppressWarnings({
                 "unchecked"
         })
-        public ListOfDestinations createFromParcel(Parcel in) {
-            ListOfDestinations instance = new ListOfDestinations();
-            instance.id = in.readValue((Object.class.getClassLoader()));
+        public DestinationsChild createFromParcel(Parcel in) {
+            DestinationsChild instance = new DestinationsChild();
+            instance.id = ((String) in.readValue((String.class.getClassLoader())));
             instance.name = ((String) in.readValue((String.class.getClassLoader())));
-            instance.imageUrl = in.readValue((Object.class.getClassLoader()));
+            instance.imageUrl = ((String) in.readValue((String.class.getClassLoader())));
             instance.text1 = in.readValue((Object.class.getClassLoader()));
             instance.text2 = in.readValue((Object.class.getClassLoader()));
-            in.readList(instance.children, (com.mcp.smyrilline.model.restaurant.Child.class.getClassLoader()));
+            instance.children = in.readValue((Object.class.getClassLoader()));
             return instance;
         }
 
-        public ListOfDestinations[] newArray(int size) {
-            return (new ListOfDestinations[size]);
+        public DestinationsChild[] newArray(int size) {
+            return (new DestinationsChild[size]);
         }
 
     };
     @SerializedName("id")
     @Expose
-    private Object id;
+    private String id;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("imageUrl")
     @Expose
-    private Object imageUrl;
+    private String imageUrl;
     @SerializedName("text1")
     @Expose
     private Object text1;
@@ -55,13 +51,13 @@ public class ListOfDestinations implements Parcelable {
     private Object text2;
     @SerializedName("children")
     @Expose
-    private List<Child> children = null;
+    private Object children;
 
-    public Object getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Object id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -73,11 +69,11 @@ public class ListOfDestinations implements Parcelable {
         this.name = name;
     }
 
-    public Object getImageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(Object imageUrl) {
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -97,11 +93,11 @@ public class ListOfDestinations implements Parcelable {
         this.text2 = text2;
     }
 
-    public List<Child> getChildren() {
+    public Object getChildren() {
         return children;
     }
 
-    public void setChildren(List<Child> children) {
+    public void setChildren(Object children) {
         this.children = children;
     }
 
@@ -116,7 +112,7 @@ public class ListOfDestinations implements Parcelable {
         dest.writeValue(imageUrl);
         dest.writeValue(text1);
         dest.writeValue(text2);
-        dest.writeList(children);
+        dest.writeValue(children);
     }
 
     public int describeContents() {

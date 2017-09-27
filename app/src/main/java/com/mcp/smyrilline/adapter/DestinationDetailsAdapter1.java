@@ -12,20 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.model.destination.DestinationDetailsChild;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
-public class DestinationDetailsAdapter extends RecyclerView.Adapter<DestinationDetailsAdapter.ViewHolder> {
+public class DestinationDetailsAdapter1 extends
+        RecyclerView.Adapter<DestinationDetailsAdapter1.ViewHolder> {
 
     private final Context context;
     private List mDestinationDetailsList;
 
-    public DestinationDetailsAdapter(Context context,
-                                     List mDestinationDetailsList) {
+    public DestinationDetailsAdapter1(Context context,
+            List mDestinationDetailsList) {
         this.context = context;
         this.mDestinationDetailsList = mDestinationDetailsList;
     }
@@ -34,7 +33,7 @@ public class DestinationDetailsAdapter extends RecyclerView.Adapter<DestinationD
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_image_with_center_text, parent, false);
+                .inflate(R.layout.list_item_grid_image_with_center_text, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
 
@@ -50,7 +49,7 @@ public class DestinationDetailsAdapter extends RecyclerView.Adapter<DestinationD
                 .load(context.getResources().
                         getString(R.string.image_downloaded_base_url) +
                         child.getImageUrl())
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.img_placeholder_thumb)
                 .into(holder.imgRestaurant);
     }
 
@@ -67,8 +66,8 @@ public class DestinationDetailsAdapter extends RecyclerView.Adapter<DestinationD
         public ViewHolder(View itemView) {
             super(itemView);
 
-            tvDestinationTitle = (TextView) itemView.findViewById(R.id.title_textview);
-            imgRestaurant = (ImageView) itemView.findViewById(R.id.content_imageview);
+            tvDestinationTitle = (TextView) itemView.findViewById(R.id.titleGridListItem);
+            imgRestaurant = (ImageView) itemView.findViewById(R.id.imageGridListItem);
         }
     }
 }
