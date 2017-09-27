@@ -9,12 +9,8 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
-
-import com.mcp.smyrilline.util.AppUtils;
 import com.mcp.smyrilline.listener.BulletinListener;
-
-import microsoft.aspnet.signalr.client.Platform;
-import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
+import com.mcp.smyrilline.util.AppUtils;
 
 /**
  * Service to connect to SignalR
@@ -36,14 +32,25 @@ public class SignalRService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(AppUtils.TAG, "SignalRService: received broadcast -> " + intent.getAction());
-            // We need to register with socket again with new language param [SKIP FOR NOW! Enable when Console supports language]
+            // We need to register with socket again with new language param
             if (intent.getAction().equals(ACTION_APP_SETTINGS_CHANGED)) {
-                if (mSignalRClient != null)
-                    if (mSignalRClient.isConnected()) {
-                        mSignalRClient.register();
-                    } else if (AppUtils.isNetworkAvailable(mContext)) {
+                try {
+                    if (mSignalRClient != null) {
+                        if (mSignalRClient.isConnected())
+                            mSignalRClient.register();
+                        else if (mSignalRClient.isConnecting()) {
+                            // restart connection
+                            mSignalRClient.stopConnection();
+                            mSignalRClient.startConnection();
+                        } else
+                            mSignalRClient.startConnection();
+                    } else {
+                        mSignalRClient = SignalRClient.getInstance(mContext);
                         mSignalRClient.startConnection();
                     }
+                } catch (Exception e) {
+                    Log.e(AppUtils.TAG, "SignalRService -> " + e.getMessage());
+                }
             }
         }
     };
@@ -69,7 +76,6 @@ public class SignalRService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Platform.loadPlatformComponent(new AndroidPlatformComponent());
         mContext = getBaseContext();
 
         // Register language change receiver

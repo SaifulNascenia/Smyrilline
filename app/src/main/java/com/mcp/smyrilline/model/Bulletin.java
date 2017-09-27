@@ -4,47 +4,48 @@ package com.mcp.smyrilline.model;
  * Model class for bulletin
  */
 public class Bulletin {
-    private int mId;
-    private String mTitle;
-    private String mContent;
-    private String mDate;
-    private String mImageURL;
-    private boolean mSeen;
+
+    private int id;
+    private String title;
+    private String content;
+    private String date;
+    private String imageUrl;
+    private boolean seen;
 
     public Bulletin(int id, String title, String content, String date, String imageUrl, boolean seen) {
-        this.mId = id;
-        this.mTitle = title;
-        this.mContent = content;
-        this.mDate = date;
-        this.mImageURL = imageUrl;
-        this.mSeen = seen;
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.date = date;
+        this.imageUrl = imageUrl;
+        this.seen = seen;
     }
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
     public String getContent() {
-        return mContent;
+        return content;
     }
 
     public String getDate() {
-        return mDate;
+        return date;
     }
 
-    public String getImageURL() {
-        return mImageURL;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public boolean isSeen() {
-        return mSeen;
+        return seen;
     }
 
     public void setSeen(boolean isSeen) {
-        mSeen = isSeen;
+        seen = isSeen;
     }
 
     public int getId() {
-        return mId;
+        return id;
     }
 }

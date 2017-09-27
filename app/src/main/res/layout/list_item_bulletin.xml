@@ -3,14 +3,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bkg_fragment_bulletin">
+    android:layout_margin="2dp"
+    android:background="@color/white_55_opaque">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bkg_with_bottom_border"
-        android:orientation="horizontal"
         android:padding="@dimen/activity_horizontal_margin"
+        android:background="@drawable/bkg_80_white_3dp_corner"
+        android:orientation="horizontal"
         android:visibility="visible"
         android:weightSum="10">
 
@@ -18,28 +19,28 @@
             android:id="@+id/imgBulletinNewIndicator"
             android:layout_width="0dp"
             android:layout_height="8dp"
-            android:layout_gravity="center"
             android:layout_weight="0.5"
+            android:layout_gravity="center"
             android:src="@drawable/bkg_blue_circle" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_weight="8"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin">
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvBulletinTitle"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Bulletin title"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black"
-                android:textStyle="bold" />
+                android:textColor="@android:color/black"/>
 
             <TextView
                 android:id="@+id/tvBulletinContent"
