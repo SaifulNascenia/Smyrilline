@@ -1,14 +1,12 @@
 package com.mcp.smyrilline.rest;
 
-import com.mcp.smyrilline.model.destination.DestinationDetailsInfo;
-import com.mcp.smyrilline.model.destination.ListOfDestinations;
+import com.mcp.smyrilline.model.destination.DestinationDetails;
+import com.mcp.smyrilline.model.destination.Destinations;
 import com.mcp.smyrilline.model.dutyfree.DutyFree;
 import com.mcp.smyrilline.model.restaurant.ListOfRestaurants;
 import com.mcp.smyrilline.model.restaurant.RestaurantDetails;
-import com.mcp.smyrilline.model.shipinfo.Info;
-
+import com.mcp.smyrilline.model.shipinfo.ShipInfo;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -24,25 +22,25 @@ public interface RetrofitInterfaces {
     Call<List<ParentModel>> fetchAllRestaurantsAndBarsInfo();
     */
 
-    @GET("Restaurants/{language}")
+    @GET("restaurants/{language}")
     Call<List<ListOfRestaurants>> fetchAllRestaurantsAndBarsInfo(@Path("language") String language);
 
-    @GET("Restaurants/{language}/{id}")
+    @GET("restaurants/{language}/{id}")
     Call<RestaurantDetails> fetchRestaurantDetails(@Path("language") String language,
                                                    @Path("id") String id);
 
-    @GET("TaxFreeShop/{language}")
+    @GET("taxfreeshop/{language}")
     Call<DutyFree> fetchDutyFreeProductsList(@Path("language") String language);
 
-    @GET("Destinations/{language}")
-    Call<List<ListOfDestinations>> fetchAllDestinationsInfo(@Path("language") String language);
+    @GET("destinations/{language}")
+    Call<List<Destinations>> fetchAllDestinationsInfo(@Path("language") String language);
 
-    @GET("Destinations/{language}/{id}")
-    Call<DestinationDetailsInfo> fetchDestinationDetialsInfo(@Path("language") String language,
-                                                             @Path("id") String id);
+    @GET("destinations/{language}/{id}")
+    Call<DestinationDetails> fetchDestinationDetialsInfo(@Path("language") String language,
+            @Path("id") String id);
 
-    @GET("ShipInfo/{language}")
-    Call<Info> fetchShipInfo(@Path("language") String language);
+    @GET("shipinfo/{language}")
+    Call<ShipInfo> fetchShipInfo(@Path("language") String language);
 
 
 }
