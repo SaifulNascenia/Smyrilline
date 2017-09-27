@@ -4,31 +4,32 @@ package com.mcp.smyrilline.model;
  * Created by raqib on 4/26/16.
  */
 public class Passenger {
-    private String mName;
-    private String mSex;
-    private String mDOB;
-    private String mNationality;
 
-    public Passenger(String name, String sex, String dob, String nationality) {
-        this.mName = name;
-        this.mSex = sex;
-        this.mDOB = dob;
-        this.mNationality = nationality;
+    private String name;
+    private String sex;
+    private String dob;
+    private String country;
+
+    public Passenger(String name, String sex, String dob, String country) {
+        this.name = name;
+        this.sex = sex;
+        this.dob = dob;
+        this.country = country;
     }
 
     public String getName() {
-        return mName;
+        return name;
     }
 
     public String getSex() {
-        return mSex;
+        return sex;
     }
 
     public String getDOB() {
-        return mDOB;
+        return dob;
     }
 
-    public String getNationality() {
-        return mNationality;
+    public String getCountry() {
+        return country;
     }
 }

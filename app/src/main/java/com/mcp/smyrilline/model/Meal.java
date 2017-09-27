@@ -9,43 +9,43 @@ import java.util.Date;
  */
 public class Meal implements Comparable<Meal> {
 
-    private boolean mUsed;
-    private String mCount;
-    private String mDescription;
-    private String mDateString;
-    private Date mDate;
+    private boolean used;
+    private String count;
+    private String description;
+    private String dateString;
+    private Date date;
 //    private long mDateMillis;
 
     public Meal(String count, String description, String dateString) {
-        this.mCount = count;
-        this.mDescription = description;
-        this.mUsed = false;
-        this.mDateString = dateString;
+        this.count = count;
+        this.description = description;
+        this.used = false;
+        this.dateString = dateString;
 
         // get long millis, we'll add 23:59
         SimpleDateFormat givenFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         try {
-            mDate = givenFormat.parse(mDateString + " " + "23:59");
-//            mDateMillis = mDate.getTime();
+            date = givenFormat.parse(this.dateString + " " + "23:59");
+//            mDateMillis = date.getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
     public String getCount() {
-        return mCount;
+        return count;
     }
 
     public String getDescription() {
-        return mDescription;
+        return description;
     }
 
     public Date getDate() {
-        return mDate;
+        return date;
     }
 
     public String getDateString() {
-        return mDateString;
+        return dateString;
     }
 
 //    public long getDateMillis() {
@@ -53,16 +53,16 @@ public class Meal implements Comparable<Meal> {
 //    }
 
     public boolean isUsed() {
-        return mUsed;
+        return used;
     }
 
     public void setUsed(boolean used) {
-        this.mUsed = used;
+        this.used = used;
     }
 
     @Override
     public int compareTo(Meal another) {
-        return mDate.compareTo(another.getDate());
+        return date.compareTo(another.getDate());
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Meal implements Comparable<Meal> {
         boolean retVal = false;
         if (o instanceof Meal) {
             Meal compareMeal = (Meal) o;
-            retVal = mDate.equals(compareMeal.getDate());
+            retVal = date.equals(compareMeal.getDate());
         }
 
         return retVal;

@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bkg_light_grey"
+    android:paddingTop="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_horizontal_margin">
+    android:background="@color/transparent">
 
     <ExpandableListView
         android:id="@+id/listViewMeals"
@@ -20,5 +20,5 @@
         android:layout_centerInParent="true"
         android:text="@string/no_meals"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/bkg_deep_grey" />
+        android:textColor="@android:color/white"/>
 </RelativeLayout>

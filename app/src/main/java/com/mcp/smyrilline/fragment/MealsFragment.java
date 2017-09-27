@@ -12,14 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.adapter.MealExpandableListAdapter;
+import com.mcp.smyrilline.model.InternalStorage;
 import com.mcp.smyrilline.model.MealDate;
 import com.mcp.smyrilline.util.AppUtils;
-
 import java.util.ArrayList;
 
 /**
@@ -51,15 +49,14 @@ public class MealsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_meals, container, false);
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
-        String mealListAsString = mSharedPref.getString(AppUtils.PREF_MEAL_LIST, AppUtils.PREF_NO_ENTRY);
 
-        if (!mealListAsString.equals(AppUtils.PREF_NO_ENTRY) && !mealListAsString.equals("null")) {
-            mMealList = gson.fromJson(mealListAsString, new TypeToken<ArrayList<MealDate>>() {
-            }.getType());
-
-        } else {
+        // load meal list
+        Object savedObject = InternalStorage
+                .readObject(mContext, AppUtils.PREF_MEAL_LIST);
+        if (savedObject != null)
+            mMealList = (ArrayList<MealDate>) savedObject;
+        else
             mMealList = new ArrayList<>();
-        }
 
         mExpandableListView = (ExpandableListView) rootView.findViewById(R.id.listViewMeals);
         tvNothingText = (TextView) rootView.findViewById(R.id.tvMealsNothingText);

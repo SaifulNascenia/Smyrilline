@@ -7,10 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.model.Passenger;
-
 import java.util.ArrayList;
 
 /**
@@ -51,7 +49,7 @@ public class PassengerPagerAdapter extends PagerAdapter {
         tvBookingName.setText(passenger.getName());
         tvBookingSex.setText(passenger.getSex());
         tvBookingDOB.setText(passenger.getDOB());
-        tvBookingNationality.setText(passenger.getNationality());
+        tvBookingNationality.setText(passenger.getCountry());
 
         container.addView(itemView);
         return itemView;
