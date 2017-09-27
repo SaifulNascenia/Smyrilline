@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bkg_light_grey">
+    android:background="@color/bkg_fragment_root">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/restaurants_list_recycler_view"
@@ -16,10 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
-        android:background="@color/colorPrimaryDark"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
-
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <ProgressBar
         android:id="@+id/restaurantsLoadingView"
@@ -28,18 +26,8 @@
         android:layout_centerInParent="true"
         android:visibility="visible" />
 
-    <TextView
-        android:id="@+id/tvRestaurantsNothingText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="no_records"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/bkg_deep_grey"
-        android:visibility="gone" />
-
     <include
-        android:id="@+id/no_internet_layout"
-        layout="@layout/no_internet_connection_layout"
+        android:id="@+id/no_connection_layout"
+        layout="@layout/no_connection_layout"
         android:visibility="gone" />
 </RelativeLayout>

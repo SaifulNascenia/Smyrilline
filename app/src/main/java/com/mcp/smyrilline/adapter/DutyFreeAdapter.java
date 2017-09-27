@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.fragment.DutyFreeFragment;
 import com.mcp.smyrilline.model.dutyfree.Child;
@@ -17,7 +16,6 @@ import com.mcp.smyrilline.model.restaurant.DinnerItem;
 import com.mcp.smyrilline.model.restaurant.LunchItem;
 import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 /**
@@ -54,15 +52,15 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
 
         if (thisAdapterClassCalledClassName.equals(DutyFreeFragment.class.getSimpleName())) {
 
-            setViewOnDutyFreeRecylerView(holder, position);
+            setViewOnDutyFreeRecyclerView(holder, position);
         } else {
-            setViewOnRestaurantRecylerView(holder, position);
+            setViewOnRestaurantRecyclerView(holder, position);
         }
 
 
     }
 
-    private void setViewOnRestaurantRecylerView(DutyFreeViewHolder holder, int position) {
+    private void setViewOnRestaurantRecyclerView(DutyFreeViewHolder holder, int position) {
 
         holder.rootCardView.getLayoutParams().height = AppUtils.dpToPx(160);
 
@@ -83,7 +81,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
                     .load(mContext.getResources().
                             getString(R.string.image_downloaded_base_url) +
                             breakfastItem.getImageUrl())
-                    .placeholder(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.img_placeholder_thumb)
                     .into(holder.productImageView);
 
 
@@ -98,7 +96,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
                     .load(mContext.getResources().
                             getString(R.string.image_downloaded_base_url) +
                             lunchItem.getImageUrl())
-                    .placeholder(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.img_placeholder_thumb)
                     .into(holder.productImageView);
         } else {
 
@@ -112,13 +110,13 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
                     .load(mContext.getResources().
                             getString(R.string.image_downloaded_base_url) +
                             dinnerItem.getImageUrl())
-                    .placeholder(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.img_placeholder_thumb)
                     .into(holder.productImageView);
         }
 
     }
 
-    private void setViewOnDutyFreeRecylerView(DutyFreeViewHolder holder, int position) {
+    private void setViewOnDutyFreeRecyclerView(DutyFreeViewHolder holder, int position) {
 
         Child dutyFreeItemChild = (Child) dutyFreeChildList.get(position);
 
@@ -137,7 +135,7 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
                 .load(mContext.getResources().
                         getString(R.string.image_downloaded_base_url) +
                         dutyFreeItemChild.getImageUrl())
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.img_placeholder_thumb)
                 .into(holder.productImageView);
 
     }
@@ -148,22 +146,22 @@ public class DutyFreeAdapter extends RecyclerView.Adapter<DutyFreeAdapter.DutyFr
     }
 
 
-    public class DutyFreeViewHolder extends RecyclerView.ViewHolder {
+    class DutyFreeViewHolder extends RecyclerView.ViewHolder {
 
-        public CardView rootCardView;
-        public TextView productNameTextView;
-        public TextView productShortDetailsTextview;
-        public ImageView productImageView;
-        public TextView euroValueOfProducPriceTextview;
-        public TextView pennyValueOfProducPriceTextview;
+        private CardView rootCardView;
+        private TextView productNameTextView;
+        private TextView productShortDetailsTextview;
+        private ImageView productImageView;
+        private TextView euroValueOfProducPriceTextview;
+        private TextView pennyValueOfProducPriceTextview;
 
-        public DutyFreeViewHolder(View view) {
+        private DutyFreeViewHolder(View view) {
             super(view);
 
             rootCardView = (CardView) view.findViewById(R.id.root_card_view);
             productNameTextView = (TextView) view.findViewById(R.id.product_name_textview);
             productShortDetailsTextview = (TextView) view.findViewById(R.id.product_short_details_textview);
-            productImageView = (ImageView) view.findViewById(R.id.product_imageview);
+            productImageView = (ImageView) view.findViewById(R.id.imgShipInfoDetailHeader);
             euroValueOfProducPriceTextview = (TextView) view.findViewById(R.id.euro_value_of_product_price_textview);
             pennyValueOfProducPriceTextview = (TextView) view.findViewById(R.id.penny_value_of_product_price_textview);
         }

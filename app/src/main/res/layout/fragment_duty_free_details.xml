@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/windowBackground">
-
+    android:background="@color/white_65_opaque">
 
     <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/main_content"
+        android:id="@+id/root_coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
@@ -24,99 +23,98 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
                 app:expandedTitleMarginEnd="64dp"
                 app:expandedTitleMarginStart="48dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                <ImageView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fitsSystemWindows="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/child_black_image"
-                    app:layout_collapseMode="parallax" />
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/product_imageview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fitsSystemWindows="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/cheese_5"
-                    app:layout_collapseMode="parallax" />
+                        <ImageView
+                            android:id="@+id/imgShipInfoDetailHeader"
+                            android:layout_width="220dp"
+                            android:layout_height="220dp"
+                            android:layout_centerInParent="true"
+                            android:fitsSystemWindows="true"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/cheese_5"
+                            app:layout_collapseMode="parallax"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/activity_vertical_margin"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingRight="@dimen/activity_horizontal_margin"
+                        app:layout_collapseMode="parallax">
+
+                        <TextView
+                            android:id="@+id/product_name_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:maxLength="20"
+                            android:maxLines="1"
+                            android:text="BOSS"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/black_65_opaque"/>
+
+                        <RelativeLayout
+                            android:id="@+id/product_price_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:gravity="end">
+
+                            <TextView
+                                android:id="@+id/penny_value_of_product_price_textview"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_toRightOf="@+id/euro_value_of_product_price_textview"
+                                android:text="78"
+                                android:textAppearance="@android:style/TextAppearance.Small"
+                                android:textColor="@color/colorPrimary"/>
+
+                            <TextView
+                                android:id="@+id/euro_value_of_product_price_textview"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentBottom="true"
+                                android:layout_alignParentStart="true"
+                                android:gravity="center"
+                                android:text="€ 68"
+                                android:textAppearance="@android:style/TextAppearance.Medium"
+                                android:textColor="@color/colorPrimary"/>
+                        </RelativeLayout>
+                    </RelativeLayout>
+                </LinearLayout>
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    android:background="@drawable/bkg_toolbar_black_45_to_transparent_gradient_down"
                     app:layout_collapseMode="pin"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/small_margin"
-                    android:paddingLeft="@dimen/tax_free_shop_bottom_layout_margin"
-                    android:paddingRight="@dimen/tax_free_shop_bottom_layout_margin"
-                    app:layout_collapseMode="parallax">
-
-                    <TextView
-                        android:id="@+id/product_name_textview"
-                        style="@style/TextAppearance.AppCompat.Large"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Boss"
-                        android:textColor="@color/colorPrimary"
-                        android:textStyle="bold" />
-
-                    <RelativeLayout
-                        android:id="@+id/r1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/product_name_textview">
-
-                        <TextView
-                            android:id="@+id/penny_value_of_product_price_textview"
-                            style="@android:style/TextAppearance.Small"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_toRightOf="@+id/euro_value_of_product_price_textview"
-                            android:text="78"
-                            android:textColor="@color/colorPrimary"
-                            android:textStyle="bold" />
-
-
-                        <TextView
-                            android:id="@+id/euro_value_of_product_price_textview"
-                            style="@android:style/TextAppearance.Large"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerInParent="true"
-                            android:layout_marginTop="@dimen/small_margin"
-                            android:text="€ 68"
-                            android:textColor="@color/colorPrimary"
-                            android:textStyle="bold" />
-                    </RelativeLayout>
-
-
-                </RelativeLayout>
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="2dip"
                     android:layout_gravity="bottom"
-                    android:background="@color/light_grey_bkg"
+                    android:background="@color/bkg_light_grey"
                     android:orientation="horizontal"
                     app:layout_collapseMode="parallax" />
-
-
             </android.support.design.widget.CollapsingToolbarLayout>
-
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.widget.NestedScrollView
@@ -132,29 +130,30 @@
                     android:id="@+id/expandview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
                     android:layout_alignParentTop="true"
-                    android:layout_margin="@dimen/small_margin"
-                    android:background="@drawable/cardbackground"
-                    android:padding="@dimen/small_padding">
+                    android:padding="@dimen/medium_margin"
+                    android:background="@drawable/bkg_white_3dp_corner">
 
 
                     <!--   <TextView-->
                     <at.blogc.android.views.ExpandableTextView
-                        android:id="@+id/expandable_TextView"
-                        style="@style/TextAppearance.AppCompat.Medium"
+                        android:id="@+id/productDetailsExpandableTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="3"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/smalltextColor" />
 
                     <TextView
-                        android:id="@+id/toggle_TextView"
+                        android:id="@+id/productDestailsMoreView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/medium_margin"
                         android:layout_alignParentRight="true"
-                        android:layout_below="@+id/expandable_TextView"
-                        android:text="view more"
+                        android:layout_below="@+id/productDetailsExpandableTextView"
+                        android:text="@string/more"
                         android:textColor="@color/colorPrimary"
                         android:visibility="gone" />
 
@@ -164,9 +163,9 @@
                     android:id="@+id/quantity_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
                     android:layout_below="@+id/expandview"
-                    android:layout_margin="@dimen/small_margin"
-                    android:background="@drawable/cardbackground"
+                    android:background="@drawable/bkg_white_3dp_corner"
                     android:orientation="vertical"
                     android:visibility="gone">
 
@@ -184,11 +183,11 @@
                             android:gravity="center_horizontal">
 
                             <TextView
-                                style="@style/TextAppearance.AppCompat.Medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:padding="@dimen/small_padding"
+                                android:padding="@dimen/medium_padding"
                                 android:text="Quantity"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                                 android:textColor="@color/smalltextColor" />
 
                         </LinearLayout>
@@ -196,7 +195,7 @@
                         <LinearLayout
                             android:layout_width="2dp"
                             android:layout_height="match_parent"
-                            android:background="@color/light_grey_bkg"
+                            android:background="@color/bkg_light_grey"
                             android:orientation="vertical" />
 
                         <LinearLayout
@@ -206,11 +205,11 @@
                             android:gravity="center_horizontal">
 
                             <TextView
-                                style="@style/TextAppearance.AppCompat.Medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:padding="@dimen/small_padding"
+                                android:padding="@dimen/medium_padding"
                                 android:text="Total"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                                 android:textColor="@color/smalltextColor" />
 
                         </LinearLayout>
@@ -219,7 +218,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="@color/light_grey_bkg"
+                        android:background="@color/bkg_light_grey"
                         android:orientation="horizontal" />
 
                     <LinearLayout
@@ -238,21 +237,21 @@
 
                             <Button
                                 android:id="@+id/plus_img"
+                                android:textStyle="bold"
                                 android:layout_width="36dp"
                                 android:layout_height="36dp"
+                                android:layout_marginLeft="10dp"
                                 android:layout_alignParentLeft="true"
                                 android:layout_centerInParent="true"
-                                android:layout_marginLeft="10dp"
-                                android:background="@color/light_grey_bkg"
+                                android:background="@color/bkg_light_grey"
                                 android:gravity="center"
                                 android:text="+"
                                 android:textColor="@color/smalltextColor"
-                                android:textStyle="bold"
                                 android:visibility="visible" />
 
                             <TextView
                                 android:id="@+id/quantity_number_text"
-                                style="@style/TextAppearance.AppCompat.Large"
+                                android:textStyle="bold"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -260,21 +259,21 @@
                                 android:layout_toStartOf="@+id/minus_img"
                                 android:gravity="center"
                                 android:text="3000"
-                                android:textColor="@color/colorPrimary"
-                                android:textStyle="bold" />
+                                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                                android:textColor="@color/colorPrimary"/>
 
                             <Button
                                 android:id="@+id/minus_img"
+                                android:textStyle="bold"
                                 android:layout_width="36dp"
                                 android:layout_height="36dp"
+                                android:layout_marginRight="10dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerInParent="true"
-                                android:layout_marginRight="10dp"
-                                android:background="@color/light_grey_bkg"
+                                android:background="@color/bkg_light_grey"
                                 android:gravity="center"
                                 android:text="-"
                                 android:textColor="@color/smalltextColor"
-                                android:textStyle="bold"
                                 android:visibility="visible" />
 
 
@@ -283,7 +282,7 @@
                         <LinearLayout
                             android:layout_width="2dp"
                             android:layout_height="match_parent"
-                            android:background="@color/light_grey_bkg"
+                            android:background="@color/bkg_light_grey"
                             android:orientation="vertical" />
 
                         <LinearLayout
@@ -300,50 +299,45 @@
 
                                 <TextView
                                     android:id="@+id/quantity_product_price_number_textview"
-                                    style="@android:style/TextAppearance.Small"
+                                    android:textStyle="bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentTop="true"
                                     android:layout_toRightOf="@+id/quantity_product_price"
                                     android:text="78"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textStyle="bold" />
-
+                                    android:textAppearance="@android:style/TextAppearance.Small"
+                                    android:textColor="@color/colorPrimary"/>
 
                                 <TextView
                                     android:id="@+id/quantity_product_price"
-                                    style="@android:style/TextAppearance.Large"
+                                    android:textStyle="bold"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/medium_margin"
                                     android:layout_alignParentStart="true"
                                     android:layout_centerInParent="true"
-                                    android:layout_marginTop="@dimen/small_margin"
                                     android:text="€ 268"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textStyle="bold" />
+                                    android:textAppearance="@android:style/TextAppearance.Large"
+                                    android:textColor="@color/colorPrimary"/>
                             </RelativeLayout>
-
                         </LinearLayout>
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/b1"
-                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
                     android:layout_below="@id/quantity_layout"
-                    android:layout_margin="@dimen/small_margin"
                     android:background="@color/colorPrimary"
-                    android:text="Location"
+                    android:text="@string/place_order"
                     android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/windowBackground"
-                    android:textStyle="bold"
                     android:visibility="visible" />
-
             </RelativeLayout>
-
         </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>
 
@@ -354,7 +348,7 @@
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:visibility="gone"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <ProgressBar
         android:id="@+id/restaurantsLoadingView"
@@ -364,8 +358,8 @@
         android:visibility="visible" />
 
     <include
-        android:id="@+id/no_internet_layout"
-        layout="@layout/no_internet_connection_layout"
+        android:id="@+id/no_connection_layout"
+        layout="@layout/no_connection_layout"
         android:visibility="gone" />
 
 </RelativeLayout>
