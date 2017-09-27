@@ -9,19 +9,24 @@ import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-
 import com.mcp.smyrilline.BuildConfig;
 import com.mcp.smyrilline.R;
+import com.mcp.smyrilline.fragment.CouponsFragment;
+import com.mcp.smyrilline.fragment.DestinationFragment;
+import com.mcp.smyrilline.fragment.DutyFreeFragment;
+import com.mcp.smyrilline.fragment.HelpFragment;
+import com.mcp.smyrilline.fragment.InboxFragment;
 import com.mcp.smyrilline.fragment.LoginFragment;
+import com.mcp.smyrilline.fragment.RestaurantFragment;
+import com.mcp.smyrilline.fragment.SettingsFragment;
+import com.mcp.smyrilline.fragment.ShipInfoFragment;
+import com.mcp.smyrilline.fragment.ShipTrackerFragment;
 import com.mcp.smyrilline.util.AppUtils;
 
 public class MainGridActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
     GridLayout mGridLayoutNavigation;
-    ImageView imgGridViewBooking, imgGridShipTracker, imgGridInbox, imgGridDutyFree, imgGridRestaurants,
-            imgGridDestinations, imgGridCoupons, imgGridSettings, imgGridInfo;
 
     // OnyxBeacon SDK
 
@@ -48,12 +53,10 @@ public class MainGridActivity extends AppCompatActivity {
 
     private void initUI() {
         setContentView(R.layout.activity_main_grid);
-
         mGridLayoutNavigation = (GridLayout) findViewById(R.id.gridLayoutNavigation);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        mToolbar.setTitle(getString(R.string.app_name));
+        setTitle(getString(R.string.app_name));
     }
 
     public void onClick(View view) {
@@ -62,36 +65,39 @@ public class MainGridActivity extends AppCompatActivity {
 
         switch (view.getId()) {
             case R.id.imgGridViewBooking:
-                fragmentName = AppUtils.fragmentList[0];
+                fragmentName = LoginFragment.class.getSimpleName();
                 break;
             case R.id.imgGridShipTracker:
-                fragmentName = AppUtils.fragmentList[1];
+                fragmentName = ShipTrackerFragment.class.getSimpleName();
                 break;
             case (R.id.imgGridInbox):
-                fragmentName = AppUtils.fragmentList[2];
+                fragmentName = InboxFragment.class.getSimpleName();
                 break;
             case R.id.imgGridDutyFree:
-                fragmentName = AppUtils.fragmentList[3];
+                fragmentName = DutyFreeFragment.class.getSimpleName();
                 break;
             case R.id.imgGridRestaurants:
-                fragmentName = AppUtils.fragmentList[4];
+                fragmentName = RestaurantFragment.class.getSimpleName();
                 break;
             case R.id.imgGridDestinations:
-                fragmentName = AppUtils.fragmentList[5];
+                fragmentName = DestinationFragment.class.getSimpleName();
                 break;
             case R.id.imgGridCoupons:
-                fragmentName = AppUtils.fragmentList[6];
+                fragmentName = CouponsFragment.class.getSimpleName();
                 break;
             case R.id.imgGridSettings:
-                fragmentName = AppUtils.fragmentList[7];
+                fragmentName = SettingsFragment.class.getSimpleName();
                 break;
             case R.id.imgGridInfo:
-                fragmentName = AppUtils.fragmentList[8];
+                fragmentName = ShipInfoFragment.class.getSimpleName();
+                break;
+            case R.id.imgGridHelp:
+                fragmentName = HelpFragment.class.getSimpleName();
                 break;
             default:
                 fragmentName = LoginFragment.class.getSimpleName();
         }
-
+        // start drawer activity
         Intent intent = new Intent();
         intent.setClass(this, DrawerActivity.class);
         intent.putExtra(AppUtils.START_DRAWER_FRAGMENT, fragmentName);

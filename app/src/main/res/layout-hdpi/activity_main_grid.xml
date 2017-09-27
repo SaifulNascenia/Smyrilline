@@ -14,9 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
-        android:background="@android:color/transparent"
+        android:background="@color/transparent"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:popupTheme="@style/Theme.AppCompat.Light"/>
+        android:visibility="gone"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -25,7 +26,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:background="@color/transparent"
-        android:fitsSystemWindows="true"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.mcp.smyrilline.activity.DrawerActivity">
@@ -54,7 +54,7 @@
                     android:id="@+id/imgGridViewBooking"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
                     android:background="@drawable/bkg_80_white_3dp_corner"
@@ -65,13 +65,14 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:gravity="center_horizontal"
                     android:maxLines="2"
                     android:text="@string/view_booking"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="13.5sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -90,7 +91,7 @@
                     android:id="@+id/imgGridShipTracker"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
                     android:background="@drawable/bkg_80_white_3dp_corner"
@@ -101,11 +102,12 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/ship_tracker"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="13.5sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -123,7 +125,7 @@
                     android:id="@+id/imgGridInbox"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
                     android:background="@drawable/bkg_80_white_3dp_corner"
@@ -134,11 +136,12 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/inbox"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="13.5sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -156,7 +159,7 @@
                     android:id="@+id/imgGridDutyFree"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
                     android:background="@drawable/bkg_80_white_3dp_corner"
@@ -167,11 +170,12 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/duty_free"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="13.5sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -190,7 +194,7 @@
                     android:id="@+id/imgGridRestaurants"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
                     android:background="@drawable/bkg_80_white_3dp_corner"
@@ -201,11 +205,12 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/restaurants"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="13.5sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -223,7 +228,7 @@
                     android:id="@+id/imgGridDestinations"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
                     android:background="@drawable/bkg_80_white_3dp_corner"
@@ -234,11 +239,12 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/destinations"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="13.5sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -256,7 +262,7 @@
                     android:id="@+id/imgGridCoupons"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
                     android:background="@drawable/bkg_80_white_3dp_corner"
@@ -267,11 +273,12 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/coupons"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="13.5sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -290,7 +297,7 @@
                     android:id="@+id/imgGridSettings"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
                     android:background="@drawable/bkg_80_white_3dp_corner"
@@ -301,11 +308,12 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/settings"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="13.5sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -323,7 +331,7 @@
                     android:id="@+id/imgGridInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
                     android:background="@drawable/bkg_80_white_3dp_corner"
@@ -334,11 +342,12 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/info"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="13.5sp"/>
             </LinearLayout>
 
             <View
@@ -367,7 +376,7 @@
                     android:id="@+id/imgGridHelp"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="2.5"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
                     android:background="@drawable/bkg_80_white_3dp_corner"
@@ -378,11 +387,12 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:gravity="center_horizontal"
                     android:text="@string/help"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="13.5sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -412,7 +422,7 @@
                     android:id="@+id/tvGridLogout"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1.5"
                     android:padding="4dp"
                     android:text="@string/logout"
                     android:textColor="@android:color/white"/>
