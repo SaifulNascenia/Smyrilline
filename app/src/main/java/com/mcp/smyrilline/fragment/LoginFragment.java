@@ -18,16 +18,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
+import com.mcp.smyrilline.model.InternalStorage;
 import com.mcp.smyrilline.model.Meal;
 import com.mcp.smyrilline.model.MealDate;
 import com.mcp.smyrilline.model.Passenger;
 import com.mcp.smyrilline.model.RouteItem;
 import com.mcp.smyrilline.util.AppUtils;
-
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,14 +44,6 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpResponseException;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by raqib on 5/17/17.
@@ -79,7 +77,6 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         View rootView = inflater.inflate(R.layout.fragment_login, null);
         ((DrawerActivity)getActivity()).setToolbarAndToggle((Toolbar)rootView.findViewById(R.id.toolbar));
         getActivity().setTitle(mContext.getResources().getString(R.string.log_in));
-        rlWelcomeHeader = (RelativeLayout) rootView.findViewById(R.id.rlWelcomeHeader);
 
         // Init UI
         etLastName = (EditText) rootView.findViewById(R.id.etLastName);
@@ -89,10 +86,6 @@ public class LoginFragment extends android.support.v4.app.Fragment {
         // for testing
 //        etLastName.setText("í Skorini");
 //        etBooking.setText("34807457");
-
-        // change hint text color
-//        etLastName.setHint(Html.fromHtml("<font color = #D3D3D3>" + getResources().getString(R.string.hint_lastname) + "</font>"));
-//        etBooking.setHint(Html.fromHtml("<font color = #D3D3D3>" + getResources().getString(R.string.hint_booking) + "</font>"));
 
         // Login/view booking
         btnLogin.setAllCaps(false);
@@ -175,7 +168,6 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             // nationality
             String nationality = passengerObject.getString("Nationality");
             Locale locale = new Locale("", nationality);
-            nationality = locale.getDisplayCountry();
 
             // convert dob, getting yyyy-MM-dd, need dd/MM/yyyy
             String dob = passengerObject.getString("DateOfBirth");
@@ -184,7 +176,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
             Date dobDate = givenDobDateFormat.parse(dob);
             dob = requiredDobDateFormat.format(dobDate);
 
-            passengerList.add(new Passenger(name, sex, dob, nationality));
+            passengerList.add(new Passenger(name, sex, dob, locale.getDisplayCountry()));
         }
 
         return passengerList;
@@ -359,9 +351,15 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                 ArrayList<MealDate> mealDateList = jsonObject.isNull("MealTypes") ? null : getMealList(jsonObject.getJSONArray("MealTypes"));
                 // Get route list
                 ArrayList<RouteItem> routeList = jsonObject.isNull("ListOfRoutes") ? null : getRouteList(jsonObject.getJSONArray("ListOfRoutes"));
-                // Get childs
+                // Get childs, check if they are integer first
                 String child12 = jsonObject.getString("NoOfChild12");
+                child12 =
+                        child12 != null && !child12.isEmpty() && child12.matches("[\\d+]") ? child12
+                                : "0";
                 String child15 = jsonObject.getString("NoOfChild15");
+                child15 =
+                        child15 != null && !child15.isEmpty() && child15.matches("[\\d+]") ? child15
+                                : "0";
                 String child = String.valueOf(Integer.parseInt(child12) + Integer.parseInt(child15));
                 // Get car
                 String car = jsonObject.getString("TypeOfCar");
@@ -370,7 +368,6 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                 // Save ticket data to memory
                 SharedPreferences.Editor editor = mSharedPref.edit();
                 Gson gson = new Gson();
-
                 editor.putString(AppUtils.PREF_BOOKING_NAME, bookingName);
                 editor.putString(AppUtils.PREF_BOOKING_NUMBER, bookingNumber);
                 editor.putString(AppUtils.PREF_ADULT, adult);
@@ -379,9 +376,10 @@ public class LoginFragment extends android.support.v4.app.Fragment {
                 editor.putString(AppUtils.PREF_CHILD15, child15);
                 editor.putString(AppUtils.PREF_INFANT, infant);
                 editor.putString(AppUtils.PREF_CAR, car);
-                editor.putString(AppUtils.PREF_MEAL_LIST, gson.toJson(mealDateList));
                 editor.putString(AppUtils.PREF_ROUTE_LIST, gson.toJson(routeList));
                 editor.putString(AppUtils.PREF_PASSENGER_LIST, gson.toJson(passengerList));
+                // Save meal list in file, to fix json exception in gson deserialize
+                InternalStorage.writeObject(mContext, AppUtils.PREF_MEAL_LIST, mealDateList);
 
                 // User is now logged in
                 editor.putBoolean(AppUtils.PREF_LOGGED_IN, true);
