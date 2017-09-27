@@ -6,27 +6,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.fragment.CouponsFragment;
+import com.mcp.smyrilline.listener.CouponsListener;
 import com.mcp.smyrilline.listener.DrawerCouponsCountListener;
 import com.mcp.smyrilline.util.AppUtils;
 import com.onyxbeacon.OnyxBeaconApplication;
 import com.onyxbeacon.listeners.OnyxBeaconsListener;
-import com.onyxbeacon.listeners.OnyxCouponsListener;
-import com.onyxbeacon.listeners.OnyxPushListener;
-import com.onyxbeacon.listeners.OnyxTagsListener;
-
-import com.onyxbeacon.rest.model.account.BluemixApp;
 import com.onyxbeacon.rest.model.content.Coupon;
-import com.onyxbeacon.rest.model.content.Tag;
 import com.onyxbeaconservice.Beacon;
+import com.onyxbeaconservice.Eddystone;
 import com.onyxbeaconservice.IBeacon;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * This is the BroadcastReceiver for the coupon and push notification
@@ -39,11 +32,8 @@ public class ContentReceiver extends BroadcastReceiver {
 
     private static ContentReceiver sInstance;
     /* Coupons */
-    private static String COUPONS_TAG = "coupons_tag";
     private OnyxBeaconsListener mOnyxBeaconListener;
-    private OnyxCouponsListener mOnyxCouponsListener;
-    private OnyxTagsListener mOnyxTagsListener;
-    private OnyxPushListener mOnyxPushListener;
+    private CouponsListener mCouponsListener;
     private SharedPreferences mSharedPref;
     private Gson gson = new Gson();
     private DrawerCouponsCountListener mCouponsCountListener;
@@ -60,20 +50,8 @@ public class ContentReceiver extends BroadcastReceiver {
         }
     }
 
-    public void setOnyxBeaconsListener(OnyxBeaconsListener onyxBeaconListener) {
-        mOnyxBeaconListener = onyxBeaconListener;
-    }
-
-    public void setOnyxCouponsListener(OnyxCouponsListener onyxCouponsListener) {
-        mOnyxCouponsListener = onyxCouponsListener;
-    }
-
-    public void setOnyxTagsListener(OnyxTagsListener onyxTagsListener) {
-        mOnyxTagsListener = onyxTagsListener;
-    }
-
-    public void setOnyxPushListener(OnyxPushListener onyxPushListener) {
-        mOnyxPushListener = onyxPushListener;
+    public void setOnyxCouponsListener(CouponsListener couponsListener) {
+        mCouponsListener = couponsListener;
     }
 
     public void setCouponsCountListener(DrawerCouponsCountListener couponsCountListener) {
@@ -84,29 +62,105 @@ public class ContentReceiver extends BroadcastReceiver {
         String payloadType = intent.getStringExtra(OnyxBeaconApplication.PAYLOAD_TYPE);
 
         switch (payloadType) {
-            case OnyxBeaconApplication.TAG_TYPE:
-                ArrayList<Tag> tagsList = intent.getParcelableArrayListExtra(OnyxBeaconApplication.EXTRA_TAGS);
-                if (mOnyxTagsListener != null) {
-                    mOnyxTagsListener.onTagsReceived(tagsList);
-                } else {
-                    // In background display notification
-                }
-                break;
             case OnyxBeaconApplication.BEACON_TYPE:
-                ArrayList<Beacon> beacons = intent.getParcelableArrayListExtra(OnyxBeaconApplication.EXTRA_BEACONS);
-                if (mOnyxBeaconListener != null) {
-                    mOnyxBeaconListener.didRangeBeaconsInRegion(beacons);
-                } else {
-                    // In background display notification
+                ArrayList<Beacon> beacons = intent
+                        .getParcelableArrayListExtra(OnyxBeaconApplication.EXTRA_BEACONS);
+                for (Beacon beacon : beacons) {
+                    if (beacon instanceof IBeacon) {
+                        IBeacon iBeacon = (IBeacon) beacon;
+                        android.util.Log.d("BeaconRec", "IBeacon toString " + iBeacon.toString());
+                    } else if (beacon instanceof Eddystone) {
+                        Eddystone eddystone = (Eddystone) beacon;
+                        android.util.Log
+                                .d("BeaconRec", "Eddystone toString " + eddystone.toString());
+                    }
                 }
                 break;
             case OnyxBeaconApplication.COUPON_TYPE:
 
                 mSharedPref = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-                ArrayList<Coupon> coupons = intent.getParcelableArrayListExtra(OnyxBeaconApplication.EXTRA_COUPONS);
-                IBeacon beacon = intent.getParcelableExtra(OnyxBeaconApplication.EXTRA_BEACON);
+                Coupon coupon = intent.getParcelableExtra(OnyxBeaconApplication.EXTRA_COUPON);
 
-                Log.i(AppUtils.TAG, "BUZZ beacon " + gson.toJson(beacon));
+                System.out.println("Coupon receiver - Received coupon " + gson.toJson(coupon));
+                Log.d("ExpTrig", "Coupon exp date is " + coupon.expires);
+
+                if (coupon != null) {
+                    // Get coupon list from memory if exists
+                    ArrayList<Coupon> couponsFromStorage;
+                    String couponsListAsString = mSharedPref
+                            .getString(AppUtils.PREF_COUPON_LIST, AppUtils.PREF_NO_ENTRY);
+                    if (!couponsListAsString.equals(AppUtils.PREF_NO_ENTRY)) {
+                        couponsFromStorage = gson
+                                .fromJson(couponsListAsString, new TypeToken<ArrayList<Coupon>>() {
+                                }.getType());
+                    } else {
+                        couponsFromStorage = new ArrayList<>();
+                    }
+
+                    // Get unseen coupon list from memory
+                    ArrayList<Long> unseenCoupons;
+                    String unseenCouponsAsString = mSharedPref
+                            .getString(AppUtils.PREF_UNSEEN_COUPONS, AppUtils.PREF_NO_ENTRY);
+                    if (!unseenCouponsAsString.equals(AppUtils.PREF_NO_ENTRY)) {
+                        unseenCoupons = gson
+                                .fromJson(unseenCouponsAsString, new TypeToken<ArrayList<Long>>() {
+                                }.getType());
+                    } else {
+                        unseenCoupons = new ArrayList<>();
+                    }
+
+                    // Get list of used coupons from memory
+                    ArrayList<Long> usedListFromStorage;
+                    String usedListAsString = mSharedPref
+                            .getString(AppUtils.PREF_USED_COUPONS, AppUtils.PREF_NO_ENTRY);
+                    if (!usedListAsString.equals(AppUtils.PREF_NO_ENTRY))
+                        usedListFromStorage = gson
+                                .fromJson(usedListAsString, new TypeToken<ArrayList<Long>>() {
+                                }.getType());
+                    else
+                        usedListFromStorage = new ArrayList<>();
+
+                    // check if coupon is already present, or was present (i.e. used)
+                    if (!(couponsFromStorage.contains(coupon) || usedListFromStorage
+                            .contains(coupon.couponId))) {
+
+                        couponsFromStorage.add(0, coupon);  // add the latest coupon to first pos
+                        unseenCoupons.add(coupon.couponId); // add id to unseen list
+
+                        // Update the drawer counter
+                        if (mCouponsCountListener != null)
+                            mCouponsCountListener.onNewCouponReceived(+1);
+
+                        // Update coupons fragment if showing
+                        if (mCouponsListener != null)
+                            mCouponsListener.onCouponReceived(coupon);
+
+                        // Save updated lists in shared preference
+                        AppUtils.saveListInSharedPref(couponsFromStorage,
+                                AppUtils.PREF_COUPON_LIST);
+                        AppUtils.saveListInSharedPref(unseenCoupons, AppUtils.PREF_UNSEEN_COUPONS);
+
+                        // Generate notification
+                        AppUtils.generateNotification(context, coupon.name, coupon.message,
+                                R.mipmap.app_icon,
+                                CouponsFragment.class.getSimpleName());
+
+                        if (usedListFromStorage.contains(coupon.couponId))
+                            Log.i(AppUtils.TAG,
+                                    "Used list already contains \"" + coupon.name + "\" with ID - "
+                                            + coupon.couponId);
+                        else
+                            Log.i(AppUtils.TAG,
+                                    "Used list doesn't contain \"" + coupon.name + "\" with ID - "
+                                            + coupon.couponId);
+                    }
+                }
+                break;
+            case OnyxBeaconApplication.COUPONS_DELIVERED_TYPE:
+                mSharedPref = PreferenceManager
+                        .getDefaultSharedPreferences(context.getApplicationContext());
+                ArrayList<Coupon> coupons = intent
+                        .getParcelableArrayListExtra(OnyxBeaconApplication.EXTRA_COUPONS);
 
                 if (!(coupons == null || coupons.size() == 0)) {
 
@@ -139,16 +193,12 @@ public class ContentReceiver extends BroadcastReceiver {
                     else
                         usedListFromStorage = new ArrayList<>();
 
+                    // Check for existing coupons and create a new list
                     ArrayList<Coupon> newCouponsList = new ArrayList<>();
-
                     for (Coupon cp : coupons) {
                         if (!(couponsFromStorage.contains(cp) || usedListFromStorage.contains(cp.couponId))) {
                             newCouponsList.add(0, cp);  // add the latest coupon to first position
-                            unseenCoupons.add(cp.couponId);
-
-                            // Update the drawer counter
-                            if (mCouponsCountListener != null)
-                                mCouponsCountListener.onNewCouponReceived();
+                            unseenCoupons.add(cp.couponId); // add id to the unseen list
                         }
 
                         if (usedListFromStorage.contains(cp.couponId))
@@ -157,40 +207,44 @@ public class ContentReceiver extends BroadcastReceiver {
                             Log.i(AppUtils.TAG, "Used list doesn't contain \"" + cp.name + "\" with ID - " + cp.couponId);
                     }
 
-                    // add the latest coupon list to the begining of existing list
-                    couponsFromStorage.addAll(0, newCouponsList);
+                    if (newCouponsList.size() > 0) {
+                        // add the new coupon list to the beginning of existing list
+                        couponsFromStorage.addAll(0, newCouponsList);
 
-                    for (Iterator<Coupon> ci = newCouponsList.iterator(); ci.hasNext(); ) {
-                        Coupon c = ci.next();
-                        AppUtils.generateNotification(context, c.name, c.message, R.mipmap.ic_launcher,
-                                CouponsFragment.class.getSimpleName());
+                        // Update the drawer counter
+                        if (mCouponsCountListener != null)
+                            mCouponsCountListener.onNewCouponReceived(newCouponsList.size());
+
+                        // Update coupons fragment if visible
+                        if (mCouponsListener != null)
+                            mCouponsListener.onDeliveredCouponsReceived(newCouponsList);
+
+                        // Save updated lists in shared preference
+                        AppUtils.saveListInSharedPref(couponsFromStorage,
+                                AppUtils.PREF_COUPON_LIST);
+                        AppUtils.saveListInSharedPref(unseenCoupons, AppUtils.PREF_UNSEEN_COUPONS);
+
+                        // Generate notification based on number of coupons
+                        if (newCouponsList.size() == 1) {
+                            AppUtils.generateNotification(context,
+                                    context.getString(R.string.new_coupon),
+                                    newCouponsList.get(0).name,
+                                    R.mipmap.app_icon,
+                                    CouponsFragment.class.getSimpleName());
+                        } else {
+                            AppUtils.generateNotification(context,
+                                    newCouponsList.size() + " " + context
+                                            .getString(R.string.new_coupons_available),
+                                    context.getString(R.string.please_check_app_for_details),
+                                    R.mipmap.app_icon,
+                                    CouponsFragment.class.getSimpleName());
+                        }
                     }
-
-                    if (mOnyxCouponsListener != null)
-                        mOnyxCouponsListener.onDeliveredCouponsReceived(newCouponsList);
-
-                    // Save updated lists in shared preference
-                    AppUtils.saveListInSharedPref(couponsFromStorage, AppUtils.PREF_COUPON_LIST);
-                    AppUtils.saveListInSharedPref(unseenCoupons, AppUtils.PREF_UNSEEN_COUPONS);
-                }
-                break;
-            case OnyxBeaconApplication.PUSH_TYPE:
-                BluemixApp bluemixApp = intent.getParcelableExtra(OnyxBeaconApplication.EXTRA_BLUEMIX);
-                System.out.println("PUSH Received bluemix credentials " + gson.toJson(bluemixApp));
-                if (mOnyxPushListener != null) {
-                    mOnyxPushListener.onBluemixCredentialsReceived(bluemixApp);
-                }
-                break;
-            case OnyxBeaconApplication.COUPONS_DELIVERED_TYPE:
-                ArrayList<Coupon> deliveredCoupons = intent.getParcelableArrayListExtra(OnyxBeaconApplication.EXTRA_COUPONS);
-                android.util.Log.d("Receiver", "No of delivered coupons " + deliveredCoupons.size());
-                if (mOnyxCouponsListener != null) {
-                    mOnyxCouponsListener.onDeliveredCouponsReceived(deliveredCoupons);
                 }
                 break;
             case OnyxBeaconApplication.WEB_REQUEST_TYPE:
                 String extraInfo = intent.getStringExtra(OnyxBeaconApplication.EXTRA_INFO);
-                System.out.println("AUTH Web reguest info " + extraInfo);
+                Log.i(AppUtils.TAG, "AUTH Web reguest info " + extraInfo);
                 if (extraInfo.equals(OnyxBeaconApplication.REQUEST_UNAUTHORIZED)) {
                     // Pin based session expired
                 }

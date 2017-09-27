@@ -17,7 +17,7 @@
             android:layout_height="140dp"
             android:background="@android:color/white">
 
-            <com.android.volley.toolbox.NetworkImageView
+            <ImageView
                 android:id="@+id/imgCouponThumb"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
@@ -28,39 +28,39 @@
 
             <TextView
                 android:id="@+id/tvOfferAmount"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
-                android:layout_marginTop="16dp"
                 android:layout_toRightOf="@+id/imgCouponThumb"
                 android:maxLines="2"
                 android:text="15% off"
                 android:textColor="@android:color/black"
-                android:textSize="@dimen/abc_text_size_medium_material"
-                android:textStyle="bold" />
+                android:textSize="@dimen/abc_text_size_medium_material"/>
 
             <TextView
                 android:id="@+id/tvDescription"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_alignParentLeft="false"
                 android:layout_alignStart="@+id/tvOfferAmount"
                 android:layout_below="@+id/tvOfferAmount"
-                android:layout_marginTop="8dp"
                 android:singleLine="true"
                 android:text="Only for dinner"
                 android:textSize="@dimen/abc_text_size_small_material"
-                android:textStyle="bold"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/labelEnds"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignStart="@+id/tvDescription"
-                android:layout_marginBottom="12dp"
                 android:text="@string/ends"
                 android:textSize="12sp" />
 
@@ -78,8 +78,8 @@
                 android:id="@+id/llGreyLine"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_above="@+id/ic_details"
                 android:layout_marginBottom="10dp"
+                android:layout_above="@+id/ic_details"
                 android:layout_toRightOf="@+id/imgCouponThumb"
                 android:background="@color/bkg_light_grey"
                 android:orientation="horizontal" />
@@ -88,10 +88,10 @@
                 android:id="@+id/ic_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
                 android:layout_marginBottom="12dp"
                 android:layout_marginRight="12dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
                 android:src="@drawable/ic_more" />
 
         </RelativeLayout>
@@ -101,10 +101,10 @@
         android:id="@+id/imgNewRibbon"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="1dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="1dp"
-        android:layout_marginTop="3dp"
         android:elevation="4dp"
         android:scaleType="fitXY"
         android:src="@drawable/img_new_blue_ribbon"

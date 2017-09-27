@@ -16,27 +16,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.adapter.CouponAdapter;
+import com.mcp.smyrilline.listener.CouponsListener;
 import com.mcp.smyrilline.receiver.ContentReceiver;
 import com.mcp.smyrilline.util.AppUtils;
 import com.onyxbeacon.OnyxBeaconApplication;
 import com.onyxbeacon.OnyxBeaconManager;
-import com.onyxbeacon.listeners.OnyxCouponsListener;
 import com.onyxbeacon.rest.model.content.Coupon;
-import com.onyxbeaconservice.IBeacon;
-
 import java.util.ArrayList;
 
 /**
  * Created by raqib on 5/11/17.
  */
 
-public class CouponsFragment extends Fragment implements OnyxCouponsListener {
+public class CouponsFragment extends Fragment implements CouponsListener {
 
     public SearchView mSearchView;
     private Context mContext;
@@ -48,7 +45,7 @@ public class CouponsFragment extends Fragment implements OnyxCouponsListener {
     // Coupons persistance
     private SharedPreferences mSharedPref;
     private ContentReceiver mContentReceiver;
-    private CouponAdapter mAdapter;
+    private CouponAdapter mCouponAdapter;
     private ArrayList<Coupon> mCouponList;
     private OnyxBeaconManager manager;
 
@@ -90,11 +87,11 @@ public class CouponsFragment extends Fragment implements OnyxCouponsListener {
             mUnseenCoupons = new ArrayList<>();
         }
 
-        mAdapter = new CouponAdapter(mContext, mCouponList, mUnseenCoupons, tvNothingText);
-        mListView.setAdapter(mAdapter);
+        mCouponAdapter = new CouponAdapter(mContext, mCouponList, mUnseenCoupons, tvNothingText);
+        mListView.setAdapter(mCouponAdapter);
         mSearchView = (SearchView) rootView.findViewById(R.id.couponSearch);
 
-        mAdapter.checkEmpty();
+        mCouponAdapter.checkEmpty();
 
         // removing underline inside SearchView
         int searchPlateId = mSearchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
@@ -112,13 +109,14 @@ public class CouponsFragment extends Fragment implements OnyxCouponsListener {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 AppUtils.hideKeyboard(getActivity());
-                if (query.length() > 0) mAdapter.filter(query);
+                if (query.length() > 0)
+                    mCouponAdapter.filter(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mAdapter.filter(newText);
+                mCouponAdapter.filter(newText);
                 return true;
             }
         });
@@ -129,32 +127,24 @@ public class CouponsFragment extends Fragment implements OnyxCouponsListener {
 
         return rootView;
     }
-    
-    @Override
-    public void onCouponReceived(Coupon coupon, IBeacon beacon) {
-        if (coupon != null) {
-            mCouponList.add(coupon);
-        }
 
-        mAdapter.notifyDataSetChanged();
+    @Override
+    public void onCouponReceived(Coupon coupon) {
+        mCouponAdapter.add(0, coupon);
+        // Add new coupon ID to the unseen list
+        mUnseenCoupons.add(coupon.couponId);
     }
 
     @Override
-    public void onDeliveredCouponsReceived(ArrayList<Coupon> deliveredCoupons) {
-        ArrayList<Coupon> newCoupons = new ArrayList<>();
-        for (Coupon deliveredCoupon : deliveredCoupons) {
-            boolean isInList = false;
-            for (Coupon coupon : mCouponList) {
-                if (coupon.couponId == deliveredCoupon.couponId) {
-                    isInList = true;
-                }
-            }
-            if (!isInList) {
-                newCoupons.add(deliveredCoupon);
-            }
-        }
-        mCouponList.addAll(newCoupons);
-        mAdapter.notifyDataSetChanged();
+    public void onDeliveredCouponsReceived(ArrayList<Coupon> couponList) {
+        // Display coupons in list
+        Log.i(AppUtils.TAG, "CR Fragment Coupons received " + gson.toJson(couponList));
+
+        mCouponAdapter.addAll(0, couponList);
+
+        // Add new coupon IDs to the unseen list
+        for (Coupon coupon : couponList)
+            mUnseenCoupons.add(coupon.couponId);
     }
 
     @Override
@@ -180,7 +170,7 @@ public class CouponsFragment extends Fragment implements OnyxCouponsListener {
             AppUtils.saveListInSharedPref(usedCouponList, AppUtils.PREF_USED_COUPONS);
 
             // Remove the coupon from UI and store the list
-            mAdapter.remove(couponRemovedPosition);
+            mCouponAdapter.remove(couponRemovedPosition);
             Log.i(AppUtils.TAG, "After removing coupon(" + couponId + ") from list:");
             AppUtils.printCouponList(mCouponList);
 

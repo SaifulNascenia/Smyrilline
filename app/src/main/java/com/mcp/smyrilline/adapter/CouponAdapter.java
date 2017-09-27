@@ -11,17 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.android.volley.toolbox.NetworkImageView;
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.activity.MainGridActivity;
 import com.mcp.smyrilline.fragment.CouponDetailFragment;
 import com.mcp.smyrilline.util.AppUtils;
 import com.onyxbeacon.OnyxBeaconApplication;
 import com.onyxbeacon.rest.model.content.Coupon;
 import com.squareup.picasso.Picasso;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -94,8 +90,6 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.ViewHolder
 
         holder.tvExpires.setText(" " + expireStr);
 
-//        OnyxBeaconApplication.loadImageAsync(coupon.imageThumb, holder.imgCouponThumb);
-
         Picasso.with(mContext)
                 .load(coupon.imageThumb)
                 .placeholder(R.drawable.img_placeholder_thumb)
@@ -127,7 +121,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.ViewHolder
                     Log.i(AppUtils.TAG, "After removing id from unseen list:");
                     AppUtils.printCouponIdList(mUnseenCoupons);
                     AppUtils.saveListInSharedPref(mUnseenCoupons, AppUtils.PREF_UNSEEN_COUPONS);
-                    ((DrawerActivity) mContext).updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_COUPONS, -1);
+//                    ((DrawerActivity) mContext).updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_COUPONS, -1);
                 }
 
                 // Pass coupon data to the detail fragment
@@ -154,8 +148,6 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.ViewHolder
             }
         });
     }
-
-
 
     public ArrayList<Coupon> getCouponList() {
         return mCouponList;
@@ -195,6 +187,12 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.ViewHolder
         return mCouponList.size();
     }
 
+    public void add(int position, Coupon coupon) {
+        mCouponList.add(position, coupon);
+        notifyItemInserted(position);
+        checkEmpty();
+    }
+
     public void addAll(int position, List<Coupon> couponList) {
         mCouponList.addAll(position, couponList);
         notifyItemRangeInserted(position, couponList.size());
@@ -211,7 +209,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         CardView cardViewCoupon;
-        NetworkImageView imgCouponThumb;
+        ImageView imgCouponThumb;
         TextView tvOfferAmount;
         TextView tvDescription;
         TextView tvExpires;
@@ -220,7 +218,7 @@ public class CouponAdapter extends RecyclerView.Adapter<CouponAdapter.ViewHolder
         ViewHolder(View itemView) {
             super(itemView);
             cardViewCoupon = (CardView) itemView.findViewById(R.id.cardViewCoupon);
-            imgCouponThumb = (NetworkImageView) itemView.findViewById(R.id.imgCouponThumb);
+            imgCouponThumb = (ImageView) itemView.findViewById(R.id.imgCouponThumb);
             tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
             tvOfferAmount = (TextView) itemView.findViewById(R.id.tvOfferAmount);
             tvExpires = (TextView) itemView.findViewById(R.id.tvExpires);
