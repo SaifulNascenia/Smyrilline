@@ -37,7 +37,7 @@
                     android:gravity="center"
                     android:text="@string/message_filters"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/colorPrimary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/please_choose_message_category"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"/>
 
                 <TextView
                     android:id="@+id/tvAgeGroupLabel"
@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/age_group"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -82,16 +82,17 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="@drawable/bkg_primary_color_fill_3dp_corner"
-                                android:src="@drawable/img_age_adult" />
+                                android:src="@drawable/img_age_adult"/>
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:paddingLeft="5dp"
-                                android:paddingRight="5dp"
+                                android:paddingStart="3dp"
+                                android:paddingEnd="3dp"
                                 android:gravity="center"
-                                android:text="@string/adult" />
+                                android:text="@string/adult"
+                                android:textSize="@dimen/settings_small_text_for_low_res_device"/>
                         </LinearLayout>
 
                         <RelativeLayout
@@ -109,7 +110,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_alignParentTop="true"
                                 android:padding="3dp"
-                                android:src="@drawable/img_tick_inside_circle" />
+                                android:src="@drawable/img_tick_inside_circle"/>
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -134,16 +135,17 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="@drawable/bkg_primary_color_fill_3dp_corner"
-                                android:src="@drawable/img_age_child18" />
+                                android:src="@drawable/img_age_child18"/>
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:paddingStart="5dp"
-                                android:paddingEnd="5dp"
+                                android:paddingStart="3dp"
+                                android:paddingEnd="3dp"
                                 android:gravity="center"
-                                android:text="@string/child15" />
+                                android:text="@string/child15"
+                                android:textSize="@dimen/settings_small_text_for_low_res_device"/>
                         </LinearLayout>
 
                         <RelativeLayout
@@ -161,7 +163,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_alignParentTop="true"
                                 android:padding="3dp"
-                                android:src="@drawable/img_tick_inside_circle" />
+                                android:src="@drawable/img_tick_inside_circle"/>
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -186,16 +188,17 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="@drawable/bkg_primary_color_fill_3dp_corner"
-                                android:src="@drawable/img_age_child15" />
+                                android:src="@drawable/img_age_child15"/>
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:paddingStart="5dp"
-                                android:paddingEnd="5dp"
+                                android:paddingStart="3dp"
+                                android:paddingEnd="3dp"
                                 android:gravity="center"
-                                android:text="@string/child11" />
+                                android:text="@string/child11"
+                                android:textSize="@dimen/settings_small_text_for_low_res_device"/>
                         </LinearLayout>
 
                         <RelativeLayout
@@ -214,7 +217,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_alignParentTop="true"
                                 android:padding="3dp"
-                                android:src="@drawable/img_tick_inside_circle" />
+                                android:src="@drawable/img_tick_inside_circle"/>
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -236,16 +239,17 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bkg_primary_color_fill_3dp_corner"
-                                android:src="@drawable/img_age_all" />
+                                android:src="@drawable/img_age_all"/>
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:paddingStart="5dp"
-                                android:paddingEnd="5dp"
+                                android:paddingStart="3dp"
+                                android:paddingEnd="3dp"
                                 android:gravity="center"
-                                android:text="@string/all" />
+                                android:text="@string/all"
+                                android:textSize="@dimen/settings_small_text_for_low_res_device"/>
                         </LinearLayout>
 
                         <RelativeLayout
@@ -263,7 +267,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_alignParentTop="true"
                                 android:padding="3dp"
-                                android:src="@drawable/img_tick_inside_circle" />
+                                android:src="@drawable/img_tick_inside_circle"/>
                         </RelativeLayout>
                     </RelativeLayout>
                 </LinearLayout>
@@ -279,7 +283,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/gender"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -305,14 +309,15 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bkg_primary_color_fill_3dp_corner"
-                                android:src="@drawable/img_gender_male" />
+                                android:src="@drawable/img_gender_male"/>
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:gravity="center"
-                                android:text="@string/male" />
+                                android:text="@string/male"
+                                android:textSize="@dimen/settings_small_text_for_low_res_device"/>
                         </LinearLayout>
 
                         <RelativeLayout
@@ -330,7 +335,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_alignParentTop="true"
                                 android:padding="3dp"
-                                android:src="@drawable/img_tick_inside_circle" />
+                                android:src="@drawable/img_tick_inside_circle"/>
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -352,14 +357,15 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bkg_primary_color_fill_3dp_corner"
-                                android:src="@drawable/img_gender_female" />
+                                android:src="@drawable/img_gender_female"/>
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:gravity="center"
-                                android:text="@string/female" />
+                                android:text="@string/female"
+                                android:textSize="@dimen/settings_small_text_for_low_res_device"/>
                         </LinearLayout>
 
                         <RelativeLayout
@@ -378,7 +384,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_alignParentTop="true"
                                 android:padding="3dp"
-                                android:src="@drawable/img_tick_inside_circle" />
+                                android:src="@drawable/img_tick_inside_circle"/>
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -400,14 +406,15 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bkg_primary_color_fill_3dp_corner"
-                                android:src="@drawable/img_gender_both" />
+                                android:src="@drawable/img_gender_both"/>
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:gravity="center"
-                                android:text="@string/both" />
+                                android:text="@string/both"
+                                android:textSize="@dimen/settings_small_text_for_low_res_device"/>
                         </LinearLayout>
 
                         <RelativeLayout
@@ -425,7 +432,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_alignParentTop="true"
                                 android:padding="3dp"
-                                android:src="@drawable/img_tick_inside_circle" />
+                                android:src="@drawable/img_tick_inside_circle"/>
                         </RelativeLayout>
                     </RelativeLayout>
                     <!--invisible container-->
@@ -436,7 +443,7 @@
                         android:layout_marginLeft="10dp"
                         android:padding="10dp"
                         android:orientation="vertical"
-                        android:visibility="invisible" />
+                        android:visibility="invisible"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -455,7 +462,7 @@
                     android:gravity="center"
                     android:text="@string/language"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/colorPrimary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -463,7 +470,7 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/please_choose_language"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
