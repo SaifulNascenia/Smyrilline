@@ -10,24 +10,24 @@
         android:id="@+id/ll_booking_barcode"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bkg_light_grey"
-        android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin"
+        android:background="@color/transparent"
+        android:orientation="vertical"
         android:weightSum="10">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:weightSum="10.0">
 
                 <ImageView
@@ -35,17 +35,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
-                    android:paddingBottom="@dimen/activity_horizontal_margin"
                     android:paddingTop="@dimen/activity_horizontal_margin"
+                    android:paddingBottom="@dimen/activity_horizontal_margin"
                     android:src="@drawable/ic_booking" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5.3"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:gravity="left|center_vertical"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/activity_horizontal_margin">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/labelBookingNumber"
@@ -67,8 +67,8 @@
                     android:id="@+id/imgBarcode"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical|right"
                     android:layout_weight="4"
+                    android:layout_gravity="center_vertical|right"
                     android:adjustViewBounds="true"
                     android:visibility="gone" />
             </LinearLayout>
@@ -79,12 +79,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
                 android:orientation="vertical">
 
                 <com.mcp.smyrilline.util.InnerViewPager
@@ -100,7 +100,7 @@
                     android:paddingBottom="10dp"
                     app:fillColor="@color/colorPrimaryDark"
                     app:pageColor="#ccedff"
-                    app:radius="3dp"
+                    app:radius="@dimen/grid_item_corner_radius"
                     app:strokeWidth="0dp" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -109,17 +109,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="5dp">
 
             <LinearLayout
                 android:id="@+id/ll_travellers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
+                android:paddingTop="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_horizontal_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_horizontal_margin">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/ic_travellers"
@@ -132,9 +132,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="9"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/activity_horizontal_margin">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/labelTicketTravellers"
@@ -273,16 +273,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="5dp">
 
             <LinearLayout
                 android:id="@+id/ll_car"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
+                android:padding="@dimen/activity_horizontal_margin"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/activity_horizontal_margin"
                 android:weightSum="10.0"
                 app:cardElevation="1dp">
 
@@ -298,9 +298,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="9.3"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/activity_horizontal_margin">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/labelBookingCar"
@@ -325,23 +325,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/rlRouteHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
+                    android:paddingTop="@dimen/activity_horizontal_margin"
                     android:paddingBottom="8dp"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/activity_horizontal_margin"
+                    android:gravity="center_vertical"
                     android:weightSum="10.0">
 
                     <ImageView
@@ -364,8 +364,7 @@
                 <com.mcp.smyrilline.util.InnerViewPager
                     android:id="@+id/routeViewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white" />
+                    android:layout_height="wrap_content"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -379,7 +378,7 @@
                         android:paddingBottom="10dp"
                         app:fillColor="@color/colorPrimaryDark"
                         app:pageColor="#ccedff"
-                        app:radius="3dp"
+                        app:radius="@dimen/grid_item_corner_radius"
                         app:strokeWidth="0dp" />
                 </LinearLayout>
             </LinearLayout>
@@ -390,9 +389,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:background="@drawable/bkg_btn_use"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/bkg_btn_use"
             android:text="@string/log_out"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white"

@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/ll_passenger_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:padding="@dimen/activity_horizontal_margin"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="@dimen/activity_horizontal_margin"
         android:weightSum="10.0">
 
         <ImageView
@@ -26,9 +26,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5.6"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/labelBookingName"
@@ -45,24 +45,22 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black" />
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_sex_dob_nationality"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="horizontal"
         android:padding="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
         android:weightSum="10.0">
 
         <ImageView
             android:id="@+id/ic_room"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_centerVertical="true"
             android:layout_weight="1"
+            android:layout_centerVertical="true"
             android:src="@drawable/ic_room"
             android:visibility="gone" />
 
@@ -70,9 +68,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:visibility="gone">
 
             <TextView
@@ -105,9 +103,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/labelBookingSex"
@@ -129,9 +127,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3.3"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/labelBookingDOB"
@@ -153,9 +151,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:gravity="center_vertical|right"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/labelBookingNationality"
