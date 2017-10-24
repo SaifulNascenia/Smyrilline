@@ -30,9 +30,9 @@ import android.widget.TextView;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.error.TimeoutError;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonArrayRequest;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.overlay.Marker;
 import com.mapbox.mapboxsdk.overlay.PathOverlay;
@@ -99,11 +99,11 @@ public class ShipTrackerFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_ship_tracker, container, false);
         mContext = getActivity();
 
-        // set the toolbar as actionbar
+        // set the messaging_toolbar as actionbar
         ((DrawerActivity) getActivity())
                 .setToolbarAndToggle((Toolbar) rootView.findViewById(R.id.toolbar));
         getActivity().setTitle(R.string.ship_tracker);  // Set title
-        getActivity().invalidateOptionsMenu();          // Refresh toolbar options
+        getActivity().invalidateOptionsMenu();          // Refresh messaging_toolbar options
 
         // Init UI
         mLoadingView = rootView.findViewById(R.id.shipTrackerLoadingView);
@@ -262,7 +262,7 @@ public class ShipTrackerFragment extends Fragment{
             sendTrackingRequest();
         } else {
             mLoadingView.setVisibility(View.GONE);
-            AppUtils.showAlertDialog(mContext, AppUtils.ALERT_NO_WIFI);
+            AppUtils.showAlertDialog(mContext, getString(R.string.alert_no_wifi));
         }
     }
 
@@ -324,9 +324,9 @@ public class ShipTrackerFragment extends Fragment{
 
                 // show server error dialog
                 if (volleyError.getClass().equals(TimeoutError.class))
-                    AppUtils.showAlertDialog(mContext, AppUtils.ALERT_SERVER_TIMEOUT);
+                    AppUtils.showAlertDialog(mContext, getString(R.string.alert_server_timeout));
                 else
-                    AppUtils.showAlertDialog(mContext, AppUtils.ALERT_SERVER_DOWN);
+                    AppUtils.showAlertDialog(mContext, getString(R.string.alert_server_down));
 
                 return;
             }
@@ -453,9 +453,9 @@ public class ShipTrackerFragment extends Fragment{
 
                 // show server error dialog
                 if (volleyError.getClass().equals(TimeoutError.class))
-                    AppUtils.showAlertDialog(mContext, AppUtils.ALERT_SERVER_TIMEOUT);
+                    AppUtils.showAlertDialog(mContext, getString(R.string.alert_server_timeout));
                 else
-                    AppUtils.showAlertDialog(mContext, AppUtils.ALERT_SERVER_DOWN);
+                    AppUtils.showAlertDialog(mContext, getString(R.string.alert_server_down));
 
                 return;
             }
@@ -541,7 +541,7 @@ public class ShipTrackerFragment extends Fragment{
                     sendTrackingRequest();
                 } else {
                     mLoadingView.setVisibility(View.GONE);
-                    AppUtils.showAlertDialog(mContext, AppUtils.ALERT_NO_WIFI);
+                    AppUtils.showAlertDialog(mContext, getString(R.string.alert_no_wifi));
                 }
                 break;
         }

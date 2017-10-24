@@ -3,7 +3,7 @@ package com.mcp.smyrilline.rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.util.AppUtils;
+import com.mcp.smyrilline.util.McpApplication;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -23,7 +23,7 @@ public class RetrofitClient {
                     .create();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(AppUtils.mContext.getString(R.string.api_base_url))
+                .baseUrl(McpApplication.instance().context().getString(R.string.api_base_url))
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }

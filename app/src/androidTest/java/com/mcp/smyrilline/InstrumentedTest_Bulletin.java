@@ -1,7 +1,7 @@
 package com.mcp.smyrilline;
 
 import android.support.test.runner.AndroidJUnit4;
-import com.mcp.smyrilline.model.Bulletin;
+import com.mcp.smyrilline.model.messaging.Bulletin;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

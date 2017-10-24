@@ -7,15 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.model.Bulletin;
+import com.mcp.smyrilline.model.messaging.Bulletin;
 import com.mcp.smyrilline.util.AppUtils;
-
+import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-
-import java.util.ArrayList;
 
 /**
  * Created by raqib on 12/29/15.
@@ -58,7 +55,9 @@ public class BulletinAdapter extends RecyclerView.Adapter<BulletinAdapter.ViewHo
 
         // We're getting eg. "date": "Sep 02, 2016 04:15 PM"
         String date = bulletin.getDate();
-        String convertedDate = AppUtils.convertDateFormat(date, AppUtils.DATE_FORMAT_BULLETIN_DETAIL, AppUtils.DATE_FORMAT_BULLETIN);
+        String convertedDate = AppUtils
+            .convertDateFormat(date, AppUtils.DATE_FORMAT_BULLETIN_DETAIL,
+                AppUtils.DATE_FORMAT_BULLETIN);
         holder.tvBulletinDate.setText(convertedDate);
     }
 

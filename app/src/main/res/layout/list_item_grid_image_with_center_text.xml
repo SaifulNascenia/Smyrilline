@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:paddingStart="@dimen/medium_padding"
         android:paddingEnd="@dimen/medium_padding"
-        android:background="@drawable/bkg_40_black_3dp_corner"
+        android:background="@drawable/bg_40_black_3dp_corner"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="2"

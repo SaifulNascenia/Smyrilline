@@ -137,7 +137,8 @@ public class DutyFreeFragment extends Fragment {
     private void fetchDutyFreeProductList() {
         Retrofit retrofit = RetrofitClient.getClient();
         RetrofitInterfaces retrofitInterfaces = retrofit.create(RetrofitInterfaces.class);
-        Call<DutyFree> call = retrofitInterfaces.fetchDutyFreeProductsList(AppUtils.WP_PARAM_LANGUAGE);
+        Call<DutyFree> call = retrofitInterfaces
+            .fetchDutyFreeProductsList(getString(R.string.wp_language_param));
 
         call.enqueue(new Callback<DutyFree>() {
             @Override

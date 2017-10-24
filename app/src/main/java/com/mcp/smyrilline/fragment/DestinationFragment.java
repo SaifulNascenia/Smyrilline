@@ -71,7 +71,7 @@ public class DestinationFragment extends Fragment {
     // Init UI
     private void initView() {
 
-        // toolbar
+        // messaging_toolbar
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolbar.setBackground(null);
         toolbar.setTitle(getString(R.string.destinations));
@@ -124,7 +124,8 @@ public class DestinationFragment extends Fragment {
         if (AppUtils.isNetworkAvailable(getActivity())) {
             retrofit = RetrofitClient.getClient();
             retrofitInterfaces = retrofit.create(RetrofitInterfaces.class);
-            call = retrofitInterfaces.fetchAllDestinationsInfo(AppUtils.WP_PARAM_LANGUAGE);
+            call = retrofitInterfaces
+                .fetchAllDestinationsInfo(getString(R.string.wp_language_param));
             call.enqueue(new Callback<List<Destinations>>() {
             @Override
             public void onResponse(Call<List<Destinations>> call,

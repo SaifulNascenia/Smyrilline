@@ -41,6 +41,4 @@ public interface RetrofitInterfaces {
 
     @GET("shipinfo/{language}")
     Call<ShipInfo> fetchShipInfo(@Path("language") String language);
-
-
 }

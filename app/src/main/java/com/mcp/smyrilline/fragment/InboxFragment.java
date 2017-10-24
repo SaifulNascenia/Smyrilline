@@ -2,16 +2,21 @@ package com.mcp.smyrilline.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -23,8 +28,9 @@ import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.adapter.BulletinAdapter;
 import com.mcp.smyrilline.listener.BulletinListener;
-import com.mcp.smyrilline.model.Bulletin;
+import com.mcp.smyrilline.model.messaging.Bulletin;
 import com.mcp.smyrilline.util.AppUtils;
+import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 /**
@@ -40,30 +46,30 @@ public class InboxFragment extends Fragment implements BulletinListener {
     private BulletinAdapter mAdapter;
     private SharedPreferences mSharedPref;
     private TextView tvNothingText;
-    private DrawerActivity mDrawerActivity;
+    private DrawerActivity mMainActivity;
+    private View mRootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
+        Bundle savedInstanceState) {
+        mRootView = inflater.inflate(R.layout.fragment_inbox, container, false);
         mContext = getActivity();
 
-        mDrawerActivity = (DrawerActivity) mContext;
-        // set the toolbar as actionbar
-        ((DrawerActivity) getActivity())
-                .setToolbarAndToggle((Toolbar) rootView.findViewById(R.id.toolbar));
-        getActivity().setTitle(R.string.inbox);                // set title
-        mDrawerActivity.invalidateOptionsMenu();                  // Refresh toolbar options
-        mDrawerActivity.setBulletinListener(this);                // Set bulletin listener
+        mMainActivity = (DrawerActivity) mContext;
+//        // set the messaging_toolbar as actionbar
+//        ((DrawerActivity)getActivity()).setToolbarAndToggle((Toolbar)mRootView.findViewById(R.id.messaging_toolbar));
+//        getActivity().setTitle(R.string.inbox);                // set title
+//        mMainActivity.invalidateOptionsMenu();                  // Refresh messaging_toolbar options
+        mMainActivity.setBulletinListener(this);                // Set bulletin listener
 
         mSharedPref = PreferenceManager
-                .getDefaultSharedPreferences(mContext.getApplicationContext());
+            .getDefaultSharedPreferences(mContext.getApplicationContext());
 
-        tvNothingText = (TextView) rootView.findViewById(R.id.tvBulletinsNothingText);
+        tvNothingText = (TextView) mRootView.findViewById(R.id.tvBulletinsNothingText);
         mBulletinList = new ArrayList<>();
 
         // init list view
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listViewBulletins);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.listViewBulletins);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         // Set adapter
@@ -94,7 +100,7 @@ public class InboxFragment extends Fragment implements BulletinListener {
                                     mAdapter.remove(position);
 
 //                                    if (updateCounter)
-//                                        mDrawerActivity.updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_BULLETINS, -1);
+//                                        mMainActivity.updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_BULLETINS, -1);
 
                                 } catch (IndexOutOfBoundsException e) {
                                     // Happens when swiped too fast, too random
@@ -107,7 +113,7 @@ public class InboxFragment extends Fragment implements BulletinListener {
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         mRecyclerView.addOnScrollListener(
-                (RecyclerView.OnScrollListener) touchListener.makeScrollListener());
+            (RecyclerView.OnScrollListener) touchListener.makeScrollListener());
         mRecyclerView.addOnItemTouchListener(new FixSwipeableItemClickListener(mContext,
                 new OnItemClickListener() {
                     @Override
@@ -119,36 +125,12 @@ public class InboxFragment extends Fragment implements BulletinListener {
                         } else {
                             try {
                                 Log.i(AppUtils.TAG,
-                                        String.format("Bulletin @%d touched", position));
-                                Bulletin bulletin = mBulletinList.get(position);
-
-                                Bundle bulletinData = new Bundle();
-                                bulletinData.putString("title", bulletin.getTitle());
-                                bulletinData.putString("content", bulletin.getContent());
-                                bulletinData.putString("date", bulletin.getDate());
-                                bulletinData.putString("imageURL", bulletin.getImageUrl());
-
-                                BulletinDetailFragment fragment = new BulletinDetailFragment();
-                                fragment.setArguments(bulletinData);
-
-                                mDrawerActivity.getSupportFragmentManager()
-                                        .beginTransaction()
-                                        .setCustomAnimations(R.anim.slide_in_right,
-                                                R.anim.slide_out_left)
-                                        .replace(R.id.content_frame, fragment)
-                                        .commit();
-
-                                if (!bulletin.isSeen()) {
-                                    // Set seen true & save
-                                    bulletin.setSeen(true);
-                                    // Update the unread label in nav drawer
-//                                    mDrawerActivity.updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_BULLETINS, -1);
-                                }
-
-                                // Save the list
-                                AppUtils.saveListInSharedPref(mBulletinList,
-                                        AppUtils.PREF_BULLETIN_LIST);
-
+                                    String.format("Bulletin @%d touched", position));
+                                BulletinDetailFragment bulletinDetailDialogFragment =
+                                    BulletinDetailFragment.newInstance(mBulletinList.get(position));
+                                bulletinDetailDialogFragment.show(getFragmentManager(),
+                                    bulletinDetailDialogFragment.getClass().getSimpleName());
+//                                showDetailPopupAndSetSeen(mBulletinList.get(position));
                             } catch (IndexOutOfBoundsException ex) {
                                 // If tapped quickly when dismiss animation is going on
                                 // i.e. the item doesn't exist
@@ -159,7 +141,64 @@ public class InboxFragment extends Fragment implements BulletinListener {
 
 /**     SWIPE TO DELETE & UNDO  [END] **/
 
-        return rootView;
+        return mRootView;
+    }
+
+    private void showDetailPopupAndSetSeen(Bulletin bulletin) {
+        // show the detail popup
+        mRootView.findViewById(R.id.rlBulletinDetail).setVisibility(View.VISIBLE);
+        ((TextView) mRootView.findViewById(R.id.tvBulletinTitleDetail))
+            .setText(bulletin.getTitle());
+        ((TextView) mRootView.findViewById(R.id.tvBulletinDateDetail)).setText(bulletin.getDate());
+
+        String content = bulletin.getContent();
+        content = content.replace("\n", "<br>");
+        WebView wvBulletinContentDetail = (WebView) mRootView
+            .findViewById(R.id.wvBulletinContentDetail);
+
+        WebSettings webSettings = wvBulletinContentDetail.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setSupportZoom(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+        webSettings.setLoadWithOverviewMode(true);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            webSettings.setPluginState(WebSettings.PluginState.ON);
+        }
+
+        AppUtils.removeBottomSpaceFromWebView(wvBulletinContentDetail);
+        wvBulletinContentDetail.setWebChromeClient(new WebChromeClient());
+        wvBulletinContentDetail
+            .loadDataWithBaseURL(null, AppUtils.CSS_FIT_IMAGE_IN_WEBVIEW + content, "text/html",
+                "UTF-8", null);
+        wvBulletinContentDetail.setBackgroundColor(Color.TRANSPARENT);
+
+        ImageView imgBulletinDetail = (ImageView) mRootView.findViewById(R.id.imgBulletinDetail);
+        String imageUrl = bulletin.getImageUrl();
+        if (imageUrl != null) {
+            Picasso.with(getActivity()).load(imageUrl)
+                .error(R.drawable.img_placeholder_failed_square).into(imgBulletinDetail);
+        } else
+            imgBulletinDetail.setVisibility(View.GONE);
+
+        // the bulletin is seen, change seen status
+        if (!bulletin.isSeen()) {
+            // Set seen true & save
+            bulletin.setSeen(true);
+            // Update the unread label in nav drawer
+//          mMainActivity.updateDrawerCounterLabelAndSave(AppUtils.PREF_UNREAD_BULLETINS, -1);
+        }
+
+        // Save the list with updated status
+        AppUtils.saveListInSharedPref(mBulletinList, AppUtils.PREF_BULLETIN_LIST);
+
+        // handle close press
+        mRootView.findViewById(R.id.imgCloseBulletinDetail)
+            .setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mRootView.findViewById(R.id.rlBulletinDetail).setVisibility(View.GONE);
+                }
+            });
     }
 
     @Override
@@ -193,16 +232,22 @@ public class InboxFragment extends Fragment implements BulletinListener {
         Log.i(AppUtils.TAG, "InboxFragment: onResume -> getting BulletinList");
         mBulletinList = getSavedBulletinList();
         AppUtils.printBulletinList(mBulletinList);
+/*
 
         // dummy bulletin for test [REMOVE for release]
-        dummyBulletinCount = mSharedPref.getInt(DUMMY_BULLETIN_COUNT, 0);
-        if (dummyBulletinCount == 0) {
-            mBulletinList
-                    .add(new Bulletin(0, "Welcome to Smyril Line!", getString(R.string.lorem_ipsum),
-                            "Aug 02, 2017 04:15 PM",
-                            "http://i.ytimg.com/vi/1Xu_qyeiilU/maxresdefault.jpg", false));
+        dummyBulletinCount = mSharedPref.getInt(DUMMY_BULLETIN_COUNT,0);
+        if(dummyBulletinCount == 0) {
+            mBulletinList.add(new Bulletin(0, "Welcome to Smyril Line!",
+            getString(R.string.lorem_ipsum), "Aug 02, 2017 04:15 PM",
+            "http://i.ytimg.com/vi/1Xu_qyeiilU/maxresdefault.jpg", false));
             mSharedPref.edit().putInt(DUMMY_BULLETIN_COUNT, ++dummyBulletinCount).apply();
         }
+*/
+        // dummy for view pager inbox
+        mBulletinList
+            .add(new Bulletin(0, "Welcome to Smyril Line!", getString(R.string.lorem_ipsum),
+                "Aug 02, 2017 04:15 PM", "http://i.ytimg.com/vi/1Xu_qyeiilU/maxresdefault.jpg",
+                false));
 
         mAdapter.setBulletinList(mBulletinList);
         mAdapter.notifyDataSetChanged();
@@ -219,15 +264,26 @@ public class InboxFragment extends Fragment implements BulletinListener {
 
         // Init list - check saved if exists
         String savedBulletinListAsString = mSharedPref
-                .getString(AppUtils.PREF_BULLETIN_LIST, AppUtils.PREF_NO_ENTRY);
+            .getString(AppUtils.PREF_BULLETIN_LIST, AppUtils.PREF_NO_ENTRY);
         if (savedBulletinListAsString.equals(AppUtils.PREF_NO_ENTRY)) {
             savedBulletinList = new ArrayList<>();
         } else {
             savedBulletinList = gson
-                    .fromJson(savedBulletinListAsString, new TypeToken<ArrayList<Bulletin>>() {
-                    }.getType());
+                .fromJson(savedBulletinListAsString, new TypeToken<ArrayList<Bulletin>>() {
+                }.getType());
         }
         return savedBulletinList;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        /*
+        // == REMOVE FOR ACTUAL BULLETIN == //
+        mBulletinList.clear();
+        mAdapter.notifyDataSetChanged();
+        mSharedPref.edit().putInt(DUMMY_BULLETIN_COUNT, 0).apply();
+    */
     }
 
     /**

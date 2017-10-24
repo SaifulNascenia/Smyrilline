@@ -142,8 +142,7 @@ public class ContentReceiver extends BroadcastReceiver {
 
                         // Generate notification
                         AppUtils.generateNotification(context, coupon.name, coupon.message,
-                                R.mipmap.app_icon,
-                                CouponsFragment.class.getSimpleName());
+                            CouponsFragment.class.getSimpleName(), null);
 
                         if (usedListFromStorage.contains(coupon.couponId))
                             Log.i(AppUtils.TAG,
@@ -229,15 +228,13 @@ public class ContentReceiver extends BroadcastReceiver {
                             AppUtils.generateNotification(context,
                                     context.getString(R.string.new_coupon),
                                     newCouponsList.get(0).name,
-                                    R.mipmap.app_icon,
-                                    CouponsFragment.class.getSimpleName());
+                                CouponsFragment.class.getSimpleName(), null);
                         } else {
                             AppUtils.generateNotification(context,
                                     newCouponsList.size() + " " + context
                                             .getString(R.string.new_coupons_available),
                                     context.getString(R.string.please_check_app_for_details),
-                                    R.mipmap.app_icon,
-                                    CouponsFragment.class.getSimpleName());
+                                CouponsFragment.class.getSimpleName(), null);
                         }
                     }
                 }

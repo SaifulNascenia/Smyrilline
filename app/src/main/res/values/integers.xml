@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="grid_menu_max_messsage_count">9</integer>
+    <integer name="profile_description_max_char">60</integer>
+    <integer name="profile_user_name_max_char">15</integer>
+</resources>

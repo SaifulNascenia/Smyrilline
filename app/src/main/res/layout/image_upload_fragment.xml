@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="@dimen/big_padding"
+    android:background="@drawable/bkg_white_3dp_corner"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <!-- To display picture taken -->
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgPreview"
+        android:layout_width="@dimen/profile_pic_size"
+        android:layout_height="@dimen/profile_pic_size"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_user"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/txtPercentage"
+        android:textStyle="italic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/start_uploading"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:visibility="visible"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_24dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnCancel"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white_rounded_primary_outline"
+            android:text="@string/cancel"
+            android:textColor="@color/black"/>
+        <Button
+            android:id="@+id/btnUpload"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="@dimen/big_margin"
+            android:background="@drawable/bg_white_rounded_primary_outline"
+            android:text="@string/upload"
+            android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
+</LinearLayout>

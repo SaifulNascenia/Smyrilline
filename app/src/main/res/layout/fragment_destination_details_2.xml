@@ -133,8 +133,8 @@
 
     <ProgressBar
         android:id="@+id/loadingProgressView"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="@dimen/circular_progress_bar_size"
+        android:layout_height="@dimen/circular_progress_bar_size"
         android:layout_centerInParent="true"
         android:visibility="visible" />
 

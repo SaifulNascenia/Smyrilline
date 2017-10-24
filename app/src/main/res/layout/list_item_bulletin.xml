@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/activity_horizontal_margin"
-        android:background="@drawable/bkg_80_white_3dp_corner"
+        android:background="@drawable/bg_80_white_3dp_corner"
         android:orientation="horizontal"
         android:visibility="visible"
         android:weightSum="10">

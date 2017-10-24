@@ -1,4 +1,4 @@
-package com.mcp.smyrilline.model;
+package com.mcp.smyrilline.util;
 
 import android.content.Context;
 import java.io.FileInputStream;

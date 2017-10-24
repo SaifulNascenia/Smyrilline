@@ -2,7 +2,6 @@ package com.mcp.smyrilline.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,7 +12,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -46,6 +44,9 @@ import com.mcp.smyrilline.fragment.DutyFreeFragment;
 import com.mcp.smyrilline.fragment.HelpFragment;
 import com.mcp.smyrilline.fragment.InboxFragment;
 import com.mcp.smyrilline.fragment.LoginFragment;
+import com.mcp.smyrilline.fragment.MessagingMainFragment;
+import com.mcp.smyrilline.fragment.ProfileDialogFragment;
+import com.mcp.smyrilline.fragment.RealtimeChatFragment;
 import com.mcp.smyrilline.fragment.RestaurantFragment;
 import com.mcp.smyrilline.fragment.SettingsFragment;
 import com.mcp.smyrilline.fragment.ShipInfoFragment;
@@ -54,12 +55,15 @@ import com.mcp.smyrilline.fragment.TicketFragment;
 import com.mcp.smyrilline.listener.BleStateListener;
 import com.mcp.smyrilline.listener.BulletinListener;
 import com.mcp.smyrilline.listener.DrawerCouponsCountListener;
-import com.mcp.smyrilline.model.Bulletin;
 import com.mcp.smyrilline.model.DrawerItem;
+import com.mcp.smyrilline.model.messaging.Bulletin;
+import com.mcp.smyrilline.model.messaging.NewMessageCount;
 import com.mcp.smyrilline.receiver.BleStateReceiver;
 import com.mcp.smyrilline.receiver.ContentReceiver;
 import com.mcp.smyrilline.signalr.SignalRService;
 import com.mcp.smyrilline.util.AppUtils;
+import com.mcp.smyrilline.util.ImagePicker;
+import com.mcp.smyrilline.util.McpApplication;
 import com.onyxbeacon.OnyxBeaconApplication;
 import com.onyxbeacon.OnyxBeaconManager;
 import com.onyxbeacon.rest.auth.util.AuthData;
@@ -67,16 +71,32 @@ import com.onyxbeacon.rest.auth.util.AuthenticationMode;
 import com.onyxbeacon.service.logging.LoggingStrategy;
 import java.util.ArrayList;
 import java.util.Locale;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
-public class DrawerActivity extends AppCompatActivity implements BleStateListener, BulletinListener, DrawerCouponsCountListener {
+public class DrawerActivity extends AppCompatActivity implements BleStateListener, BulletinListener,
+    DrawerCouponsCountListener {
+
     public static final String ENTERED_FROM_MENU = "enteredFromMenu";
     public static final String FRAGMENT_PARENT_TAG = "parent_fragment";
     public static final String FRAGMENT_CHILD_TAG = "child_fragment";
-    private static final int REQUEST_ENABLE_BT = 1;
     private static final String TAG = "smyrilline MainActivity";
     private static final int REQUEST_FINE_LOCATION = 0;
     public static BulletinListener mListener;
     private static boolean languageChangeRestart = false;
+    // Fragment list in the order they are shown in menu
+    private final String[] fragmentList = {
+        LoginFragment.class.getSimpleName(),
+        ShipTrackerFragment.class.getSimpleName(),
+        MessagingMainFragment.class.getSimpleName(),
+        DutyFreeFragment.class.getSimpleName(),
+        RestaurantFragment.class.getSimpleName(),
+        DestinationFragment.class.getSimpleName(),
+        CouponsFragment.class.getSimpleName(),
+        SettingsFragment.class.getSimpleName(),
+        ShipInfoFragment.class.getSimpleName(),
+        HelpFragment.class.getSimpleName(),
+    };
     private ArrayList<Long> mUsedCouponList;
     private TextView tvDrawerInboxCount;
     private TextView tvDrawerCouponsCount;
@@ -109,34 +129,30 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        bundle = new Bundle();
+        bundle = getIntent().getExtras();
         mContext = this;
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
 
         initUI(savedInstanceState);
-        // SignalRService initialize before load list (for Bulletins)
-        initSignalRService();
-
-        AppUtils.updateTextTranslations();
 
         // Load lists before setup drawer
         loadSavedLists();
 
-        // setup drawer
+        // setup drawero
         setupNavigationDrawer();
 
         // show fragment
         // if it is restart from language switch, must start the last shown fragment
         String fragmentName = languageChangeRestart ? LoginFragment.class.getSimpleName() :
-                getIntent().getExtras().getString(AppUtils.START_DRAWER_FRAGMENT);
+            getIntent().getExtras().getString(AppUtils.KEY_START_DRAWER_FRAGMENT);
+
         if (fragmentName != null)
             showFragment(fragmentName);
         languageChangeRestart = false;
 
         // onyx beacon  (for Coupons)
 //        initOnyxBeacon();
-
 
     }
 
@@ -145,17 +161,26 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         setContentView(R.layout.activity_drawer);
 
         mDrawerListItems = new ArrayList<>();
-        mDrawerListItems.add(new DrawerItem(getString(R.string.view_booking), R.drawable.ic_grid_ticket_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.ship_tracker), R.drawable.ic_grid_ship_tracker_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.inbox), R.drawable.ic_grid_inbox_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.duty_free), R.drawable.ic_grid_duty_free_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.restaurants), R.drawable.ic_grid_restaurants_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.destinations), R.drawable.ic_grid_destinations_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.coupons), R.drawable.ic_grid_coupons_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.settings), R.drawable.ic_grid_settings_white));
-        mDrawerListItems.add(new DrawerItem(getString(R.string.info), R.drawable.ic_grid_info_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.view_booking),
+            R.drawable.ic_grid_ticket_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.ship_tracker),
+            R.drawable.ic_grid_ship_tracker_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.messaging),
+            R.drawable.ic_grid_messaging_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.duty_free),
+            R.drawable.ic_grid_duty_free_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.restaurants),
+            R.drawable.ic_grid_restaurants_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.destinations),
+            R.drawable.ic_grid_destinations_white));
         mDrawerListItems
-                .add(new DrawerItem(getString(R.string.help), R.drawable.ic_grid_help_white));
+            .add(new DrawerItem(getString(R.string.coupons), R.drawable.ic_grid_coupons_white));
+        mDrawerListItems.add(new DrawerItem(getString(R.string.settings),
+            R.drawable.ic_grid_settings_white));
+        mDrawerListItems
+            .add(new DrawerItem(getString(R.string.info), R.drawable.ic_grid_info_white));
+        mDrawerListItems
+            .add(new DrawerItem(getString(R.string.help), R.drawable.ic_grid_help_white));
     }
 
     private void showFragment(String fragmentName) {
@@ -177,8 +202,11 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             case ("ShipTrackerFragment"):
                 fragment = new ShipTrackerFragment();
                 break;
-            case ("InboxFragment"):
-                fragment = new InboxFragment();
+            case ("MessagingMainFragment"):
+                fragment = new MessagingMainFragment();
+                break;
+            case ("RealtimeChatFragment"):  // From notification
+                fragment = new RealtimeChatFragment();
                 break;
             case ("DutyFreeFragment"):
                 fragment = new DutyFreeFragment();
@@ -205,49 +233,28 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
 
         fragment.setArguments(bundle);
         // Only LoginFragment is Parent, others are child
-        String fragmentTag = (fragment instanceof LoginFragment) || (fragment instanceof TicketFragment) ? FRAGMENT_PARENT_TAG : FRAGMENT_CHILD_TAG;
+        String fragmentTag =
+            (fragment instanceof LoginFragment) || (fragment instanceof TicketFragment)
+                ? FRAGMENT_PARENT_TAG : FRAGMENT_CHILD_TAG;
 
         getSupportFragmentManager().beginTransaction()
 //                .setCustomAnimations(R.anim.slide_in_right, 0)
-                .replace(R.id.content_frame, fragment, fragmentTag)
-                .commit();
+            .replace(R.id.content_frame, fragment, fragmentTag)
+            .commit();
 
         // update selected item and title, then close the drawer
 //        mDrawerListView.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerListView);
     }
 
-    private void initSignalRService() {
-        // Setup service connection
-        // it will be called after the activity is bound to the service with bindService()
-        mServiceConnection = new ServiceConnection() {
-
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mSignalRService = ((SignalRService.Binder) service).getService();
-//                mSignalRService.onStartCommand(null, 0, 0);
-                mSignalRService.setListener(DrawerActivity.this);
-                mIsBound = true;
-                Log.i(TAG, "SignalRService: listener set");
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mSignalRService = null;
-                mIsBound = false;
-            }
-        };
-
-        // Start the socket service
-        startService(SignalRService.startIntent(getBaseContext()));
-    }
-
     private void loadSavedLists() {
         // Get used coupon list from memory if available
-        String usedCouponListAsString = mSharedPreferences.getString(AppUtils.PREF_USED_COUPONS, AppUtils.PREF_NO_ENTRY);
+        String usedCouponListAsString = mSharedPreferences
+            .getString(AppUtils.PREF_USED_COUPONS, AppUtils.PREF_NO_ENTRY);
         if (!usedCouponListAsString.equals(AppUtils.PREF_NO_ENTRY))
-            mUsedCouponList = gson.fromJson(usedCouponListAsString, new TypeToken<ArrayList<Long>>() {
-            }.getType());
+            mUsedCouponList = gson
+                .fromJson(usedCouponListAsString, new TypeToken<ArrayList<Long>>() {
+                }.getType());
         else
             mUsedCouponList = new ArrayList<>();
     }
@@ -259,11 +266,11 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         // set up the drawer's list view with items and click listener
         mDrawerListView = (ListView) findViewById(R.id.drawer_listview);
         mDrawerListView.setAdapter(
-                new DrawerMenuAdapter(this, R.layout.list_item_drawer, mDrawerListItems));
+            new DrawerMenuAdapter(this, R.layout.list_item_drawer, mDrawerListItems));
         mDrawerListView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showFragment(AppUtils.fragmentList[position]);
+                showFragment(fragmentList[position]);
             }
         });
     }
@@ -276,7 +283,6 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         mBleReceiver = BleStateReceiver.getInstance();
         mBleReceiver.setBleStateListener(this);
 
-
         BLE_INTENT_FILTER = getPackageName() + ".scan";
         registerReceiver(mBleReceiver, new IntentFilter(BLE_INTENT_FILTER));
         bleStateRegistered = true;
@@ -288,7 +294,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Log.i(TAG, "Checking location permission.");
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED) {
                 requestLocationPermission();
             }
         }
@@ -314,48 +320,33 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     private void requestLocationPermission() {
         // BEGIN_INCLUDE(location_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)) {
+            Manifest.permission.ACCESS_FINE_LOCATION)) {
 
             Snackbar.make(mDrawerLayout, "Location permission are needed to enable location",
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction("OK", new View.OnClickListener() {
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(McpApplication.instance().context().getString(R.string.ok),
+                    new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             ActivityCompat.requestPermissions(DrawerActivity.this,
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                    REQUEST_FINE_LOCATION);
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                REQUEST_FINE_LOCATION);
                         }
                     })
-                    .show();
+                .show();
         } else {
             // Location permission has not been granted yet. Request it directly.
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_FINE_LOCATION);
+            ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                REQUEST_FINE_LOCATION);
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i(TAG, "MainActivity: onStop");
-
-        // Unbind from socket service
-        if (mSignalRService != null)
-            mSignalRService.setListener(null);
-        if (mIsBound)
-            unbindService(mServiceConnection);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "MainActivity: onDestroy");
-    }
 /*
 
     private void checkBluetooth() {
         if (mManager.isBluetoothAvailable()) {
-            // Enable scanner in foreground mode and register receiver
+            // Enable scanner in foreground mode and registerBulletin receiver
             mManager.setForegroundMode(true);
         } else {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -367,18 +358,37 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // If bluetooth is turned on, dismiss snackbar
-        if (resultCode == Activity.RESULT_OK)
-            if (mBluetoothSnackbar.isShown())
+        if (requestCode == AppUtils.REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
+            if (mBluetoothSnackbar != null && mBluetoothSnackbar.isShown())
                 mBluetoothSnackbar.dismiss();
+        } else if (requestCode == ImagePicker.REQUEST_PICK_IMAGE
+            || requestCode == ImagePicker.REQUEST_CROP_IMAGE) {
+            getSupportFragmentManager()
+                .findFragmentByTag(ProfileDialogFragment.class.getSimpleName())
+                .onActivityResult(requestCode, resultCode, data);
+        } else
+            super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void onResume() {
-        super.onResume();
-/*
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-        if (mBleReceiver == null) mBleReceiver = BleStateReceiver.getInstance();
+        Log.i(AppUtils.TAG, "DrawerActivity: onStart");
 
-        if (mContentReceiver == null) mContentReceiver = ContentReceiver.getInstance();
+        // Bind to the the socket service
+        McpApplication.instance().bindSignalRService(SignalRService.startIntent(getBaseContext()));
+
+        // registerBulletin from eventbus
+        McpApplication.registerWithEventBus(this);
+        // client is online
+        AppUtils.setClientOnlineStatus();
+
+        /*
+
+        if (mBleReceiver == null) mBleReceiver = BleStateReceiver.instance();
+
+        if (mContentReceiver == null) mContentReceiver = ContentReceiver.instance();
 
         registerReceiver(mContentReceiver, new IntentFilter(CONTENT_INTENT_FILTER));
         receiverRegistered = true;
@@ -392,16 +402,30 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
                 Snackbar.make(mDrawerLayout, "Please turn on bluetooth",
                         Snackbar.LENGTH_SHORT).show();
             } else {
-                // Enable scanner in foreground mode and register receiver
+                // Enable scanner in foreground mode and registerBulletin receiver
                 mManager = OnyxBeaconApplication.getOnyxBeaconManager(this);
                 mManager.setForegroundMode(true);
             }
         }
 */
+
     }
 
-    public void onPause() {
-        super.onPause();
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        Log.i(AppUtils.TAG, "DrawerActivity: onStop");
+
+        // set client offline
+        AppUtils.setClientOfflineStatus();
+        // unregister from eventbus
+        EventBus.getDefault().unregister(this);
+        // unbind from service
+        McpApplication.instance().unbindSignalRService();
+
+
+
 /*        // Set scanner in background mode
         mManager.setForegroundMode(false);
 
@@ -466,11 +490,12 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
      * and saves in shared preference
      *
      * @param countType the menu 'bulletin' or 'coupon'
-     * @param change    change amount
+     * @param change change amount
      */
     public void updateDrawerCounterLabelAndSave(String countType, int change) {
         // Check count type bulletin or coupon
-        TextView countLabel = countType == AppUtils.PREF_UNREAD_BULLETINS ? tvDrawerInboxCount : tvDrawerCouponsCount;
+        TextView countLabel = countType == AppUtils.PREF_UNREAD_BULLETINS ? tvDrawerInboxCount
+            : tvDrawerCouponsCount;
         String currentValue = countLabel.getText().toString().trim().split(" ")[0];
 
         // If current text is not "99+", we'll update counter
@@ -531,12 +556,12 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             //actionBar.setDisplayHomeAsUpEnabled(true);
 
             if (getCurrentFragment() instanceof LoginFragment
-                    || getCurrentFragment() instanceof TicketFragment)
+                || getCurrentFragment() instanceof TicketFragment)
                 initLanguageSwitcher(toolbar);
 
             mDrawerLayout = (DrawerLayout) appCompatActivity.findViewById(R.id.drawer_layout);
             mDrawerToggle = new ActionBarDrawerToggle(
-                    this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+                this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
             mDrawerLayout.setDrawerListener(mDrawerToggle);
             mDrawerToggle.syncState();
         } else {
@@ -547,14 +572,14 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
     private void initLanguageSwitcher(Toolbar toolbar) {
         // Populate flag icon id list
         final Integer[] flagIcons = {
-                R.drawable.img_flag_english
-                , R.drawable.img_flag_deutsch
-                , R.drawable.img_flag_faroese
-                , R.drawable.img_flag_danish};
+            R.drawable.img_flag_english
+            , R.drawable.img_flag_deutsch
+            , R.drawable.img_flag_faroese
+            , R.drawable.img_flag_danish};
         mLanguageSpinner = new Spinner(getSupportActionBar().getThemedContext());
         // Adapter for spinner
         LanguageSpinnerAdapter langSpinnerAdapter = new LanguageSpinnerAdapter(mContext,
-                R.layout.list_item_language_spinner, flagIcons);
+            R.layout.list_item_language_spinner, flagIcons);
         mLanguageSpinner.setAdapter(langSpinnerAdapter);
 
         // Set the initial spinner item
@@ -590,7 +615,7 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
-                    int position, long arg3) {
+                int position, long arg3) {
                 if (isLoaded >= 1) {
                     // Check the selected position in the icon array
                     switch (flagIcons[position]) {
@@ -619,8 +644,8 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
 
         // Add the spinner to the right of Toolbar
         Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams.gravity = Gravity.RIGHT;
         toolbar.addView(mLanguageSpinner, layoutParams);
     }
@@ -631,13 +656,12 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.isDrawerIndicatorEnabled() &&
-                mDrawerToggle.onOptionsItemSelected(item)) {
-
+        if (mDrawerToggle != null && mDrawerToggle.isDrawerIndicatorEnabled() &&
+            mDrawerToggle.onOptionsItemSelected(item)) {
             Toast.makeText(getBaseContext(), "1", Toast.LENGTH_LONG).show();
             return true;
         } else if (item.getItemId() == android.R.id.home &&
-                getSupportFragmentManager().popBackStackImmediate()) {
+            getSupportFragmentManager().popBackStackImmediate()) {
             Toast.makeText(getBaseContext(), "home", Toast.LENGTH_LONG).show();
             return true;
         } else {
@@ -682,8 +706,8 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
             // Toast.makeText(getBaseContext(), "backstack has " + getSupportFragmentManager().getBackStackEntryCount(), Toast.LENGTH_LONG).show();
         } else {
             super.onBackPressed();
-            startActivity(new Intent(this, MainGridActivity.class));
-            finish();
+//            startActivity(new Intent(this, MainGridActivity.class));
+//            finish();
             //Toast.makeText(getBaseContext(), "no backstack has", Toast.LENGTH_LONG).show();
         }
 
@@ -705,11 +729,63 @@ public class DrawerActivity extends AppCompatActivity implements BleStateListene
         }
     }
 
+    @Subscribe
+    public void updateNewMessageCount(NewMessageCount newMessageCount) {
+        // TODO: 10/2/17
+        // newMessageCount.getNewBulletinCount
+        // newMessageCount.getNewChatCount
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.i(AppUtils.TAG, "DrawerActivity: new Intent received -> " + intent.toString());
+        String fragmentName;
+        Fragment fragment = null;
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+
+            // if received from internal notification, when App is running
+            fragmentName = bundle.getString(AppUtils.KEY_START_DRAWER_FRAGMENT);
+            if (fragmentName != null) {
+                switch (fragmentName) {
+                    case "CouponsFragment":   // From Coupon notification
+                        fragment = new CouponsFragment();
+
+                        // From Onyx internal push
+                        break;
+                    case "InboxFragment":     // From bulletin internal push
+                        fragment = new InboxFragment();
+                        break;
+                    case "RealtimeChatFragment":
+                        fragment = new RealtimeChatFragment();
+                        // bundle has the parcelable user data
+                        fragment.setArguments(bundle);
+                        break;
+                }
+            }
+
+            Fragment currentFragment = getSupportFragmentManager()
+                .findFragmentById(R.id.content_frame);
+
+            // Check if selected fragment is already showing
+            if (fragment != null && !fragment.getClass().getSimpleName()
+                .equals(currentFragment.getClass().getSimpleName())) {
+
+                getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_right, 0)
+                    .replace(R.id.content_frame, fragment, fragment.getClass().getSimpleName())
+                    .commit();
+            }
+        }
+    }
+
     /* The click listner for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
+
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            showFragment(AppUtils.fragmentList[0]);
+            showFragment(fragmentList[0]);
         }
     }
 }

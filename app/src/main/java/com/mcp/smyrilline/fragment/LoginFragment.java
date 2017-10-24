@@ -21,12 +21,12 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.model.InternalStorage;
 import com.mcp.smyrilline.model.Meal;
 import com.mcp.smyrilline.model.MealDate;
 import com.mcp.smyrilline.model.Passenger;
 import com.mcp.smyrilline.model.RouteItem;
 import com.mcp.smyrilline.util.AppUtils;
+import com.mcp.smyrilline.util.InternalStorage;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -67,7 +67,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Refresh toolbar options
+        // Refresh messaging_toolbar options
         getActivity().invalidateOptionsMenu();
 
         mContext = getActivity();

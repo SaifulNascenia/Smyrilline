@@ -15,12 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.signalr.SignalRService;
 import com.mcp.smyrilline.util.AppUtils;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,11 +55,11 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         getActivity().invalidateOptionsMenu();
         mContext = getActivity();
 
-        // set the toolbar as actionbar
+        // set the messaging_toolbar as actionbar
         ((DrawerActivity)getActivity()).setToolbarAndToggle((Toolbar)rootView.findViewById(R.id.toolbar));
         getActivity().setTitle(R.string.settings);
 
-        // Has a 'done' option in toolbar
+        // Has a 'done' option in messaging_toolbar
         setHasOptionsMenu(true);
 
         // Age settings

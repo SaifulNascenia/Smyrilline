@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.adapter.MealExpandableListAdapter;
-import com.mcp.smyrilline.model.InternalStorage;
 import com.mcp.smyrilline.model.MealDate;
 import com.mcp.smyrilline.util.AppUtils;
+import com.mcp.smyrilline.util.InternalStorage;
 import java.util.ArrayList;
 
 /**

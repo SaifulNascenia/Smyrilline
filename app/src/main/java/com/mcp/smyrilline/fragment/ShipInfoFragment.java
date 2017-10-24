@@ -23,11 +23,11 @@ import com.mcp.smyrilline.activity.DrawerActivity;
 import com.mcp.smyrilline.adapter.ShipInfoAdapter;
 import com.mcp.smyrilline.listener.RecylerViewItemClickListener;
 import com.mcp.smyrilline.listener.RecylerViewTouchEventListener;
-import com.mcp.smyrilline.model.InternalStorage;
 import com.mcp.smyrilline.model.shipinfo.ShipInfo;
 import com.mcp.smyrilline.rest.RetrofitClient;
 import com.mcp.smyrilline.rest.RetrofitInterfaces;
 import com.mcp.smyrilline.util.AppUtils;
+import com.mcp.smyrilline.util.InternalStorage;
 import com.mcp.smyrilline.view.GridSpacingItemDecoration;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -156,7 +156,7 @@ public class ShipInfoFragment extends Fragment {
         if (AppUtils.isNetworkAvailable(getActivity())) {
             retrofit = RetrofitClient.getClient();
             retrofitInterfaces = retrofit.create(RetrofitInterfaces.class);
-            call = retrofitInterfaces.fetchShipInfo(AppUtils.WP_PARAM_LANGUAGE);
+            call = retrofitInterfaces.fetchShipInfo(getString(R.string.wp_language_param));
             call.enqueue(new Callback<ShipInfo>() {
                 @Override
                 public void onResponse(Call<ShipInfo> call, Response<ShipInfo> response) {

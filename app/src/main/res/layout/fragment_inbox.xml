@@ -1,38 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/transparent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listViewBulletins"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        android:layout_height="match_parent"/>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tvBulletinsNothingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_bulletins"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/white"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/rlBulletinDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:orientation="vertical">
+        android:background="@color/black_65_opaque"
+        android:visibility="gone">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listViewBulletins"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <TextView
-            android:id="@+id/tvBulletinsNothingText"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/no_bulletins"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/white"
-            android:visibility="gone"/>
-    </LinearLayout>
+            android:layout_margin="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:background="@drawable/bg_80_white_3dp_corner"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvBulletinTitleDetail"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/transparent"
+                    android:text="Title"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/black"/>
+
+                <TextView
+                    android:id="@+id/tvBulletinDateDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"/>
+
+                <!-- Divider line -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/bkg_deep_grey"
+                    android:orientation="horizontal"/>
+
+                <ImageView
+                    android:id="@+id/imgBulletinDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:adjustViewBounds="true"
+                    android:background="@color/bkg_light_grey"
+                    android:scaleType="fitXY"/>
+
+                <WebView
+                    android:id="@+id/wvBulletinContentDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Content"
+                    android:textColor="@android:color/black"/>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- cross image marginEnd & marginTop -> 24 (padding of detail layout)
+                minus 20 (half size of cross image) = 4 -->
+
+        <ImageView
+            android:id="@+id/imgCloseBulletinDetail"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_corner_close"/>
+    </RelativeLayout>
 </RelativeLayout>

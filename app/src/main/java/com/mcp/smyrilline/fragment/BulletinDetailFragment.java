@@ -1,49 +1,62 @@
 package com.mcp.smyrilline.fragment;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcp.smyrilline.R;
-import com.mcp.smyrilline.activity.DrawerActivity;
+import com.mcp.smyrilline.model.messaging.Bulletin;
 import com.mcp.smyrilline.util.AppUtils;
 import com.squareup.picasso.Picasso;
 
 /**
  * Created by raqib on 1/5/16.
  */
-public class BulletinDetailFragment extends Fragment {
+public class BulletinDetailFragment extends DialogFragment {
+
+    public static final String KEY_BULLETIN_DATA = "bulletin_data";
+
+    public static BulletinDetailFragment newInstance(Bulletin bulletin) {
+        BulletinDetailFragment fragment = new BulletinDetailFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(KEY_BULLETIN_DATA, bulletin);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_bulletin_detail, container, false);
-        // set the toolbar as actionbar
-        ((DrawerActivity) getActivity())
-                .setToolbarAndToggle((Toolbar) rootView.findViewById(R.id.toolbar));
-        getActivity().setTitle(R.string.inbox);  // Set title
+
+        // set the messaging_toolbar as actionbar
+//        ((DrawerActivity) getActivity()).setToolbarAndToggle((Toolbar) rootView.findViewById(R.id.messaging_toolbar));
+//        getActivity().setTitle(R.string.inbox);  // Set title
 
         // Get data from BulletinAdapter
         Bundle extras = getArguments();
+        Bulletin bulletin = extras.getParcelable(KEY_BULLETIN_DATA);
 
         if (extras != null) {
-            String title = extras.getString("title");
+            String title = bulletin.getTitle();
             ((TextView) rootView.findViewById(R.id.tvBulletinTitleDetail)).setText(title);
 
-            String date = extras.getString("date");
+            String date = bulletin.getDate();
             ((TextView) rootView.findViewById(R.id.tvBulletinDateDetail)).setText(date);
 
-            String content = extras.getString("content");
+            String content = bulletin.getContent();
             content = content.replace("\n", "<br>");
             WebView wvBulletinContentDetail = (WebView) rootView
                     .findViewById(R.id.wvBulletinContentDetail);
@@ -65,13 +78,32 @@ public class BulletinDetailFragment extends Fragment {
             wvBulletinContentDetail.setBackgroundColor(Color.TRANSPARENT);
 
             ImageView imgBulletinDetail = (ImageView) rootView.findViewById(R.id.imgBulletinDetail);
-            String imageURL = extras.getString("imageURL");
+            String imageURL = bulletin.getImageUrl();
             if (imageURL != null) {
-                Picasso.with(getActivity()).load(imageURL).error(R.drawable.img_placeholder_thumb)
-                        .into(imgBulletinDetail);
+                Picasso.with(getActivity()).load(imageURL).into(imgBulletinDetail);
             } else
                 imgBulletinDetail.setVisibility(View.GONE);
         }
         return rootView;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+        // request a window without the title
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        // set size of dialog to layout file
+        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+        params.width = LayoutParams.MATCH_PARENT;
+        params.height = LayoutParams.WRAP_CONTENT;
+        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+        super.onResume();
     }
 }

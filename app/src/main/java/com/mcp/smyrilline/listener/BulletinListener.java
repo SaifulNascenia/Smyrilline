@@ -1,7 +1,6 @@
 package com.mcp.smyrilline.listener;
 
-import com.mcp.smyrilline.model.Bulletin;
-
+import com.mcp.smyrilline.model.messaging.Bulletin;
 import java.util.ArrayList;
 
 /**

@@ -42,7 +42,7 @@ public class HelpFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_help, container, false);
         getActivity().invalidateOptionsMenu();
         mContext = getActivity();
-        // set the toolbar as actionbar
+        // set the messaging_toolbar as actionbar
         ((DrawerActivity) getActivity())
                 .setToolbarAndToggle((Toolbar) rootView.findViewById(R.id.toolbar));
         getActivity().setTitle(R.string.help);  // Set title
@@ -56,7 +56,7 @@ public class HelpFragment extends Fragment {
 
         // show client id
         tvClientId = (TextView) rootView.findViewById(R.id.tvClientID);
-        tvClientId.setText(AppUtils.getAndroidID());
+        tvClientId.setText(AppUtils.getDeviceId());
 
         mLoadingView = rootView.findViewById(R.id.helpLoadingView);
         tvNothingText = (TextView) rootView.findViewById(R.id.tvHelpNothingText);
@@ -124,7 +124,7 @@ public class HelpFragment extends Fragment {
         } else {
             mLoadingView.setVisibility(View.GONE);
             tvNothingText.setVisibility(View.VISIBLE);
-            AppUtils.showAlertDialog(mContext, AppUtils.ALERT_NO_WIFI);
+            AppUtils.showAlertDialog(mContext, getString(R.string.alert_no_wifi));
         }
     }
 
@@ -137,7 +137,8 @@ public class HelpFragment extends Fragment {
 
             // Getting JSON array from URL
             JSONArray jArray = jParser.getJSONArrayFromUrl(mContext.getResources()
-                    .getString(R.string.url_wordpress_parent) + "=0" + AppUtils.WP_PARAM_LANGUAGE);
+                .getString(R.string.url_wordpress_parent) + "=0" + getString(
+                R.string.wp_language_param));
 
             // Double check
             if (jArray == null)

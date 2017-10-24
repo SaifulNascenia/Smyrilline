@@ -123,7 +123,8 @@ public class RestaurantFragment extends Fragment {
             loadingProgressView.setVisibility(View.VISIBLE);
             retrofit = RetrofitClient.getClient();
             retrofitInterfaces = retrofit.create(RetrofitInterfaces.class);
-            call = retrofitInterfaces.fetchAllRestaurantsAndBarsInfo(AppUtils.WP_PARAM_LANGUAGE);
+            call = retrofitInterfaces
+                .fetchAllRestaurantsAndBarsInfo(getString(R.string.wp_language_param));
             call.enqueue(new Callback<List<ListOfRestaurants>>() {
                 @Override
                 public void onResponse(Call<List<ListOfRestaurants>> call,
@@ -149,8 +150,11 @@ public class RestaurantFragment extends Fragment {
                 @Override
                 public void onFailure(Call<List<ListOfRestaurants>> call, Throwable t) {
                     Log.d("onResponse", "onFailure " + t.toString());
-                    AppUtils.showNoConnectionView(getActivity(), thisFragment, loadingProgressView,
+                    if (getActivity() != null) {
+                        AppUtils.showNoConnectionView(getActivity(), thisFragment,
+                            loadingProgressView,
                             noConnectionView, toolbar);
+                    }
                 }
             });
         } else {

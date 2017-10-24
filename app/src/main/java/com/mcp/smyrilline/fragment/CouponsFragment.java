@@ -54,11 +54,11 @@ public class CouponsFragment extends Fragment implements CouponsListener {
         View rootView = inflater.inflate(R.layout.fragment_coupons, container, false);
         mContext = getActivity();
 
-        // set the toolbar as actionbar
+        // set the messaging_toolbar as actionbar
         ((DrawerActivity)getActivity()).setToolbarAndToggle((Toolbar)rootView.findViewById(R.id.toolbar));
         getActivity().setTitle((mContext.getResources().getString(R.string.coupons)));
 
-        // Refresh toolbar options
+        // Refresh messaging_toolbar options
         getActivity().invalidateOptionsMenu();
 
         // Init UI

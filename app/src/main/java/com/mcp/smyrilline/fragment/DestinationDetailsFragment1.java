@@ -81,7 +81,7 @@ public class DestinationDetailsFragment1 extends Fragment {
         nestedScrollView.smoothScrollBy(0, detailsInfoLayout.getTop());
         loadingProgressView = mRootView.findViewById(R.id.loadingProgressView);
 
-        // toolbar
+        // messaging_toolbar
         toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
         ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
         toolbar.setTitle(getArguments().getString(AppUtils.ITEM_NAME));
@@ -156,7 +156,8 @@ public class DestinationDetailsFragment1 extends Fragment {
         if (AppUtils.isNetworkAvailable(getActivity())) {
             retrofit = RetrofitClient.getClient();
             retrofitInterfaces = retrofit.create(RetrofitInterfaces.class);
-            call = retrofitInterfaces.fetchDestinationDetialsInfo(AppUtils.WP_PARAM_LANGUAGE,
+            call = retrofitInterfaces
+                .fetchDestinationDetialsInfo(getString(R.string.wp_language_param),
                     getArguments().getString(AppUtils.ITEM_ID));
             call.enqueue(new Callback<DestinationDetails>() {
                 @Override

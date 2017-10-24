@@ -101,7 +101,7 @@
                             android:layout_height="match_parent"
                             android:layout_alignBottom="@+id/llAgeAdult"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/bkg_40_black_3dp_corner"
+                            android:background="@drawable/bg_40_black_3dp_corner"
                             android:visibility="visible">
 
                             <ImageView
@@ -154,7 +154,7 @@
                             android:layout_height="match_parent"
                             android:layout_alignBottom="@+id/llAgeChild15"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/bkg_40_black_3dp_corner"
+                            android:background="@drawable/bg_40_black_3dp_corner"
                             android:visibility="invisible">
 
                             <ImageView
@@ -208,7 +208,7 @@
                             android:layout_alignBottom="@+id/llAgeChild11"
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
-                            android:background="@drawable/bkg_40_black_3dp_corner"
+                            android:background="@drawable/bg_40_black_3dp_corner"
                             android:visibility="invisible">
 
                             <ImageView
@@ -258,7 +258,7 @@
                             android:layout_height="match_parent"
                             android:layout_alignBottom="@+id/llAgeAll"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/bkg_40_black_3dp_corner"
+                            android:background="@drawable/bg_40_black_3dp_corner"
                             android:visibility="invisible">
 
                             <ImageView
@@ -326,7 +326,7 @@
                             android:layout_height="match_parent"
                             android:layout_alignBottom="@+id/llGenderMale"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/bkg_40_black_3dp_corner"
+                            android:background="@drawable/bg_40_black_3dp_corner"
                             android:visibility="invisible">
 
                             <ImageView
@@ -375,7 +375,7 @@
                             android:layout_alignBottom="@+id/llGenderFemale"
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
-                            android:background="@drawable/bkg_40_black_3dp_corner"
+                            android:background="@drawable/bg_40_black_3dp_corner"
                             android:visibility="invisible">
 
                             <ImageView
@@ -423,7 +423,7 @@
                             android:layout_height="match_parent"
                             android:layout_alignBottom="@+id/llGenderBoth"
                             android:layout_centerInParent="true"
-                            android:background="@drawable/bkg_40_black_3dp_corner"
+                            android:background="@drawable/bg_40_black_3dp_corner"
                             android:visibility="invisible">
 
                             <ImageView
@@ -452,7 +452,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:padding="@dimen/activity_horizontal_margin"
-                android:background="@drawable/bkg_80_white_3dp_corner"
+                android:background="@drawable/bg_80_white_3dp_corner"
                 android:orientation="vertical"
                 android:visibility="invisible">
 

@@ -8,12 +8,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
-        android:name=".util.AppUtils"
+        android:name=".util.McpApplication"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
@@ -28,15 +30,18 @@
         </activity>
         <activity
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:name=".activity.MainGridActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:launchMode="singleTask"
             android:name=".activity.DrawerActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -44,13 +49,25 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".signalr.SignalRService"/>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
+
+        <service
+            android:name=".signalr.SignalRService"
+            android:stopWithTask="false"/>
+
         <receiver android:name=".receiver.NetworkReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
+        <receiver android:name=".receiver.SettingsChangeReceiver">
+            <intent-filter>
+                <action android:name="com.mcp.smyrilline.ACTION_APP_SETTINGS_CHANGED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="b7968a36aec96be7e7d8bf92230772e7c4ea1c91"/>

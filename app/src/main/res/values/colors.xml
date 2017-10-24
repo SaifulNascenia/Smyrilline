@@ -19,6 +19,7 @@
     <color name="bkg_restaurant_image">#F1E9DB</color>
     <color name="ship_trajectory">#2c7af8</color>
     <color name="bkg_deep_grey">#999999</color>
+    <color name="bkg_80_deep_grey">#cc999999</color>
     <color name="bkg_fragment_bulletin">#d9d9d9</color>
     <color name="bkg_login_input_boundary">#D0D0D0</color>
     <color name="guide_screen_text">#005580</color>
@@ -33,10 +34,15 @@
     <color name="smalltextColor">#767576</color>
     <color name="largetextColor">#434343</color>
     <color name="bkg_light_grey">#ececec</color>
+    <color name="bkg_80_light_grey">#CCececec</color>
     <color name="bkg_fragment_root">@color/transparent</color>
     <color name="bkg_semi_white_content">@color/white_80_opaque</color>
     <color name="bkg_light_grey_content">#f2f2f2</color>
     <color name="bkg_no_data_text">@color/white</color>
     <color name="sky_blue">#87ceeb</color>
+    <color name="sky_blue_80">#cc87ceeb</color>
     <color name="color_primary_45_opaque">#730a95dc</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="primary_80_opaque">#cc0a95dc</color>
 </resources>

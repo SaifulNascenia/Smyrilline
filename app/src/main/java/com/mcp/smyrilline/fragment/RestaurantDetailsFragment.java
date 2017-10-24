@@ -94,7 +94,7 @@ public class RestaurantDetailsFragment extends Fragment implements View.OnClickL
             Retrofit retrofit = RetrofitClient.getClient();
             RetrofitInterfaces retrofitInterfaces = retrofit.create(RetrofitInterfaces.class);
             Call<RestaurantDetails> call = retrofitInterfaces
-                    .fetchRestaurantDetails(AppUtils.WP_PARAM_LANGUAGE,
+                .fetchRestaurantDetails(getString(R.string.wp_language_param),
                             getArguments().getString(RestaurantFragment.RESTAURANT_ID));
 
             call.enqueue(new Callback<RestaurantDetails>() {

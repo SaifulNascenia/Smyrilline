@@ -11,23 +11,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.Settings;
-import android.support.multidex.MultiDexApplication;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.Layout;
+import android.text.Spanned;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -36,26 +38,33 @@ import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.blogc.android.views.ExpandableTextView;
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.mcp.smyrilline.BuildConfig;
 import com.mcp.smyrilline.R;
 import com.mcp.smyrilline.activity.DrawerActivity;
-import com.mcp.smyrilline.model.Bulletin;
+import com.mcp.smyrilline.fragment.ProfileDialogFragment;
+import com.mcp.smyrilline.fragment.RealtimeChatFragment;
+import com.mcp.smyrilline.model.messaging.Bulletin;
+import com.mcp.smyrilline.model.messaging.ChatUserClientModel;
+import com.mcp.smyrilline.model.messaging.ChatUserServerModel;
+import com.mcp.smyrilline.model.messaging.ClientStatus;
 import com.onyxbeacon.rest.model.content.Coupon;
-import io.fabric.sdk.android.Fabric;
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,9 +73,23 @@ import org.json.JSONObject;
  * Created by raqib on 5/11/17.
  */
 
-public class AppUtils extends MultiDexApplication {
+public class AppUtils {
 
-    public static final String START_DRAWER_FRAGMENT = "start_drawer_fragment";
+    // File upload url (replace the ip with your server address)
+    public static final String FILE_UPLOAD_URL = "http://192.168.0.104/AndroidFileUpload/fileUpload.php";
+
+    // Directory name to store captured images and videos
+    public static final String MEDIA_DIRECTORY_NAME = "smyrilline_media";
+    public static final int UPLOAD_MEDIA_TYPE_IMAGE = 1;
+    public static final int UPLOAD_MEDIA_TYPE_VIDEO = 2;
+
+    // Bluetooth enable request code
+    public static final int REQUEST_ENABLE_BT = 101;
+    // Camera activity request codes
+    public static final int REQUEST_CAMERA_CAPTURE_IMAGE = 102;
+
+    public static final String TIME_FORMAT_CHAT_MESSAGE = "h:mma";
+    public static final String KEY_START_DRAWER_FRAGMENT = "start_drawer_fragment";
     public static final String TAG = "smyrilline";
     public static final String CONNECTION_OK = "OK";
     // Date time formats
@@ -79,16 +102,11 @@ public class AppUtils extends MultiDexApplication {
     public static final String DATE_FORMAT_DOB = "dd/MM/yyyy";
     // For showing image properly inside webview
     public static final String CSS_FIT_IMAGE_IN_WEBVIEW =
-            "<style>"
-                    + "img{display:inline; height:auto; max-width:100%;}"
-                    + "body{margin:0; padding:0}"
-                    + "</style>";
+        "<style>"
+            + "img{display:inline; height:auto; max-width:100%;}"
+            + "body{margin:0; padding:0}"
+            + "</style>";
     // Shared preference keys
-    public static final String PREF_DUTY_FREE_URL = "dutyFreeURL";
-    public static final String PREF_RESTAURANTS_URL = "restaurantsFreeURL";
-    public static final String PREF_DESTINATIONS_URL = "destinationsURL";
-    public static final String PREF_ABOUT_SHIP_URL = "shipInfoURL";
-    public static final String PREF_ABOUT_SHIP_HEADER_INFO = "shipInfoHeaderInfo";
     public static final String PREF_LOCALE = "appLocale";
     public static final String PREF_LOGGED_IN = "isLoggedIn";
     public static final String PREF_COUPON_LIST = "couponsList";
@@ -118,11 +136,6 @@ public class AppUtils extends MultiDexApplication {
     public static final String PREF_CUSTOM_CSS_FROM_WP = "custom_css_from_wordpress";
     public static final String PREF_MESSAGE_FILTER_AGE = "message_filter_age";
     public static final String PREF_MESSAGE_FILTER_GENDER = "message_filter_gender";
-
-    // Intent extra keys
-    public static final String KEY_ONYX_PUSH = "coupon_push";
-    public static final String KEY_COUPON_NOTI = "coupon_notification";
-    public static final String KEY_BULLETIN_PUSH = "bulletin_push";
     // Wordpress site params to be appended to URLs
     // for organizing json response e.g. ascending order, list count 100
     public static final String WP_PARAM_ESSENTIALS = "&filter[orderby]=menu_order&filter[order]=asc&per_page=100";
@@ -138,10 +151,40 @@ public class AppUtils extends MultiDexApplication {
     public static final String ITEM_SUBHEADER = "item_subheader";
     public static final String ITEM_DESCRIPTION = "item_description";
     public static final String ITEM_IMAGE = "item_image";
-    private static final String PREF_ANDROID_ID = "androidID";
+    public static final String KEY_SAVED_USER_LIST = "chat_user_list";
+    public static final String KEY_SAVED_ADMIN_LIST = "chat_admin_list";
+    public static final String CHAT_REMOTE_USER = "chat_remote_user";
+    public static final int MESSAGE_SENDING = 0;
+    public static final int MESSAGE_SENDING_FAILED = 1;
+    public static final int MESSAGE_SENDING_SUCCESS = 2;
+    public static final String PREF_TOTAL_NEW_CHAT_MESSAGE_COUNT = "new_chat_message_count";
+    // message
+    public static final int USER_ONLINE = 1;
+    public static final int USER_OFFLINE = 0;
+    public static final String PREF_MY_NAME = "my_name";
+    public static final String PREF_MY_BOOKING_NO = "my_booking";
+    public static final String PREF_MY_DESCRIPTION = "my_description";
+    public static final String PREF_MY_COUNTRY = "my_country";
+    public static final String PREF_MY_GENDER = "my_gender";
+    public static final String PREF_MY_IMAGE_URL = "my_image_url";
+    public static final String PREF_MY_STATUS = "my_status";
+    public static final String PREF_MY_VISIBILITY = "my_visibility";
+    public static final int VISIBLE_TO_BOOKING = 1;
+    public static final int VISIBLE_TO_ALL = 2;
+    public static final int VISIBLE_TO_NONE = 3;
+    public static final int CHAT_USER_LIST_MAX_MESSAGE_COUNT = 9;
+    public static final int GRID_MENU_MAX_MESSSAGE_COUNT = 9;
+    public static final int MESSAGE_LOAD_ITEM_COUNT = 10;
+    public static final int REQUEST_ERROR = 0;
+    public static final int REQUEST_SUCCESS = 1;
+    public static final String KEY_SAVED_MESSAGE_LIST = "key_saved_message_list";
+    public static final String PREF_PROFILE_VERIFIED = "is_profile_saved";
+    public static final int AVATAR_SIZE_PX;
+    private static final String PREF_DEVICE_ID = "androidID";
     private static final String MOBILE_PLATFORM = "Android";
     private static final int CONNECTION_TIMEOUT_MS = 10000;
     private static final int MAX_RETRIES = 5;
+    private static final String KEY_NEW_CHAT_MESSAGE_COUNT = "new_chat_message_count";
     //bundle key names
     public static String PRODUCT_ID = "product_id";
     public static String PRODUCT_NAME = "product_name";
@@ -152,36 +195,16 @@ public class AppUtils extends MultiDexApplication {
     public static String CALLED_CLASS_NAME = "CALLED_CLASS_NAME";
     public static String DESTINATION_ID = "destination_id";
     public static String DESTINATION_NAME = "destination_name";
-
-
-    // Wordpress language param
-    public static String WP_PARAM_LANGUAGE;
-    // Translatable texts
-    public static String ALERT_NO_WIFI;
-    public static String ALERT_SERVER_DOWN;
-    public static String ALERT_SERVER_TIMEOUT;
-    public static String ALERT_DOWNLOADING;
-    public static String ALERT_DOWNLOAD_CANCELLED;
-    public static String ALERT_ERROR;
-    public static String ALERT_DOWNLOAD_FAILED;
-    public static String ALERT_FILE_SAVED_TO;
-    public static String ALERT_NO_PDF_READER;
-    public static String ALERT_TURN_ON_BLUETOOTH;
-    public static String LABEL_NEW;
-    public static String[] fragmentList = {"LoginFragment", "ShipTrackerFragment", "InboxFragment",
-            "DutyFreeFragment",
-            "RestaurantFragment", "DestinationFragment", "CouponsFragment", "SettingsFragment",
-            "ShipInfoFragment",
-            "HelpFragment",
-    };
-    public static Context mContext;
-    private static SharedPreferences mSharedPref;
     private static Bundle bundle = new Bundle();
-    private Locale locale = null;
+
+    static {
+        AVATAR_SIZE_PX = McpApplication.instance().context().getResources()
+            .getDimensionPixelSize(R.dimen.profile_pic_size);
+    }
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
@@ -207,16 +230,16 @@ public class AppUtils extends MultiDexApplication {
                 case (200):
                     return CONNECTION_OK;
                 default:
-                    return mContext.getResources().getString(R.string.alert_server_down);
+                    return context.getResources().getString(R.string.alert_server_down);
             }
         } catch (SocketTimeoutException e) {
-            return mContext.getResources().getString(R.string.alert_server_timeout);
+            return context.getResources().getString(R.string.alert_server_timeout);
         } catch (IOException e) {
             e.printStackTrace();
-            return mContext.getResources().getString(R.string.alert_server_down);
+            return context.getResources().getString(R.string.alert_server_down);
         } catch (Exception e) {
             e.printStackTrace();
-            return mContext.getResources().getString(R.string.alert_error);
+            return context.getResources().getString(R.string.alert_error);
         }
     }
 
@@ -230,11 +253,12 @@ public class AppUtils extends MultiDexApplication {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
         alertDialogBuilder
-                .setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            .setMessage(message)
+            .setPositiveButton(context.getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int arg1) {
-                        dialog.cancel();
+                        dialog.dismiss();
                     }
                 });
 
@@ -243,36 +267,6 @@ public class AppUtils extends MultiDexApplication {
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
     }
-/*
-    *//**
-     * Method to show Alert dialog with custom layout & message
-     *
-     * @param context  The context of the Alert
-     * @param message  The message to show
-     * @param layoutID The id of the layout
-     *//*
-    public static void showAlertDialogWithLayout(Context context, String message, int layoutID) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-        LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-        final View dialogView = inflater.inflate(layoutID, null);
-        dialogBuilder.setView(dialogView);
-
-        final AlertDialog alertDialog = dialogBuilder.create();
-
-        TextView tvPushMessage = (TextView) dialogView.findViewById(R.id.tvAlertMessage);
-        tvPushMessage.setText(message);
-
-        Button btnPushOk = (Button) dialogView.findViewById(R.id.btnAlertOk);
-        btnPushOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog.show();
-    }
-
- */
 
     /**
      * Method to show toast in UI thread
@@ -298,37 +292,24 @@ public class AppUtils extends MultiDexApplication {
         }
     }
 
-
     /**
-     * Update translations of strings used in code
-     * Called when app started, language changed in-app, and in-phone
+     * Convert given timestamp to required format
      */
-    public static void updateTextTranslations() {
-        WP_PARAM_LANGUAGE = mContext.getResources().getString(R.string.wp_language_param);
-        ALERT_TURN_ON_BLUETOOTH = mContext.getResources()
-                .getString(R.string.alert_turn_on_bluetooth);
-        ALERT_NO_WIFI = mContext.getResources().getString(R.string.alert_no_wifi);
-        ALERT_SERVER_DOWN = mContext.getResources().getString(R.string.alert_server_down);
-        ALERT_SERVER_TIMEOUT = mContext.getResources().getString(R.string.alert_server_timeout);
-        ALERT_DOWNLOADING = mContext.getResources().getString(R.string.alert_downloading);
-        ALERT_DOWNLOAD_CANCELLED = mContext.getResources()
-                .getString(R.string.alert_download_cancelled);
-        ALERT_FILE_SAVED_TO = mContext.getResources().getString(R.string.alert_file_saved_to);
-        ALERT_NO_PDF_READER = mContext.getResources().getString(R.string.alert_no_pdf_reader);
-        ALERT_DOWNLOAD_FAILED = mContext.getResources().getString(R.string.alert_download_failed);
-        ALERT_ERROR = mContext.getResources().getString(R.string.alert_error);
-        LABEL_NEW = mContext.getResources().getString(R.string.new_label);
-    }
-
     public static String convertDateFormat(String givenString, String givenFormat,
-            String requiredFormat) {
-        SimpleDateFormat givenDateFormat = new SimpleDateFormat(givenFormat);
-        SimpleDateFormat ourDateFormat = new SimpleDateFormat(requiredFormat);
+        String requiredFormat) {
+        Context context = McpApplication.instance().context();
+        SimpleDateFormat givenDateFormat = new SimpleDateFormat(givenFormat, Locale.US);
+        SimpleDateFormat requiredDateFormat = new SimpleDateFormat(requiredFormat, Locale.US);
+        // change AM/PM to am/pm
+        DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
+        symbols.setAmPmStrings(
+            new String[]{context.getString(R.string.am), context.getString(R.string.pm)});
+        requiredDateFormat.setDateFormatSymbols(symbols);
 
         String convertedString = null;
         try {
             Date date = givenDateFormat.parse(givenString);
-            convertedString = ourDateFormat.format(date);
+            convertedString = requiredDateFormat.format(date);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -342,42 +323,47 @@ public class AppUtils extends MultiDexApplication {
      * @param context the context
      * @param title the title of notification
      * @param text the text of notification
-     * @param iconID the drawable ID of the notification icon
      * @param startFragment the fragment to start when pressed on the notification
      */
-    public static void generateNotification(Context context, String title, String text, int iconID,
-            String startFragment) {
+    public static void generateNotification(Context context, String title, String text,
+        String startFragment, ChatUserServerModel chatUserData) {
 
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         long[] vibratePattern = {500, 500, 500, 500};
 
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(iconID)
-                        .setContentTitle(title)
-                        .setContentText(text)
-                        .setAutoCancel(true)
-                        .setVibrate(vibratePattern)
-                        .setSound(notificationSound);
+            new NotificationCompat.Builder(context)
+                .setSmallIcon(R.mipmap.app_icon)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setAutoCancel(true)
+                .setVibrate(vibratePattern)
+                .setSound(notificationSound);
 
         Intent resultIntent = new Intent(context, DrawerActivity.class);
-        resultIntent.putExtra(START_DRAWER_FRAGMENT, startFragment);
+        resultIntent.putExtra(KEY_START_DRAWER_FRAGMENT, startFragment);
+
+        // if this is chat notification, add chat user data
+        if (startFragment.equals(RealtimeChatFragment.class.getSimpleName())) {
+            resultIntent.putExtra(CHAT_REMOTE_USER, (Parcelable) chatUserData);
+        }
+
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
         PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        context,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+            PendingIntent.getActivity(
+                context,
+                0,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            );
 
         builder.setContentIntent(resultPendingIntent);
         // Sets an ID for the notification
         int notificationId = 1;
         // Gets an instance of the NotificationManager service
         NotificationManager notifyMgr = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+            .getSystemService(Context.NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         notifyMgr.notify(notificationId, builder.build());
     }
@@ -390,7 +376,7 @@ public class AppUtils extends MultiDexApplication {
      */
     public static synchronized void saveListInSharedPref(ArrayList list, String key) {
         Gson gson = new Gson();
-        mSharedPref.edit().putString(key, gson.toJson(list)).apply();
+        McpApplication.instance().sharedPref().edit().putString(key, gson.toJson(list)).apply();
     }
 
     public static synchronized void printCouponIdList(ArrayList<Long> list) {
@@ -406,23 +392,24 @@ public class AppUtils extends MultiDexApplication {
     public static synchronized void printBulletinList(ArrayList<Bulletin> list) {
         for (int i = 0; i < list.size(); i++)
             Log.i(TAG,
-                    "list (" + i + ") -> " + String.valueOf(list.get(i).getTitle()) + ", seen: "
-                            + list
-                            .get(i).isSeen());
+                "list (" + i + ") -> " + String.valueOf(list.get(i).getTitle()) + ", seen: "
+                    + list
+                    .get(i).isSeen());
     }
 
     public static String getAppVersion() {
         return BuildConfig.VERSION_NAME;
     }
 
-    public static String getAndroidID() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String androidID = preferences.getString(PREF_ANDROID_ID, "");
+    public static String getDeviceId() {
+        SharedPreferences preferences = McpApplication.instance().sharedPref();
+        String androidID = preferences.getString(PREF_DEVICE_ID, "");
 
         if (androidID.isEmpty() || androidID == null) {
-            androidID = Settings.Secure.getString(mContext.getContentResolver(),
+            androidID = Settings.Secure
+                .getString(McpApplication.instance().context().getContentResolver(),
                     Settings.Secure.ANDROID_ID);
-            preferences.edit().putString(PREF_ANDROID_ID, androidID).apply();
+            preferences.edit().putString(PREF_DEVICE_ID, androidID).apply();
         }
         return androidID;
     }
@@ -463,10 +450,10 @@ public class AppUtils extends MultiDexApplication {
         }
     }
 
-    public static boolean isBluetoothAvailable() {
-        if (mContext.getPackageManager().hasSystemFeature("android.hardware.bluetooth_le")) {
-            BluetoothManager e = (BluetoothManager) mContext
-                    .getSystemService(Context.BLUETOOTH_SERVICE);
+    public static boolean isBluetoothAvailable(Context context) {
+        if (context.getPackageManager().hasSystemFeature("android.hardware.bluetooth_le")) {
+            BluetoothManager e = (BluetoothManager) context
+                .getSystemService(Context.BLUETOOTH_SERVICE);
             BluetoothAdapter mBluetoothAdapter = e.getAdapter();
             return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled();
         } else {
@@ -475,9 +462,18 @@ public class AppUtils extends MultiDexApplication {
     }
 
     public static void updateUnreadBulletinCount(int increment) {
-        int currentCount = mSharedPref.getInt(PREF_UNREAD_BULLETINS, 0);
-        mSharedPref.edit().putInt(PREF_UNREAD_BULLETINS, currentCount + increment).apply();
+        SharedPreferences sharedPref = McpApplication.instance().sharedPref();
+        int currentCount = sharedPref.getInt(PREF_UNREAD_BULLETINS, 0);
+        sharedPref.edit().putInt(PREF_UNREAD_BULLETINS, currentCount + increment).apply();
+    }
 
+    // save the new message count with respect to user id
+    public static void updateNewChatMessageCountOfUser(String userDeviceId, int increment) {
+        SharedPreferences sharedPref = McpApplication.instance().sharedPref();
+        int currentCount = sharedPref.getInt(KEY_NEW_CHAT_MESSAGE_COUNT, 0);
+        sharedPref.edit()
+            .putInt(KEY_NEW_CHAT_MESSAGE_COUNT + "_" + userDeviceId, currentCount + increment)
+            .apply();
     }
 
     /**
@@ -486,7 +482,8 @@ public class AppUtils extends MultiDexApplication {
      * @return saved filter value
      */
     public static String getSavedMessageFilter(String sharedPrefKey, String defaultVal) {
-        String filterGroup = mSharedPref.getString(sharedPrefKey, defaultVal);
+        String filterGroup = McpApplication.instance().sharedPref()
+            .getString(sharedPrefKey, defaultVal);
         // Remove ending comma
         if (filterGroup.endsWith(","))
             filterGroup = filterGroup.substring(0, filterGroup.length() - 1);
@@ -499,7 +496,7 @@ public class AppUtils extends MultiDexApplication {
     public static String getStringFromJsonObject(JSONObject jsonObject, String key) {
         try {
             if (jsonObject.length() == 0 || jsonObject.isNull(key) || jsonObject.getString(key)
-                    .isEmpty())
+                .isEmpty())
                 return null;
             else
                 return jsonObject.getString(key);
@@ -510,7 +507,7 @@ public class AppUtils extends MultiDexApplication {
     }
 
     public static String getCurrentAppLanguage() {
-        return mSharedPref.getString(PREF_LOCALE, "en");
+        return McpApplication.instance().sharedPref().getString(PREF_LOCALE, "en");
     }
 
     /**
@@ -518,18 +515,32 @@ public class AppUtils extends MultiDexApplication {
      *
      * @return date string
      */
-    public static String getCurrentDateAsString(String requiredDateFormat) {
-        SimpleDateFormat ourDateFormat = new SimpleDateFormat(requiredDateFormat);
-        return ourDateFormat.format(new Date());
+    public static String getCurrentDateAsString(String requiredFormat) {
+        Context context = McpApplication.instance().context();
+        SimpleDateFormat requiredDateFormat = new SimpleDateFormat(requiredFormat, Locale.US);
+        // change AM/PM to am/pm
+        DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
+        symbols.setAmPmStrings(
+            new String[]{context.getString(R.string.am), context.getString(R.string.pm)});
+        requiredDateFormat.setDateFormatSymbols(symbols);
+        return requiredDateFormat.format(new Date());
     }
 
     /**
      * Returns current system time in GMT
      */
     public static String getCurrentTimeInGmt(String requiredTimeFormat) {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat(requiredTimeFormat);
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat(requiredTimeFormat, Locale.US);
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         return dateFormatGmt.format(new Date());
+    }
+
+    /**
+     * Returns give long millisecond time in required date format
+     */
+    public static String convertMillisToFormat(long longMillis, String requiredTimeFormat) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(requiredTimeFormat, Locale.US);
+        return dateFormat.format(new Date(longMillis));
     }
 
     /**
@@ -555,7 +566,7 @@ public class AppUtils extends MultiDexApplication {
     public static String getPdfLink(JSONObject rootJson) throws JSONException {
 
         if (rootJson.isNull("custom_fields")
-                || rootJson.get("custom_fields") instanceof JSONArray) // incompatible type
+            || rootJson.get("custom_fields") instanceof JSONArray) // incompatible type
             return null;
         else {
 
@@ -563,8 +574,8 @@ public class AppUtils extends MultiDexApplication {
 
             // Check 'file_<lang>'
             String pdfLink = getValidCustomField(
-                    custom_fields,
-                    "file_" + getCurrentAppLanguage());
+                custom_fields,
+                "file_" + getCurrentAppLanguage());
             if (pdfLink != null)
                 return pdfLink;
 
@@ -581,10 +592,10 @@ public class AppUtils extends MultiDexApplication {
      * Check for null, empty array, empty value.
      */
     public static String getValidCustomField(JSONObject custom_fields, String fieldName)
-            throws JSONException {
+        throws JSONException {
         if (custom_fields.isNull(fieldName)
-                || custom_fields.getJSONArray(fieldName).length() == 0
-                || custom_fields.getJSONArray(fieldName).getString(0).isEmpty())
+            || custom_fields.getJSONArray(fieldName).length() == 0
+            || custom_fields.getJSONArray(fieldName).getString(0).isEmpty())
             return null;
         else
             return custom_fields.getJSONArray(fieldName).getString(0);
@@ -599,13 +610,13 @@ public class AppUtils extends MultiDexApplication {
     public static boolean isNoCss(JSONObject rootJson) throws JSONException {
         // if there's no custom field, keep default i.e. return false
         if (rootJson.isNull(WP_CUSTOM_FIELDS)
-                || rootJson.get(WP_CUSTOM_FIELDS) instanceof JSONArray) {
+            || rootJson.get(WP_CUSTOM_FIELDS) instanceof JSONArray) {
             return false;
         } else
             // if "no_css" is not null, that means it exists
             return !rootJson
-                    .getJSONObject(WP_CUSTOM_FIELDS)
-                    .isNull(WP_CUSTOM_FIELD_NO_CSS);
+                .getJSONObject(WP_CUSTOM_FIELDS)
+                .isNull(WP_CUSTOM_FIELD_NO_CSS);
     }
 
     /**
@@ -615,14 +626,15 @@ public class AppUtils extends MultiDexApplication {
      * @param applyCss if custom css from wordpress will be applied
      */
     public static void showContentInWebview(WebView webView, String body,
-            boolean applyCss) {
+        boolean applyCss) {
         // remove bottom space
         removeBottomSpaceFromWebView(webView);
         body = CSS_FIT_IMAGE_IN_WEBVIEW + body;
 
         // apply css
         if (applyCss)
-            body = mSharedPref.getString(PREF_CUSTOM_CSS_FROM_WP, "") + body;
+            body = McpApplication.instance().sharedPref().getString(PREF_CUSTOM_CSS_FROM_WP, "")
+                + body;
         webView.loadDataWithBaseURL(null, body, "text/html", "UTF-8", null);
     }
 
@@ -640,7 +652,7 @@ public class AppUtils extends MultiDexApplication {
         }
 
         InputMethodManager inputMethodManager = (InputMethodManager) activity
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+            .getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
@@ -648,36 +660,33 @@ public class AppUtils extends MultiDexApplication {
      * Converting dp to pixel
      */
     public static int dpToPx(int dp) {
-        Resources r = mContext.getResources();
+        Resources resources = McpApplication.instance().context().getResources();
         return Math
-                .round(
-                        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                                r.getDisplayMetrics()));
+            .round(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                    resources.getDisplayMetrics()));
     }
 
     public static Bundle getBundleObj() {
         return bundle;
     }
 
-    public static SharedPreferences getSharedPreference() {
-        if (mSharedPref == null)
-            mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return mSharedPref;
-    }
-
+    /**
+     * Handle given texview expansion, and show/hide 'more' or 'less'
+     */
     public static void handleExpandableTextView(final ExpandableTextView tvExpandableDescription,
-            final TextView tvDescriptionMore) {
+        final TextView tvDescriptionMore) {
         ViewTreeObserver vto = tvExpandableDescription.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     tvExpandableDescription.getViewTreeObserver()
-                            .removeOnGlobalLayoutListener(this);
+                        .removeOnGlobalLayoutListener(this);
                 } else {
                     //noinspection deprecation
                     tvExpandableDescription.getViewTreeObserver()
-                            .removeGlobalOnLayoutListener(this);
+                        .removeGlobalOnLayoutListener(this);
                 }
 
                 Layout layout = tvExpandableDescription.getLayout();
@@ -721,34 +730,40 @@ public class AppUtils extends MultiDexApplication {
             textView.setVisibility(View.GONE);
     }
 
+    /**
+     * Show the view for no connection available
+     */
     public static void showNoConnectionView(final Activity rootActivity, final Fragment fragment,
-            View loadingProgressView, View noConnectionView, Toolbar toolbar) {
+        View loadingProgressView, View noConnectionView, Toolbar toolbar) {
         loadingProgressView.setVisibility(View.GONE);
         noConnectionView.setVisibility(View.VISIBLE);
-        toolbar.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent));
+        toolbar.setBackgroundColor(ContextCompat.getColor(rootActivity, R.color.transparent));
         Button retryBtn = (Button) noConnectionView.findViewById(R.id.retry_connect);
         retryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // restart fragment
                 FragmentTransaction ft = ((DrawerActivity) rootActivity).getSupportFragmentManager()
-                        .beginTransaction();
+                    .beginTransaction();
                 ft.detach(fragment).attach(fragment).commit();
             }
         });
     }
 
+    /**
+     * Show the view for no connection available with the given extra toolbar
+     */
     public static void showNoConnectionViewWithExtraToolbar(final Activity rootActivity,
-            final Fragment fragment, View loadingProgressView, View coordinatorLayout,
-            View noConnectionView, Toolbar noConnectionToolbar,
-            String toolbarTitle) {
+        final Fragment fragment, View loadingProgressView, View coordinatorLayout,
+        View noConnectionView, Toolbar noConnectionToolbar,
+        String toolbarTitle) {
         loadingProgressView.setVisibility(View.GONE);
         coordinatorLayout.setVisibility(View.GONE);
         noConnectionView.setVisibility(View.VISIBLE);
         noConnectionToolbar.setVisibility(View.VISIBLE);
         noConnectionToolbar.setTitle(toolbarTitle);
         noConnectionToolbar.setBackgroundColor(
-                ContextCompat.getColor(rootActivity, R.color.transparent));
+            ContextCompat.getColor(rootActivity, R.color.transparent));
         ((DrawerActivity) rootActivity).setToolbarAndToggle(noConnectionToolbar);
         Button retryBtn = (Button) noConnectionView.findViewById(R.id.retry_connect);
         retryBtn.setOnClickListener(new View.OnClickListener() {
@@ -756,7 +771,7 @@ public class AppUtils extends MultiDexApplication {
             public void onClick(View v) {
                 // restart fragment
                 FragmentTransaction ft = ((DrawerActivity) rootActivity).getSupportFragmentManager()
-                        .beginTransaction();
+                    .beginTransaction();
                 ft.detach(fragment).attach(fragment).commit();
             }
         });
@@ -769,7 +784,7 @@ public class AppUtils extends MultiDexApplication {
 
     public static void restartFragment(Activity rootActivity, Fragment fragment) {
         FragmentTransaction ft = ((DrawerActivity) rootActivity).getSupportFragmentManager()
-                .beginTransaction();
+            .beginTransaction();
         ft.detach(fragment).attach(fragment).commit();
     }
 
@@ -777,14 +792,15 @@ public class AppUtils extends MultiDexApplication {
      * Method to clear the shared preference if the version code is <= 4
      * because there are some Gson implementation changes for saved values
      */
-    void clearSharedPrefIfNecessary() {
+    public static void clearSharedPrefIfNecessary(Context context) {
         int versionCode = 0;
         try {
             // Get the current version code
-            versionCode = mContext.getPackageManager()
-                    .getPackageInfo(mContext.getPackageName(), 0).versionCode;
-            SharedPreferences.Editor editor = mSharedPref.edit();
-            if (mSharedPref.getInt("lastUpdate", 0) != versionCode) {
+            versionCode = context.getPackageManager()
+                .getPackageInfo(context.getPackageName(), 0).versionCode;
+            SharedPreferences sharedPreferences = McpApplication.instance().sharedPref();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            if (sharedPreferences.getInt("lastUpdate", 0) != versionCode) {
                 // Clear everything
                 editor.clear();
                 // Save current version
@@ -798,51 +814,287 @@ public class AppUtils extends MultiDexApplication {
         }
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Fabric.with(this, new Crashlytics());
-        mContext = getApplicationContext();
-        mSharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        clearSharedPrefIfNecessary();
-        Configuration config = getBaseContext().getResources().getConfiguration();
+    public static String convertMillisToLocalTimeZoneInFormat(long sendTime,
+        String requiredTimeFormat) {
+        // get local timezone offset with UTC + daylight savings
+        int gmtOffset =
+            TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
+        sendTime = sendTime + gmtOffset;
+        // convert millis to required format
+        SimpleDateFormat dateFormat = new SimpleDateFormat(requiredTimeFormat);
+        return dateFormat.format(new Date(sendTime));
+    }
 
-        // Get saved Locale from previous selection
-        String lang = mSharedPref.getString(PREF_LOCALE, "");
-        Log.i("AppUtils", "onCreate() - Getting saved locale -> " + lang);
+    public static void setClientOnlineStatus() {
+        Log.i(TAG, "setClientOnlineStatus()");
+        // save status online
+        McpApplication.instance().sharedPref().edit().
+            putInt(AppUtils.PREF_MY_STATUS, AppUtils.USER_ONLINE)
+            .apply();
+        // send status update event to service
+        Log.i(TAG, "sending client ONLINE event");
+        EventBus.getDefault().post(new ClientStatus(AppUtils.USER_ONLINE));
+    }
 
-        if (!"".equals(lang)) {
-            locale = new Locale(lang);
-            Locale.setDefault(locale);
-            config.locale = locale;
-            getBaseContext().getResources()
-                    .updateConfiguration(config,
-                            getBaseContext().getResources().getDisplayMetrics());
-        }
+    public static void setClientOfflineStatus() {
+        Log.i(TAG, "setClientOfflineStatus()");
+        // save status offline
+        McpApplication.instance().sharedPref().edit().
+            putInt(AppUtils.PREF_MY_STATUS, AppUtils.USER_OFFLINE)
+            .apply();
+        // send status event offline
+        Log.i(TAG, "sending client OFFLINE event");
+        EventBus.getDefault().post(new ClientStatus(AppUtils.USER_OFFLINE));
+    }
 
-        // Update code strings
-        updateTextTranslations();
+    public static int isUserOnline() {
+        return McpApplication.instance().sharedPref().
+            getInt(AppUtils.PREF_MY_STATUS, AppUtils.USER_OFFLINE);
+    }
+
+    // check if currently chatting with given user
+    public static boolean isCurrentlyChattingWithUser(String senderDeviceId) {
+        return RealtimeChatFragment.getCurrentRemoteUser() != null
+            && RealtimeChatFragment.getCurrentRemoteUser().getDeviceId()
+            .equals(senderDeviceId);
     }
 
     /**
-     * Called when phone config is changed
-     * in our case, were handling Locale change
+     * Show/hide & update the counter label
      *
-     * @param newConfig The new configuration
+     * @param tvCounterLabel the counter textview
+     * @param newMessageCount the value to set
+     * @param maxCount the maximum value after which '+' will be appended
      */
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Save the new locale
-        Locale saveLocale = new Locale(newConfig.locale.getLanguage());
-
-        // Save it in memory
-        mSharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        mSharedPref.edit().putString(PREF_LOCALE, saveLocale.getLanguage()).apply();
-        Log.i("AppUtils", "onConfigChange() - Saving locale -> " + saveLocale.getLanguage());
-
-        // Update texts used in code
-        updateTextTranslations();
+    public static void updateCounterLabel(TextView tvCounterLabel, int newMessageCount,
+        int maxCount) {
+        if (newMessageCount > 0) {
+            tvCounterLabel.setVisibility(View.VISIBLE);
+            if (newMessageCount > maxCount)
+                tvCounterLabel.setText(maxCount + "+");
+            else
+                tvCounterLabel.setText(String.valueOf(newMessageCount));
+        } else
+            tvCounterLabel.setVisibility(View.GONE);
     }
+
+    // update the total message count, by deducting given value
+    public static void updateTotalMessageCount(int deductCount) {
+        SharedPreferences sharedPref = McpApplication.instance().sharedPref();
+        int totalNewMessageCount = sharedPref
+            .getInt(AppUtils.PREF_TOTAL_NEW_CHAT_MESSAGE_COUNT, 0);
+        if (totalNewMessageCount > 0) {
+            sharedPref.edit().putInt(AppUtils.PREF_TOTAL_NEW_CHAT_MESSAGE_COUNT,
+                totalNewMessageCount - deductCount).apply();
+        }
+    }
+
+    // Reset the new message count of the user to 0
+    // also adjust the total new message count
+    public static void resetNewCountOfUser(String remoteUserId) {
+        ArrayList<ChatUserServerModel> savedUserList = (ArrayList<ChatUserServerModel>) InternalStorage
+            .readObject(McpApplication.instance().context(), AppUtils.KEY_SAVED_USER_LIST);
+
+        for (ChatUserServerModel user : savedUserList) {
+            if (user.getDeviceId().equals(remoteUserId)) {
+                int currentCount = user.getNewMessageCount();
+                user.setNewMessageCount(0);
+                // deduct from the total message count and save
+                AppUtils.updateTotalMessageCount(currentCount);
+                break;
+            }
+        }
+        // save updated user
+        InternalStorage.writeObject(McpApplication.instance().context(),
+            AppUtils.KEY_SAVED_USER_LIST, savedUserList);
+    }
+
+    // disable input in edittext and change background
+    public static void disableInputText(EditText editText, Drawable editTextBackground) {
+        editText.setFocusable(false);
+        editText.setFocusableInTouchMode(false);
+        editText.setEnabled(false);
+        editText.setCursorVisible(false);
+        if (editTextBackground != null) {
+            if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                editText.setBackgroundDrawable(editTextBackground);
+            } else {
+                editText.setBackground(editTextBackground);
+            }
+        }
+    }
+
+    // disable input in edittext and change background
+    public static void enableInputText(EditText editText, Drawable editTextBackground) {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.setEnabled(true);
+        editText.setCursorVisible(true);
+        if (editTextBackground != null) {
+            if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                editText.setBackgroundDrawable(editTextBackground);
+            } else {
+                editText.setBackground(editTextBackground);
+            }
+        }
+    }
+
+    public static void showAlertForVerfiyProfile(final Context context) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+        alertDialogBuilder
+            .setTitle(context.getString(R.string.chat_profile))
+            .setMessage(context.getString(R.string.please_verify_your_profile)
+                + "\n\n"
+                + AppUtils.getSpannedText(context.getString(R.string.you_can_review_profile_from)))
+            .setPositiveButton(context.getString(R.string.view_profile),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int arg1) {
+
+                        // close
+                        dialog.dismiss();
+
+                        // show the profile dialog
+                        showProfileDialog(context);
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.setCancelable(false);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
+    }
+
+    public static void showProfileDialog(Context context) {
+        SharedPreferences sharedPref = McpApplication.instance()
+            .sharedPref();
+        ProfileDialogFragment profileDialogFragment = ProfileDialogFragment
+            .newInstance(
+                new ChatUserClientModel(AppUtils.getDeviceId(),
+                    sharedPref
+                        .getInt(AppUtils.PREF_MY_BOOKING_NO,
+                            0),    // booking no.
+                    sharedPref.getString(  // name
+                        AppUtils.PREF_MY_NAME, null),
+                    sharedPref.getString(
+                        AppUtils.PREF_MY_IMAGE_URL,
+                        null), // image url
+                    sharedPref.getString(
+                        AppUtils.PREF_MY_DESCRIPTION,
+                        null), // description
+                    sharedPref.getString(
+                        AppUtils.PREF_MY_COUNTRY,
+                        null), // country
+                    sharedPref.getString(
+                        AppUtils.PREF_MY_GENDER,
+                        null),  // gender
+                    sharedPref
+                        .getInt(AppUtils.PREF_MY_STATUS,
+                            AppUtils.USER_ONLINE),
+                    // online status
+                    sharedPref
+                        .getInt(AppUtils.PREF_MY_VISIBILITY,
+                            AppUtils.VISIBLE_TO_ALL)));
+
+        profileDialogFragment.show(((DrawerActivity) context).getSupportFragmentManager(),
+            profileDialogFragment.getClass().getSimpleName());
+    }
+
+    /**
+     * Checking device has camera hardware or not
+     */
+    public static boolean isDeviceSupportCamera() {
+        // this device has a camera
+// no camera on this device
+        return McpApplication.instance().context().getPackageManager().hasSystemFeature(
+            PackageManager.FEATURE_CAMERA);
+    }
+
+    /**
+     * Creating file uri to store image/video
+     */
+    public static Uri getOutputMediaFileUri(int type) {
+        File mediaFile = getOutputMediaFile(type);
+        if (mediaFile == null)
+            return null;
+        else
+            return Uri.fromFile(mediaFile);
+    }
+
+    /**
+     * returning image / video
+     * file name format: "IMG_yyyymmdd_hhmmss.jpg"
+     */
+    public static File getOutputMediaFile(int type) {
+
+        // internal phone memory location
+        File mediaStorageDir = new File(
+            Environment
+                .getExternalStorageDirectory(),
+            MEDIA_DIRECTORY_NAME);
+
+        // first check permission
+        boolean externalStorageAvailable = false;
+        boolean externalStorageWriteable = false;
+        String state = Environment.getExternalStorageState();
+
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            // We can read and write the media
+            externalStorageAvailable = externalStorageWriteable = true;
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            // We can only read the media
+            externalStorageAvailable = true;
+            externalStorageWriteable = false;
+        } else {
+            // Something else is wrong. It may be one of many other states, but all we need
+            //  to know is we can neither read nor write
+            externalStorageAvailable = externalStorageWriteable = false;
+        }
+
+        Log.i(AppUtils.TAG, String
+            .format("External storage READABLE %s, WRITABLE %s", externalStorageAvailable,
+                externalStorageWriteable));
+
+        // ====== END ====== //
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(TAG, "Oops! Failed create directory: "
+                    + MEDIA_DIRECTORY_NAME);
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+            Locale.getDefault()).format(new Date());
+        File mediaFile;
+        if (type == UPLOAD_MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + "IMG_" + timeStamp + ".jpg");
+        } else if (type == UPLOAD_MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + "VID_" + timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
+    }
+
+    public static Spanned getSpannedText(String text) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT);
+        } else {
+            return Html.fromHtml(text);
+        }
+    }
+
+    public enum RequestType {SERVER_CONNECT, REQUEST_MESSAGE_LIST, SEND_MESSAGE}
+
+    public enum RequestStatus {SUCCESS, FAIL}
+
+    public enum MsgSendingStatus {SENDING, SENT, FAILED}
 }

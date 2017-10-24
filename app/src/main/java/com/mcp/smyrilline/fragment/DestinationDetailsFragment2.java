@@ -93,7 +93,7 @@ public class DestinationDetailsFragment2 extends Fragment implements View.OnClic
         nestedScrollView.smoothScrollBy(0, detailsInfoLayout.getTop());
         loadingProgressView = mRootView.findViewById(R.id.loadingProgressView);
 
-        // toolbar
+        // messaging_toolbar
         toolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
         ((DrawerActivity) getActivity()).setToolbarAndToggle(toolbar);
         toolbar.setTitle(getArguments().getString(AppUtils.ITEM_NAME));
@@ -188,7 +188,7 @@ public class DestinationDetailsFragment2 extends Fragment implements View.OnClic
     private void fetchApiData() {
         retrofit = RetrofitClient.getClient();
         retrofitInterfaces = retrofit.create(RetrofitInterfaces.class);
-        call = retrofitInterfaces.fetchDestinationDetialsInfo(AppUtils.WP_PARAM_LANGUAGE,
+        call = retrofitInterfaces.fetchDestinationDetialsInfo(getString(R.string.wp_language_param),
                 getArguments().getString(AppUtils.DESTINATION_ID));
         call.enqueue(new Callback<DestinationDetails>() {
             @Override

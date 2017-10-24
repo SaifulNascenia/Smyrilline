@@ -14,9 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
-        android:background="@android:color/transparent"
+        android:background="@color/transparent"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:popupTheme="@style/Theme.AppCompat.Light"/>
+        android:visibility="gone"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -43,7 +44,7 @@
                 android:id="@+id/llGridViewBooking"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginRight="@dimen/main_grid_divider_size"
+                android:layout_marginEnd="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -57,7 +58,7 @@
                     android:layout_weight="3"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
+                    android:background="@drawable/bg_80_white_3dp_corner"
                     android:onClick="onClick"
                     android:src="@drawable/ic_grid_ticket_blue"/>
 
@@ -78,8 +79,8 @@
                 android:id="@+id/llGridShipTracker"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/main_grid_divider_size"
-                android:layout_marginRight="@dimen/main_grid_divider_size"
+                android:layout_marginStart="@dimen/main_grid_divider_size"
+                android:layout_marginEnd="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -93,7 +94,7 @@
                     android:layout_weight="3"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
+                    android:background="@drawable/bg_80_white_3dp_corner"
                     android:onClick="onClick"
                     android:src="@drawable/ic_grid_ship_tracker_blue"/>
 
@@ -108,44 +109,68 @@
                     android:textColor="@android:color/white"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llGridInbox"
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/main_grid_divider_size"
-                android:gravity="center"
-                android:orientation="vertical"
+                android:layout_marginStart="@dimen/main_grid_divider_size"
                 app:layout_columnWeight="1"
-                app:layout_gravity="fill_horizontal"
                 app:layout_rowWeight="1">
 
-                <ImageView
-                    android:id="@+id/imgGridInbox"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/llGridMessaging"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
-                    android:padding="@dimen/grid_menu_image_padding"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
-                    android:onClick="onClick"
-                    android:src="@drawable/ic_grid_inbox_blue"/>
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imgGridMessaging"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:padding="@dimen/grid_menu_image_padding"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/bg_80_white_3dp_corner"
+                        android:onClick="onClick"
+                        android:src="@drawable/ic_grid_messaging_blue"/>
+
+                    <TextView
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1.2"
+                        android:padding="4dp"
+                        android:gravity="center_horizontal"
+                        android:text="@string/messaging"
+                        android:textColor="@android:color/white"/>
+                </LinearLayout>
 
                 <TextView
-                    android:textStyle="bold"
+                    android:id="@+id/tvGridMenuMessagingCounter"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1.2"
-                    android:padding="4dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/inbox"
-                    android:textColor="@android:color/white"/>
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_2dp"
+                    android:layout_marginEnd="@dimen/grid_menu_counter_label_right_margin"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:paddingStart="@dimen/small_padding"
+                    android:paddingEnd="@dimen/small_padding"
+                    android:background="@drawable/bg_80_primary_3dp_corner"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/grid_menu_counter_label_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/llGridDutyFree"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginRight="@dimen/main_grid_divider_size"
+                android:layout_marginEnd="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -159,7 +184,7 @@
                     android:layout_weight="3"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
+                    android:background="@drawable/bg_80_white_3dp_corner"
                     android:onClick="onClick"
                     android:src="@drawable/ic_grid_duty_free_blue"/>
 
@@ -178,8 +203,8 @@
                 android:id="@+id/llGridRestaurants"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/main_grid_divider_size"
-                android:layout_marginRight="@dimen/main_grid_divider_size"
+                android:layout_marginStart="@dimen/main_grid_divider_size"
+                android:layout_marginEnd="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -193,7 +218,7 @@
                     android:layout_weight="3"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
+                    android:background="@drawable/bg_80_white_3dp_corner"
                     android:onClick="onClick"
                     android:src="@drawable/ic_grid_restaurants_blue"/>
 
@@ -212,7 +237,7 @@
                 android:id="@+id/llGridDestinations"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/main_grid_divider_size"
+                android:layout_marginStart="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -226,7 +251,7 @@
                     android:layout_weight="3"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
+                    android:background="@drawable/bg_80_white_3dp_corner"
                     android:onClick="onClick"
                     android:src="@drawable/ic_grid_destinations_blue"/>
 
@@ -245,7 +270,7 @@
                 android:id="@+id/llGridCoupons"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginRight="@dimen/main_grid_divider_size"
+                android:layout_marginEnd="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -259,7 +284,7 @@
                     android:layout_weight="3"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
+                    android:background="@drawable/bg_80_white_3dp_corner"
                     android:onClick="onClick"
                     android:src="@drawable/ic_grid_coupons_blue"/>
 
@@ -278,8 +303,8 @@
                 android:id="@+id/llGridSettings"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/main_grid_divider_size"
-                android:layout_marginRight="@dimen/main_grid_divider_size"
+                android:layout_marginStart="@dimen/main_grid_divider_size"
+                android:layout_marginEnd="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -293,7 +318,7 @@
                     android:layout_weight="3"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
+                    android:background="@drawable/bg_80_white_3dp_corner"
                     android:onClick="onClick"
                     android:src="@drawable/ic_grid_settings_blue"/>
 
@@ -312,7 +337,7 @@
                 android:id="@+id/llGridInfo"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/main_grid_divider_size"
+                android:layout_marginStart="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -326,7 +351,7 @@
                     android:layout_weight="3"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
+                    android:background="@drawable/bg_80_white_3dp_corner"
                     android:onClick="onClick"
                     android:src="@drawable/ic_grid_info_blue"/>
 
@@ -344,7 +369,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginRight="@dimen/main_grid_divider_size"
+                android:layout_marginEnd="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -355,8 +380,8 @@
                 android:id="@+id/llGridHelp"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/main_grid_divider_size"
-                android:layout_marginRight="@dimen/main_grid_divider_size"
+                android:layout_marginStart="@dimen/main_grid_divider_size"
+                android:layout_marginEnd="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_columnWeight="1"
@@ -370,7 +395,7 @@
                     android:layout_weight="3"
                     android:padding="@dimen/grid_menu_image_padding"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
+                    android:background="@drawable/bg_80_white_3dp_corner"
                     android:onClick="onClick"
                     android:src="@drawable/ic_grid_help_blue"/>
 
@@ -389,7 +414,7 @@
                 android:id="@+id/llGridLogout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/main_grid_divider_size"
+                android:layout_marginStart="@dimen/main_grid_divider_size"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:visibility="gone"
@@ -404,7 +429,7 @@
                     android:layout_weight="3"
                     android:padding="18dp"
                     android:adjustViewBounds="true"
-                    android:background="@drawable/bkg_80_white_3dp_corner"
+                    android:background="@drawable/bg_80_white_3dp_corner"
                     android:onClick="onClick"
                     android:src="@drawable/ic_grid_logout_blue"/>
 

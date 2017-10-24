@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/clChatBubbleContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="3dp"
+    android:paddingStart="@dimen/medium_padding"
+    android:paddingEnd="@dimen/medium_padding">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgProfilePic"
+        android:layout_width="@dimen/chat_messaging_pic_size"
+        android:layout_height="@dimen/chat_messaging_pic_size"
+        android:src="@drawable/ic_user"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/llChatBubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:paddingTop="@dimen/medium_padding"
+        android:paddingBottom="@dimen/medium_padding"
+        android:paddingStart="@dimen/margin_24dp"
+        android:paddingEnd="@dimen/margin_24dp"
+        android:background="@drawable/bg_80_sky_blue_rounded"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toRightOf="@+id/imgProfilePic">
+
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:maxWidth="@dimen/chat_bubble_max_width"
+            android:text="Hi! how fdfdfdfdfdfdfdfdfdfdfdfdf"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/textViewMessageTime"
+            android:textStyle="italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9:55a"
+            android:textSize="9sp"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

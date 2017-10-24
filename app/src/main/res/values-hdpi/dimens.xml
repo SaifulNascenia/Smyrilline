@@ -1,0 +1,3 @@
+<resources>
+    <dimen name="grid_menu_counter_label_right_margin">@dimen/medium_margin</dimen>
+</resources>

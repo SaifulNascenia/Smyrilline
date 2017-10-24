@@ -57,7 +57,7 @@ public class ShipInfoDetailsFragment extends Fragment {
 /*
         Bundle bundle = getArguments();
         // title
-        toolbar.setTitle(bundle.getString(ShipInfoFragment.SHIP_INFO_CHILD_TITLE));
+        messaging_toolbar.setTitle(bundle.getString(ShipInfoFragment.SHIP_INFO_CHILD_TITLE));
 
 
         // header image
